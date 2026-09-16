@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Mapping · Encuentra apoyo para emprender en Perú',
+  title: 'Tu envidia es mi progreso · El atlas para emprender',
   icons: { icon: '/favicon.svg' },
   description:
-    'Programas, incubadoras y recursos para emprender desde Perú. Encuentra oportunidades según tu perfil y accede a sus enlaces oficiales.',
+    'Un mapa de programas, mentorías y recursos para emprender. Empezamos en Perú, con la mirada en Latinoamérica. Encuentra tu match y visita las fuentes oficiales.',
 };
 
 export default function RootLayout({

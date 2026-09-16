@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { opportunities, regions } from '../lib/opportunities.ts';
+import { atlasCountries, countryOpportunities } from '../lib/atlas.ts';
 import {
   availability,
   matchOpportunity,
@@ -126,5 +127,31 @@ test('Corrupt stored profiles are rejected and duplicate needs are normalized', 
     validateProfile({ ...tech, needs: ['tecnologia', 'tecnologia'] }, regions)
       .needs,
     ['tecnologia'],
+  );
+});
+
+test('The atlas separates local origin from international benefits without inventing country coverage', () => {
+  const peru = atlasCountries.find((c) => c.code === 'PE');
+  const mexico = atlasCountries.find((c) => c.code === 'MX');
+  const local = countryOpportunities(opportunities, peru);
+  const global = opportunities.filter((o) => o.geography === 'Global');
+  assert.equal(local.length, 18);
+  assert.equal(global.length, 6);
+  assert.equal(local.length + global.length, opportunities.length);
+  assert.equal(countryOpportunities(opportunities, mexico).length, 0);
+  assert.ok(!local.some((o) => o.id === 'hubspot-bootstrap'));
+});
+
+test('New country records can appear in their atlas without entering the Peru-only match', () => {
+  const mexico = atlasCountries.find((c) => c.code === 'MX');
+  const fixture = {
+    ...find('uni-incubacion'),
+    geography: 'México',
+    countryCode: 'MX',
+  };
+  assert.equal(countryOpportunities([fixture], mexico).length, 1);
+  assert.equal(
+    matchOpportunity(fixture, tech, date).eligibleForSuggestions,
+    false,
   );
 });

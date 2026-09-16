@@ -82,6 +82,8 @@ import {
 } from '@/lib/match';
 import type { MatchResult } from '@/lib/match';
 import { useMappingTools } from '@/lib/webmcp';
+import { OpportunityAtlas } from '@/components/opportunity-atlas';
+import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 
 type View = 'explore' | 'resources' | 'matches' | 'saved';
 const icons = {
@@ -101,6 +103,14 @@ const dateFormat = new Intl.DateTimeFormat('es-PE', {
 const reviewedLabel = dateFormat.format(
   new Date(CATALOG_REVIEWED + 'T12:00:00-05:00'),
 );
+
+function scrollToCatalog() {
+  document.getElementById('catalogo')?.scrollIntoView({
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'instant'
+      : 'smooth',
+  });
+}
 
 function ChoiceSelect({
   label,
@@ -265,7 +275,7 @@ function MatchQuiz({
     'Tu etapa nos ayuda a encontrar el apoyo adecuado.',
     'Las oportunidades cambian según el tipo de negocio y el sector.',
     'Puedes elegir más de una opción.',
-    'Incluimos recursos nacionales y globales. Algunas actividades pueden requerir viajar.',
+    'Por ahora, el match está disponible para negocios en Perú. Algunas actividades pueden requerir viajar.',
   ];
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) =>
     setDraft((old) => ({ ...old, [key]: value }));
@@ -550,7 +560,14 @@ export default function Home() {
       (item) =>
         (category === 'all' || item.category === category) &&
         (orgType === 'all' || item.orgType === orgType) &&
-        (scope === 'all' || item.geography === scope) &&
+        (scope === 'all' ||
+          (scope === 'Global'
+            ? item.geography === 'Global'
+            : countryOpportunities(
+                [item],
+                atlasCountries.find((country) => country.name === scope) ??
+                  atlasCountries[0],
+              ).length > 0)) &&
         (!freeOnly || item.cost === 'gratis') &&
         (!availableOnly ||
           ['open', 'ongoing'].includes(availability(item, now))) &&
@@ -607,6 +624,7 @@ export default function Home() {
   const switchView = (v: View) => {
     setView(v);
     resetFilters();
+    scrollToCatalog();
   };
   const toggleSaved = (id: string) => {
     setSaved((prev) =>
@@ -715,8 +733,12 @@ export default function Home() {
         value={scope}
         onChange={setScope}
         options={[
-          { value: 'all', label: 'Perú y global' },
-          { value: 'Perú', label: 'Perú' },
+          { value: 'all', label: 'Todos los orígenes' },
+          ...atlasCountries
+            .filter(
+              (country) => countryOpportunities(opportunities, country).length,
+            )
+            .map((country) => ({ value: country.name, label: country.name })),
           { value: 'Global', label: 'Programa global' },
         ]}
       />
@@ -744,29 +766,53 @@ export default function Home() {
         Saltar a oportunidades
       </a>
       <header className="site-header">
-        <a className="brand" href="/" aria-label="Mapping, inicio">
+        <a
+          className="brand atlas-brand"
+          href="#mapa"
+          aria-label="Tu envidia es mi progreso, volver al mapa"
+        >
           <span className="brand-mark">
             <Compass size={25} />
           </span>
-          mapping<span className="brand-dot">.</span>
+          <span>
+            tu envidia
+            <br />
+            <strong>es mi progreso.</strong>
+          </span>
         </a>
         <TabsList
           variant="line"
           className="main-nav"
           aria-label="Navegación principal"
         >
-          <TabsTrigger className="nav-link" value="explore">
-            Explorar
+          <TabsTrigger
+            className="nav-link"
+            value="explore"
+            onClick={scrollToCatalog}
+          >
+            Catálogo
           </TabsTrigger>
-          <TabsTrigger className="nav-link" value="resources">
+          <TabsTrigger
+            className="nav-link"
+            value="resources"
+            onClick={scrollToCatalog}
+          >
             Recursos
           </TabsTrigger>
-          <TabsTrigger className="nav-link" value="matches">
+          <TabsTrigger
+            className="nav-link"
+            value="matches"
+            onClick={scrollToCatalog}
+          >
             <Sparkles size={15} />
             Mis matches
             {profile && <span className="count-pill">{matchCount}</span>}
           </TabsTrigger>
-          <TabsTrigger className="nav-link" value="saved">
+          <TabsTrigger
+            className="nav-link"
+            value="saved"
+            onClick={scrollToCatalog}
+          >
             <Bookmark size={16} />
             Guardados<span className="count-pill">{saved.length}</span>
           </TabsTrigger>
@@ -776,16 +822,18 @@ export default function Home() {
           <span>{profile ? 'Editar mi perfil' : 'Encuentra tu match'}</span>
         </button>
       </header>
+      <OpportunityAtlas
+        onExplore={(selectedScope) => {
+          switchView('explore');
+          setScope(selectedScope);
+        }}
+        onMatch={() => setQuizOpen(true)}
+      />
       <main className="main-wrap">
-        <section className="intro">
+        <section className="intro catalog-intro" id="catalogo">
           <div>
-            <p className="eyebrow">
-              <span className="live-dot" /> PARA EMPRENDER DESDE PERÚ
-            </p>
-            <h1>
-              Tu siguiente paso
-              <br /> empieza <span>aquí.</span>
-            </h1>
+            <p className="eyebrow">DEL MAPA A TU PRÓXIMO PASO</p>
+            <h2>Menos vueltas. Más oportunidades.</h2>
             <p className="intro-copy">
               Programas, recursos y conexiones para impulsar tu negocio.
             </p>
@@ -819,7 +867,7 @@ export default function Home() {
             </div>
             <button className="how-it-works" onClick={() => setAboutOpen(true)}>
               <CircleHelp size={15} />
-              Cómo funciona Mapping
+              Cómo funciona
             </button>
           </aside>
           <section
@@ -1039,7 +1087,9 @@ export default function Home() {
           </section>
         </div>
         <footer className="site-footer">
-          <span className="brand small">mapping.</span>
+          <a href="#mapa" className="footer-atlas-brand">
+            tu envidia es mi progreso. ↗
+          </a>
           <p>Un próximo paso para cada emprendimiento.</p>
           <button className="text-button" onClick={() => setAboutOpen(true)}>
             Cómo funciona y privacidad <ArrowUpRight size={13} />
@@ -1239,10 +1289,37 @@ export default function Home() {
           </DialogClose>
           <DialogTitle>Un mapa para tomar tu siguiente paso.</DialogTitle>
           <DialogDescription>
-            Mapping reúne oportunidades y recursos publicados por las propias
-            instituciones.
+            Tu envidia es mi progreso reúne oportunidades y recursos publicados
+            por las propias instituciones.
           </DialogDescription>
           <div className="about-copy">
+            <h3>Un atlas que empieza en Perú</h3>
+            <p>
+              Los países marcados como “Por mapear” todavía no tienen fichas
+              locales en este catálogo. Los beneficios internacionales se
+              muestran por separado: su alcance no garantiza elegibilidad en
+              todos los países. El match, por ahora, está pensado para negocios
+              en Perú.
+            </p>
+            <p>
+              El mapa sitúa países, no sedes de instituciones. Cartografía de{' '}
+              <a
+                href="https://www.naturalearthdata.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Natural Earth
+              </a>{' '}
+              (
+              <a
+                href="/map-attribution.txt"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                créditos del mapa
+              </a>
+              ).
+            </p>
             <h3>Así funciona el match</h3>
             <p>
               Comparamos etapa, tipo de negocio, sector, objetivos y ubicación.
@@ -1267,7 +1344,7 @@ export default function Home() {
             <h3>Tu postulación</h3>
             <p>
               La inscripción, evaluación y contratación se realizan directamente
-              con cada institución. Mapping es un catálogo independiente y no
+              con cada institución. Este es un catálogo independiente y no
               representa a las organizaciones listadas.
             </p>
           </div>

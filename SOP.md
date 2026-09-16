@@ -1,8 +1,8 @@
-# SOP: Mapping — oportunidades para emprender desde Perú
+# SOP: Tu envidia es mi progreso — atlas de oportunidades
 
 ## Qué hace
 
-Reúne programas, incubadoras, servicios y beneficios en fichas con enlaces oficiales. Permite filtrar y guardar oportunidades, y recomienda opciones según etapa, tipo de negocio, sector, necesidades y región. La inscripción y evaluación suceden en el sitio de cada institución.
+Abre con un globo interactivo de Latinoamérica, que permite descubrir el catálogo por país. Reúne programas, incubadoras, servicios y beneficios con enlaces oficiales, filtros, guardados y match para negocios en Perú. La inscripción y evaluación suceden en el sitio de cada institución.
 
 ## Por qué se construyó así (build/buy/kill)
 
@@ -30,6 +30,8 @@ Rúbrica de automation-decision (1–5; 5 favorece construir):
 
 Decisión: construir la experiencia autorizada; mantener manual la aprobación de datos y posponer la extracción automática. Si el catálogo o tráfico crece 10 veces, la exportación estática puede seguir sirviendo visitas, pero conviene añadir edición compartida, historial editorial y revisión asistida de enlaces. No se justifica todavía una plataforma pesada ni solicitudes automáticas a instituciones.
 
+Ampliación visual solicitada: el atlas proyecta datos de Natural Earth con D3, sin contratar un servicio de mapas ni automatizar recopilación adicional. Se reutilizaron catálogo, match y almacenamiento local. El nuevo nombre visible no cambia las claves guardadas ni la URL existente.
+
 ## Cómo correrlo
 
 1. Instalar Node 22.18 o posterior y npm (pruebas ejecutadas con Node 26.7).
@@ -56,6 +58,7 @@ npm run check:links
 ## Entradas y salidas
 
 - Entrada editorial: `lib/opportunities.ts`, con URL oficial, fuente adicional opcional, descripción, requisitos, beneficios, costo, estado, fechas, alcance, modalidad, tipos, sectores y necesidades.
+- Entrada geográfica: `lib/atlas.ts` y el dataset world-atlas 2.0.2. Coordenadas a escala país, no ubicaciones de proveedores. Los conteos se calculan del catálogo.
 - Entrada del visitante: etapa, tipo de negocio, sector, objetivos y región.
 - Salida: lista filtrada, explicación de afinidad, ficha detallada y enlace oficial en nueva pestaña.
 - Preferencias: `mapping.saved.v1` y `mapping.profile.v1` en localStorage. Se valida su estructura al recuperar; no se requieren identificadores personales.
@@ -77,7 +80,11 @@ npm run check:links
 - BCP devolvió 403 al verificador automatizado; su página oficial se leyó con la herramienta de búsqueda. No se considera un enlace inexistente.
 - Los demás enlaces del catálogo y la fuente adicional de Alicorp devolvieron HTTP 200 en la revisión del 16/09/2026. HTTP 200 no garantiza que las bases estén actualizadas.
 - El scaffold incluye dependencias con avisos npm en herramientas y componentes de servidor. Esta entrega publica solo archivos estáticos, sin servidor RSC ni procesador de imágenes. Revisar dependencias antes de añadir backend.
-- QA: 11 pruebas de reglas y datos, comprobación TypeScript y compilación. No se hizo una auditoría visual ni de interacción completa en navegador. Se validaron las herramientas de búsqueda/lectura WebMCP en un contexto compatible.
+- Atlas: 18 fichas de origen peruano y 6 internacionales. HubSpot se reclasificó como internacional después de revisar su fuente oficial; su inclusión de Perú no lo convierte en un programa local.
+- Otros países: “Por mapear” significa que faltan fichas en este catálogo, no que el país carezca de programas. No hay fechas prometidas de lanzamiento.
+- Match: por ahora solo contempla emprendimientos en Perú. Excluye futuras fichas locales de otros países hasta ampliar el perfil y las reglas territoriales.
+- Cartografía: límites simplificados de Natural Earth, no una referencia legal de fronteras; no solicita geolocalización. Si la interacción de arrastre no está disponible, usar los botones de país y rotación.
+- QA: pruebas de reglas y separación territorial, TypeScript y compilación. Comprobación visual y de navegación del atlas en navegador; no es una auditoría integral de accesibilidad. Se preservan las dos herramientas WebMCP previamente verificadas.
 
 ## Umbral de aprobación humana
 
@@ -93,5 +100,6 @@ Responsable: propietario/editor de Mapping; no hay un mantenedor externo contrat
 - No reutilizar fechas de una edición anterior para anunciar una nueva.
 - Usar `npm run check:links` para detectar cambios de rutas. Revisar manualmente 403, 429, timeouts y redirecciones.
 - La lógica de afinidad vive en `lib/match.ts`. Ajustar pruebas cuando cambien reglas.
+- Para incorporar otro país: verificar sus fuentes, agregar `countryCode` ISO alfa-2 y `geography` con su nombre del atlas. La selección y los conteos se actualizan con las fichas; los beneficios globales permanecen separados. Ampliar cuestionario y reglas antes de habilitar match para residentes de ese país.
 - Verificar y publicar otra vez tras editar datos o código. No existe actualización automática en segundo plano.
 - Revisar las dependencias antes de ampliar la arquitectura o incorporar funciones de servidor.

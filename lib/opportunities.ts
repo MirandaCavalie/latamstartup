@@ -57,7 +57,8 @@ export type Opportunity = {
   businessTypes: BusinessType[];
   sectors: Sector[] | 'todos';
   needs: Need[];
-  geography: 'Perú' | 'Global';
+  geography: string;
+  countryCode?: string;
   location: string;
   mode: 'Virtual' | 'Presencial' | 'Híbrido' | 'Por confirmar';
   status: 'open' | 'ongoing' | 'consult' | 'closed';
@@ -691,6 +692,8 @@ export const opportunities: Opportunity[] = [
     mark: 'H',
     color: 'orange',
     url: 'https://www.hubspot.com/startups/bootstrap-program',
+    geography: 'Global',
+    location: 'Online · programa internacional, incluye Perú',
     stages: activeStages,
     businessTypes: ['startup'],
     needs: ['tecnologia', 'vender'],

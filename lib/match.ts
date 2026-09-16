@@ -53,6 +53,15 @@ export function matchOpportunity(
     pending: [],
   };
   const state = availability(item, now);
+  if (
+    item.geography !== 'Global' &&
+    (item.countryCode ? item.countryCode !== 'PE' : item.geography !== 'Perú')
+  ) {
+    result.pending.push(
+      'El match actual está diseñado para negocios en Perú. Esta oportunidad corresponde a otro país.',
+    );
+    return result;
+  }
   if (state === 'closed' || state === 'upcoming') {
     result.pending.push('La convocatoria no recibe postulaciones ahora.');
     return result;

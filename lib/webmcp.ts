@@ -54,7 +54,7 @@ export function useMappingTools(options: Options) {
     const tools: Tool[] = [
       {
         name: 'search_mapping_opportunities',
-        title: 'Buscar oportunidades en Mapping',
+        title: 'Buscar oportunidades para emprender',
         description:
           'Busca en el catálogo y actualiza los resultados visibles. No abre enlaces ni envía postulaciones.',
         inputSchema: {
@@ -95,7 +95,7 @@ export function useMappingTools(options: Options) {
       },
       {
         name: 'read_mapping_results',
-        title: 'Leer resultados de Mapping',
+        title: 'Leer resultados del catálogo',
         description:
           'Devuelve las oportunidades visibles y los identificadores guardados en este navegador.',
         inputSchema: {
