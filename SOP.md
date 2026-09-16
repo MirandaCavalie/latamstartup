@@ -32,6 +32,8 @@ Decisión: construir la experiencia autorizada; mantener manual la aprobación d
 
 Ampliación visual solicitada: el atlas proyecta datos de Natural Earth con D3, sin contratar un servicio de mapas ni automatizar recopilación adicional. Se reutilizaron catálogo, match y almacenamiento local. El nuevo nombre visible no cambia las claves guardadas ni la URL existente.
 
+Branding chicha: el título y las firmas de marca usan Chicle, colores flúor, contornos oscuros y sombra tipográfica. El título sigue siendo texto accesible, no una imagen; la fuente se incluye en la exportación. Este cambio no modifica cartografía, tarjetas de países, datos, filtros ni match.
+
 ## Cómo correrlo
 
 1. Instalar Node 22.18 o posterior y npm (pruebas ejecutadas con Node 26.7).
@@ -103,3 +105,4 @@ Responsable: propietario/editor de Mapping; no hay un mantenedor externo contrat
 - Para incorporar otro país: verificar sus fuentes, agregar `countryCode` ISO alfa-2 y `geography` con su nombre del atlas. La selección y los conteos se actualizan con las fichas; los beneficios globales permanecen separados. Ampliar cuestionario y reglas antes de habilitar match para residentes de ese país.
 - Verificar y publicar otra vez tras editar datos o código. No existe actualización automática en segundo plano.
 - Revisar las dependencias antes de ampliar la arquitectura o incorporar funciones de servidor.
+- Mantener el estilo chicha dentro de `.chicha-title`, `.atlas-brand` y `.footer-atlas-brand`; no extenderlo a los estilos del globo o de países sin una nueva solicitud. Si se cambia el texto, actualizar también `data-lettering` y la etiqueta accesible del título.

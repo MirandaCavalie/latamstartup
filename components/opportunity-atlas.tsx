@@ -81,13 +81,32 @@ export function OpportunityAtlas({
           <p className="atlas-eyebrow">
             <span /> EL ATLAS DE LOS QUE EMPRENDEN
           </p>
-          <h1 id="atlas-title">
-            Tu envidia
-            <br />
-            es mi
-            <br />
-            <span>progreso.</span>
-            <sup aria-hidden="true">↗</sup>
+          <h1
+            id="atlas-title"
+            className="chicha-title"
+            aria-label="Tu envidia es mi progreso"
+          >
+            <span
+              className="chicha-line chicha-top"
+              data-lettering="Tu envidia"
+              aria-hidden="true"
+            >
+              Tu envidia
+            </span>
+            <span
+              className="chicha-line chicha-middle"
+              data-lettering="es mi"
+              aria-hidden="true"
+            >
+              es mi
+            </span>
+            <span
+              className="chicha-line chicha-bottom"
+              data-lettering="progreso"
+              aria-hidden="true"
+            >
+              progreso
+            </span>
           </h1>
           <p className="atlas-description">
             Que no te falten oportunidades.
