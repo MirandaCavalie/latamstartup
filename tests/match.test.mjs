@@ -19,7 +19,7 @@ const tech = {
   region: 'Lima',
 };
 test('Every catalogue entry has a unique ID, HTTPS source and sufficient editorial context', () => {
-  assert.equal(opportunities.length, 41);
+  assert.equal(opportunities.length, 44);
   assert.equal(
     new Set(opportunities.map((o) => o.id)).size,
     opportunities.length,
@@ -134,14 +134,35 @@ test('The atlas maps verified country chapters without treating regional eligibi
   const peru = atlasCountries.find((c) => c.code === 'PE');
   const local = countryOpportunities(opportunities, peru);
   const global = opportunities.filter((o) => o.geography === 'Global');
+  const regional = opportunities.filter((o) => o.geography === 'Latinoamérica');
   assert.equal(local.length, 18);
   assert.equal(global.length, 6);
+  assert.equal(regional.length, 3);
   for (const [code, expected] of Object.entries({ MX: 5, CO: 3, CL: 3, AR: 3, BR: 3 })) {
     const country = atlasCountries.find((c) => c.code === code);
     assert.equal(countryOpportunities(opportunities, country).length, expected, code);
   }
-  assert.equal(local.length + global.length + 17, opportunities.length);
+  assert.equal(local.length + global.length + regional.length + 17, opportunities.length);
   assert.ok(!local.some((o) => o.id === 'hubspot-bootstrap'));
+});
+
+test('Cross-border fellowships disclose actual travel coverage and live status', () => {
+  const puentes = find('puentes-antigravity');
+  const ylai = find('ylai-fellowship');
+  const makers = find('makers-fellowship');
+  assert.equal(availability(puentes, date), 'closed');
+  assert.equal(puentes.cost, 'condicionado');
+  assert.match(puentes.costLabel, /vuelos/);
+  assert.equal(matchOpportunity(puentes, tech, date).eligibleForSuggestions, false);
+  assert.equal(ylai.cost, 'gratis');
+  assert.equal(ylai.status, 'consult');
+  assert.match(ylai.note, /no se verificó una nueva fecha/);
+  assert.equal(makers.cost, 'gratis');
+  assert.equal(availability(makers, new Date('2026-09-21T05:00:00Z')), 'closed');
+  assert.match(makers.note, /remota/);
+  const regionalMatch = matchOpportunity(makers, { ...tech, stage: 'idea', needs: ['aprender'] }, date);
+  assert.ok(regionalMatch.eligibleForSuggestions);
+  assert.ok(regionalMatch.pending.some((reason) => reason.includes('edad')));
 });
 
 test('Investment programs disclose equity, closed rounds, and remain outside the Peru-only match', () => {

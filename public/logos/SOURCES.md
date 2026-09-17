@@ -43,6 +43,9 @@ Cuando no se dispone de un logotipo específico del programa, se muestra el de s
 | Sebrae | `sebrae.svg` | Institución / proveedor | [Fuente](https://sebrae.com.br/subsites/sebrae-startups) | [Original](https://sebrae.com.br/content/dam/portal-sebrae/na/pt/imagens/logo/logo-sebrae.svg) |
 | BNDES Garagem | `bndes-garagem.png` | Programa | [Fuente](https://garagem.bndes.gov.br/) | [Original](https://garagem.bndes.gov.br/wp-content/uploads/2024/07/bndes-logoAtivo-4.png) |
 | Brasil Mais Produtivo | `brasil-mais-produtivo.webp` | Programa | [Fuente](https://brasilmaisprodutivo.mdic.gov.br/) | [Imagen servida](https://brasilmaisprodutivo.mdic.gov.br/_next/image?url=%2Fimg%2Flogo_brasilmaisprodutivo.png&w=640&q=75) |
+| Antigravity Capital · Puentes | `antigravity.png` | Institución / proveedor | [Fuente](https://puentes.antigravity.capital/) | [Original](https://puentes.antigravity.capital/Antigravity%20B%20(Secondary%20Logo)%201.png) |
+| YLAI | `ylai.png` | Programa | [Fuente](https://www.irex.org/project/young-leaders-americas-initiative-ylai-program) | [Original](https://www.irex.org/sites/default/files/logos/ylai-long-resized.png) |
+| Makers Fellowship | `makers.png` | Programa | [Fuente](https://www.makers.ngo/) | [Original](https://www.makers.ngo/images/m-logo.png) |
 
 ## Notas
 
@@ -54,3 +57,4 @@ Cuando no se dispone de un logotipo específico del programa, se muestra el de s
 - Mujer Produce y Centros CDE: identificados con la marca de Programa Nacional Tu Empresa.
 - ClimaTech: identificado con la marca de Emprende UP.
 - Centros Mype Digital: identificado con la marca del Ministerio de la Producción.
+- Puentes: su sitio oficial utiliza la marca de Antigravity Capital; no se presenta como un logo propio del fellowship.

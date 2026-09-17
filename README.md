@@ -3,10 +3,11 @@
 Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping; conserva su carpeta, URL y preferencias guardadas.
 
 - Portada con globo interactivo, selección de países y controles accesibles de rotación.
-- 18 oportunidades de origen peruano, 6 beneficios internacionales y 17 fichas de México, Colombia, Chile, Argentina y Brasil.
+- 18 oportunidades de origen peruano, 6 beneficios globales, 17 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
 
-- 41 fichas editoriales de Estado, universidades, empresas y organizaciones.
+- 44 fichas editoriales de Estado, universidades, empresas y organizaciones.
+- Fellowships e intercambios separados de aceleración e inversión: Puentes (ingeniería, estancia parcialmente cubierta, convocatoria cerrada), YLAI (intercambio en EE. UU., próximo plazo por confirmar) y Makers (remoto y gratuito).
 - Inversión por participación en una categoría propia: Platanus, Latitud, 500 Global y Rockstart no se confunden con subvenciones o capital semilla condonable.
 - Enlaces directos a los sitios oficiales; las postulaciones se realizan allí.
 - Búsqueda sin sensibilidad a tildes, filtros, recursos y guardados locales.
@@ -16,7 +17,7 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
 - Cartel chicha original en la portada, con tintas planas brillantes sobre papel negro y movimiento discreto que respeta la preferencia de movimiento reducido.
 - Identidad independiente: chancla monocroma y nombre Chancletazo en encabezado y pie; el afiche no es el logo. Interfaz en blanco y negro, con banderas y marcas a color.
-- Logos oficiales locales en las 41 fichas, con fuentes y distinción entre marca del programa y de su institución.
+- Logos oficiales locales en las 44 fichas, con fuentes y distinción entre marca del programa y de su institución.
 - Sin claves de API, registro de usuarios, pagos ni base de datos.
 
 ## Uso local
@@ -47,6 +48,7 @@ El resultado de producción es un sitio estático en `dist/client`. La publicaci
 
 - `lib/opportunities.ts`: catálogo, fuentes, requisitos y reglas editoriales.
 - `lib/latam-opportunities.ts`: fichas revisadas de los cinco países incorporados.
+- `lib/regional-opportunities.ts`: fellowships transfronterizos, cobertura, restricciones y fechas.
 - `lib/atlas.ts`: países, identificadores ISO, coordenadas de referencia y conteos derivados.
 - `components/opportunity-atlas.tsx`: globo y acceso al catálogo por origen.
 - `lib/match.ts`: afinidad, búsqueda, validación de perfil y vigencia.
@@ -69,10 +71,10 @@ El perfil y los guardados se almacenan exclusivamente en localStorage en el nave
 
 ## Estado de la revisión
 
-Fecha editorial inicial: 16 de septiembre de 2026. Ver `SOP.md` para limitaciones, revisión de fuentes y mantenimiento.
+Fecha editorial inicial: 16 de septiembre de 2026; nuevas fichas regionales revisadas el 17 de septiembre. Ver `SOP.md` para limitaciones, revisión de fuentes y mantenimiento.
 
 ## Cartografía y expansión
 
 El globo usa [D3 Geo](https://d3js.org/d3-geo) y [world-atlas](https://github.com/topojson/world-atlas) 2.0.2, a partir de Natural Earth 1:110m. Se incluye en el sitio, sin claves ni peticiones a un proveedor de mapas. Los marcadores sitúan países, no sedes de instituciones. Consultar `public/map-attribution.txt` para la licencia.
 
-Para un nuevo país, añadir fichas revisadas con `geography` igual a su nombre en español y `countryCode` ISO alfa-2. Las opciones y conteos se derivan de los datos; nunca añadir cifras manuales. El match todavía utiliza regiones peruanas y excluye fichas locales de otros países. Ampliar el cuestionario, reglas y pruebas antes de ofrecer match internacional.
+Para un nuevo país, añadir fichas revisadas con `geography` igual a su nombre en español y `countryCode` ISO alfa-2. Las opciones y conteos se derivan de los datos; nunca añadir cifras manuales. El match todavía utiliza regiones peruanas y excluye fichas locales de otros países. Puede sugerir programas regionales con requisitos pendientes; Puentes queda fuera porque evalúa perfiles individuales de ingeniería. Ampliar el cuestionario, reglas y pruebas antes de ofrecer match para residentes de otros países.

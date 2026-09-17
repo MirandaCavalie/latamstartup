@@ -18,6 +18,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Globe2,
+  UsersRound,
   RotateCcw,
   Sparkles,
 } from 'lucide-react';
@@ -62,6 +63,7 @@ export function OpportunityAtlas({
   const path = useMemo(() => geoPath(projection), [projection]);
   const selectedItems = countryOpportunities(opportunities, selected);
   const globals = opportunities.filter((item) => item.geography === 'Global');
+  const regionals = opportunities.filter((item) => item.geography === 'Latinoamérica');
   const mappedCountries = atlasCountries.filter(
     (country) => countryOpportunities(opportunities, country).length,
   );
@@ -373,15 +375,26 @@ export function OpportunityAtlas({
             </button>
           ))}
         </div>
-        <button className="global-benefits" onClick={() => onExplore('Global')}>
-          <Globe2 size={18} />
-          <span>
-            <strong>¿Tu idea no tiene fronteras?</strong> Explora{' '}
-            {globals.length} beneficios globales.
-            <small>Revisa la elegibilidad de tu país en cada proveedor.</small>
-          </span>
-          <ArrowUpRight size={21} />
-        </button>
+        <div className="international-paths">
+          <button className="global-benefits" onClick={() => onExplore('Latinoamérica')}>
+            <UsersRound size={18} />
+            <span>
+              <strong>Oportunidades para LATAM.</strong> Explora{' '}
+              {regionals.length} fellowships e intercambios regionales.
+              <small>Compara cobertura, edad y plazos antes de postular.</small>
+            </span>
+            <ArrowUpRight size={21} />
+          </button>
+          <button className="global-benefits" onClick={() => onExplore('Global')}>
+            <Globe2 size={18} />
+            <span>
+              <strong>¿Tu idea no tiene fronteras?</strong> Explora{' '}
+              {globals.length} beneficios globales.
+              <small>Revisa la elegibilidad de tu país en cada proveedor.</small>
+            </span>
+            <ArrowUpRight size={21} />
+          </button>
+        </div>
       </div>
     </section>
   );

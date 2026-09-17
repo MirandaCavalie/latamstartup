@@ -145,4 +145,7 @@ export const providerLogos: Record<string, ProviderLogoAsset> = {
   'sebrae-startups': { src: '/logos/sebrae.svg', name: 'Sebrae', kind: 'provider' },
   'bndes-garagem': { src: '/logos/bndes-garagem.png', name: 'BNDES Garagem', kind: 'program' },
   'brasil-mais-produtivo': { src: '/logos/brasil-mais-produtivo.webp', name: 'Brasil Mais Produtivo', kind: 'program' },
+  'puentes-antigravity': { src: '/logos/antigravity.png', name: 'Antigravity Capital', kind: 'provider' },
+  'ylai-fellowship': { src: '/logos/ylai.png', name: 'YLAI', kind: 'program' },
+  'makers-fellowship': { src: '/logos/makers.png', name: 'Makers Fellowship', kind: 'program' },
 };

@@ -1,4 +1,5 @@
 import { latamOpportunities } from './latam-opportunities.ts';
+import { regionalOpportunities } from './regional-opportunities.ts';
 
 export type Category =
   | 'incubacion'
@@ -7,7 +8,8 @@ export type Category =
   | 'herramientas'
   | 'capacitacion'
   | 'asesoria'
-  | 'mercados';
+  | 'mercados'
+  | 'fellowships';
 export type Stage = 'idea' | 'prototipo' | 'ventas' | 'crecimiento';
 export type BusinessType = 'startup' | 'negocio';
 export type Need =
@@ -73,6 +75,7 @@ export type Opportunity = {
   requirements: string[];
   note: string;
   checkedAt: string;
+  matchEligible?: boolean;
 };
 
 export const categoryLabels: Record<Category, string> = {
@@ -83,6 +86,7 @@ export const categoryLabels: Record<Category, string> = {
   capacitacion: 'Capacitación',
   asesoria: 'Asesoría y servicios',
   mercados: 'Acceso a mercados',
+  fellowships: 'Fellowships e intercambios',
 };
 export const stageLabels: Record<Stage, string> = {
   idea: 'Tengo una idea',
@@ -135,7 +139,7 @@ export const regions = [
   'Tumbes',
   'Ucayali',
 ];
-export const CATALOG_REVIEWED = '2026-09-16';
+export const CATALOG_REVIEWED = '2026-09-17';
 const allStages: Stage[] = ['idea', 'prototipo', 'ventas', 'crecimiento'];
 const activeStages: Stage[] = ['prototipo', 'ventas', 'crecimiento'];
 const both: BusinessType[] = ['startup', 'negocio'];
@@ -150,7 +154,7 @@ const base = {
   status: 'consult' as const,
   cost: 'consultar' as const,
   costLabel: 'Consultar condiciones',
-  checkedAt: CATALOG_REVIEWED,
+  checkedAt: '2026-09-16',
 };
 
 export const opportunities: Opportunity[] = [
@@ -916,4 +920,5 @@ export const opportunities: Opportunity[] = [
     note: 'La convocatoria cerró el 12 de junio de 2026. El programa se conserva para conocerlo y consultar futuras ediciones.',
   },
   ...latamOpportunities,
+  ...regionalOpportunities,
 ];

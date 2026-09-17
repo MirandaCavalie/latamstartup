@@ -52,9 +52,14 @@ export function matchOpportunity(
     reasons: [],
     pending: [],
   };
+  if (item.matchEligible === false) {
+    result.pending.push('Este fellowship selecciona perfiles individuales; el match actual evalúa negocios.');
+    return result;
+  }
   const state = availability(item, now);
   if (
     item.geography !== 'Global' &&
+    item.geography !== 'Latinoamérica' &&
     (item.countryCode ? item.countryCode !== 'PE' : item.geography !== 'Perú')
   ) {
     result.pending.push(
@@ -135,9 +140,9 @@ export function matchOpportunity(
           '.',
       );
   }
-  if (item.geography === 'Global')
+  if (item.geography === 'Global' || item.geography === 'Latinoamérica')
     result.pending.push(
-      'Confirma con el proveedor la elegibilidad de tu empresa en Perú.',
+      'Confirma con el programa la elegibilidad de tu perfil en Perú, incluidos edad e idioma cuando corresponda.',
     );
   if (state === 'consult' || state === 'stale') {
     result.score -= 5;

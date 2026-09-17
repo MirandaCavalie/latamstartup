@@ -10,7 +10,7 @@ Se construyó un prototipo acotado porque el usuario pidió una experiencia prop
 
 Diagnóstico aplicado antes de implementar la lógica:
 
-1. Volumen: tráfico y frecuencia real de uso desconocidos; no se afirma retorno de inversión. Hay 41 fichas revisadas como prueba del producto.
+1. Volumen: tráfico y frecuencia real de uso desconocidos; no se afirma retorno de inversión. Hay 44 fichas revisadas como prueba del producto.
 2. Entradas: sitios oficiales, bases y directorios enlazados, más respuestas estructuradas al cuestionario del visitante.
 3. Formato: fuentes HTML/PDF no uniformes, normalizadas editorialmente a registros TypeScript. El cuestionario usa opciones cerradas.
 4. Destino: catálogo y recomendaciones en la web; la acción final siempre va a la institución.
@@ -36,9 +36,13 @@ Cartel chicha e identidad separados: la portada usa un PNG original de 1448 × 1
 
 Presentación del cartel: inclinación de −2°, sombra tenue y entrada de 850 ms, una sola vez. Al pasar el cursor se endereza y levanta ligeramente; no hay bucle de animación. `prefers-reduced-motion: reduce` desactiva entrada, transición y movimiento al pasar el cursor. El texto alternativo conserva el encabezado accesible. No se aplican filtros de color a las imágenes.
 
-Las 41 fichas muestran imágenes oficiales almacenadas localmente. Cuando se utiliza la marca de una institución en vez de la del programa, se distingue en el registro y en el texto alternativo. Las fuentes están en `public/logos/SOURCES.md`; el prompt exacto del cartel está en `public/brand/POSTER-PROMPT.md`. El PNG y prompt de la antigua caligrafía transparente se conservan como versión histórica, sin referencias desde la interfaz.
+Las 44 fichas muestran imágenes oficiales almacenadas localmente. Cuando se utiliza la marca de una institución en vez de la del programa, se distingue en el registro y en el texto alternativo. Las fuentes están en `public/logos/SOURCES.md`; el prompt exacto del cartel está en `public/brand/POSTER-PROMPT.md`. El PNG y prompt de la antigua caligrafía transparente se conservan como versión histórica, sin referencias desde la interfaz.
 
 La expansión regional añade 17 fichas: 5 de México y 3 de cada uno de Colombia, Chile, Argentina y Brasil. Se crea `Inversión de capital` para programas privados que invierten a cambio de participación, separados de subvenciones y del capital semilla condonable del SENA. Algunos programas regionales figuran en el capítulo de su base o referencia principal; ello no limita ni promete elegibilidad territorial. Las convocatorias 2026 cerradas se conservan como referencia, nunca se anuncian como abiertas. El match sigue siendo peruano hasta contar con un perfil territorial para los otros países.
+
+La ampliación del 17/09/2026 incorpora tres fichas en un origen independiente «Latinoamérica» y categoría «Fellowships e intercambios». Puentes es para ingenieros de LATAM, no una aceleradora: la cohorte de octubre ya cerró y Antigravity cubre alojamiento y la mayoría de comidas, pero no vuelos ni transporte; no garantiza empleo ni permiso de trabajo. YLAI es un intercambio para emprendedores elegibles en EE. UU.; la documentación de IREX sobre pasajes y estancia corresponde a una edición anterior y exige reconfirmación cuando se anuncie la próxima convocatoria. Makers es gratuito y remoto, de 18 a 25 años, con cierre anunciado el 20/09/2026. La fuente no publica hora de cierre; el fin del día se usa solo para no mantener el estado abierto después. Se revisaron también otras opciones: MassChallenge no se añadió porque su estancia puede exigir viaje autofinanciado y sus términos reservan el uso de la marca; otros programas con cuotas no se presentan como gratuitos. Esta selección no intenta agotar los programas regionales.
+
+El filtro «Programa regional» distingue esas fichas de los beneficios globales y de los capítulos nacionales. El match peruano puede sugerir YLAI o Makers por afinidad, pero no valida edad, idioma, visa ni admisión; los deja pendientes. Puentes se excluye del match empresarial porque selecciona talento individual. Mantener esa distinción al extender el cuestionario.
 
 ## Cómo correrlo
 
@@ -66,7 +70,7 @@ npm run check:links
 
 ## Entradas y salidas
 
-- Entrada editorial: `lib/opportunities.ts` y `lib/latam-opportunities.ts`, con URL oficial, fuente adicional opcional, descripción, requisitos, beneficios, costo, estado, fechas, alcance, modalidad, tipos, sectores y necesidades.
+- Entrada editorial: `lib/opportunities.ts`, `lib/latam-opportunities.ts` y `lib/regional-opportunities.ts`, con URL oficial, fuente adicional opcional, descripción, requisitos, beneficios, costo, estado, fechas, alcance, modalidad, tipos, sectores y necesidades.
 - Entrada geográfica: `lib/atlas.ts` y el dataset world-atlas 2.0.2. Coordenadas a escala país, no ubicaciones de proveedores. Los conteos se calculan del catálogo.
 - Entrada visual: PNG del cartel y marca de chancla en `public/brand/`, logos oficiales PNG/SVG/WebP en `public/logos/`. Las imágenes no son enlaces a servicios de logos ni dependen de un proveedor externo durante la visita.
 - Entrada del visitante: etapa, tipo de negocio, sector, objetivos y región.
@@ -77,7 +81,7 @@ npm run check:links
 ## Casos límite conocidos
 
 - Convocatorias cerradas: visibles para referencia, excluidas del match.
-- Fechas: se almacenan con UTC-5. El estado cambia después de la hora de cierre exacta.
+- Fechas: se almacenan con desfase explícito de la fuente, normalmente UTC-5 y, para Puentes, UTC-7. Cuando solo se publica el día, se utiliza el final del día de manera editorial y se advierte que la hora real debe verificarse.
 - Fuentes sin fechas verificables: “Consultar convocatoria”. No se inventan aperturas futuras.
 - Información antigua: después de 45 días sin revisión se muestra “Revisar vigencia”. Esto no detecta cambios automáticamente.
 - Beneficios globales: requieren confirmación de elegibilidad territorial en Perú; se indica en la ficha y el match.
@@ -90,9 +94,9 @@ npm run check:links
 - BCP devolvió 403 al verificador automatizado; su página oficial se leyó con la herramienta de búsqueda. No se considera un enlace inexistente.
 - En la revisión de enlaces del 16/09/2026, Nafin y Latitud no pudieron verificarse automáticamente; Brasil Mais Produtivo respondió 403 al verificador. Esos resultados no prueban que el sitio esté caído. Los demás enlaces nuevos respondieron HTTP 200. HTTP 200 no garantiza que las bases estén actualizadas.
 - El scaffold incluye dependencias con avisos npm en herramientas y componentes de servidor. Esta entrega publica solo archivos estáticos, sin servidor RSC ni procesador de imágenes. Revisar dependencias antes de añadir backend.
-- Atlas: 18 fichas de origen peruano, 6 internacionales y 17 en los cinco países añadidos. HubSpot se reclasificó como internacional después de revisar su fuente oficial; su inclusión de Perú no lo convierte en un programa local.
+- Atlas: 18 fichas de origen peruano, 6 globales, 17 en los cinco países añadidos y 3 regionales. HubSpot se reclasificó como internacional después de revisar su fuente oficial; su inclusión de Perú no lo convierte en un programa local.
 - Otros países: “Por mapear” significa que faltan fichas en este catálogo, no que el país carezca de programas. No hay fechas prometidas de lanzamiento.
-- Match: por ahora solo contempla emprendimientos en Perú. Excluye las fichas de los otros países hasta ampliar el perfil y las reglas territoriales.
+- Match: por ahora solo contempla emprendimientos en Perú. Excluye las fichas nacionales de los otros países; puede sugerir programas latinoamericanos de acceso regional con requisitos pendientes y excluye Puentes, dirigido a ingenieros individuales.
 - Cartografía: límites simplificados de Natural Earth, no una referencia legal de fronteras; no solicita geolocalización. Si la interacción de arrastre no está disponible, usar los botones de país y rotación.
 - QA: pruebas de reglas y separación territorial, TypeScript y compilación. Comprobación visual y de navegación del atlas en navegador; no es una auditoría integral de accesibilidad. Se preservan las dos herramientas WebMCP previamente verificadas.
 - Logos: si una imagen falla, se muestra el nombre de la institución como texto, no un logo inventado. El original de ITP tiene resolución limitada (137 × 72). Los logos se muestran sin alterar sus proporciones o colores.
@@ -108,7 +112,7 @@ Responsable: propietario/editor de Mapping; no hay un mantenedor externo contrat
 
 - Revisar semanalmente convocatorias con cierre próximo y mensualmente recursos permanentes.
 - Abrir la fuente oficial antes de actualizar `checkedAt`; que un enlace responda no sustituye la revisión de contenido.
-- Para añadir una ficha: copiar una estructura existente en `lib/opportunities.ts` o `lib/latam-opportunities.ts`, asignar ID único, llenar todos los campos y validar la fuente. La cantidad visible se calcula del catálogo; actualizar la expectativa del test si cambia el tamaño.
+- Para añadir una ficha: copiar una estructura existente en `lib/opportunities.ts`, `lib/latam-opportunities.ts` o `lib/regional-opportunities.ts`, asignar ID único, llenar todos los campos y validar la fuente. La cantidad visible se calcula del catálogo; actualizar la expectativa del test si cambia el tamaño.
 - No reutilizar fechas de una edición anterior para anunciar una nueva.
 - Revisar con prioridad las fechas y condiciones de Platanus, 500 Global, Latitud y Rockstart: inversión por participación no equivale a subvención. Confirmar la nueva cohorte antes de cambiar `status`.
 - Usar `npm run check:links` para detectar cambios de rutas. Revisar manualmente 403, 429, timeouts y redirecciones.

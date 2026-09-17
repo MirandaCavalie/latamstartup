@@ -24,6 +24,7 @@ import {
   ShieldCheck,
   Clock3,
   TrendingUp,
+  UsersRound,
 } from 'lucide-react';
 import {
   Dialog,
@@ -97,6 +98,7 @@ const icons = {
   capacitacion: BookOpen,
   asesoria: Building2,
   mercados: Handshake,
+  fellowships: UsersRound,
 };
 const dateFormat = new Intl.DateTimeFormat('es-PE', {
   day: 'numeric',
@@ -563,8 +565,8 @@ export default function Home() {
         (category === 'all' || item.category === category) &&
         (orgType === 'all' || item.orgType === orgType) &&
         (scope === 'all' ||
-          (scope === 'Global'
-            ? item.geography === 'Global'
+          (scope === 'Global' || scope === 'Latinoamérica'
+            ? item.geography === scope
             : countryOpportunities(
                 [item],
                 atlasCountries.find((country) => country.name === scope) ??
@@ -742,6 +744,7 @@ export default function Home() {
             )
             .map((country) => ({ value: country.name, label: country.name })),
           { value: 'Global', label: 'Programa global' },
+          { value: 'Latinoamérica', label: 'Programa regional' },
         ]}
       />
       <label className="check-filter">
