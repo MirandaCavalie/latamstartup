@@ -16,7 +16,7 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Fechas con zona horaria de Perú y revisión de vigencia a los 45 días.
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
 - Interfaz minimalista blanca y negra con detalles lila y verde ácido, fondo punteado y marcos ligeros de ventana para el mapa.
-- Dos stickers originales: «Tu envidia es mi progreso» y «HECHO EN LATAM». Reemplazan el póster grande; la combi ilustrada sigue siendo el logo y las banderas y marcas oficiales conservan sus colores.
+- Dos stickers originales de letras gruesas irregulares, colores neón planos y siluetas recortadas: «Tu envidia es mi progreso» y «HECHO EN LATAM». Reemplazan el póster grande; la combi ilustrada sigue siendo el logo y las banderas y marcas oficiales conservan sus colores.
 - Entrada breve de stickers y respuesta sutil al cursor; sin bucles permanentes y con soporte de movimiento reducido.
 - Tipografía Geist para marca, títulos y lectura. La fuente y los carteles del branding anterior se conservan como archivos históricos, sin uso en la interfaz actual.
 - Logos oficiales locales en las 45 fichas, con fuentes y distinción entre marca del programa y de su institución.

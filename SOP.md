@@ -50,6 +50,8 @@ Entrada y colaboración (17/09/2026): la portada adicional abre con un globo de 
 
 El Site permanece con acceso privado de una sola persona. «Invitado» significa sin una segunda cuenta dentro de la aplicación; no evita el control de acceso de Sites. Abrirlo a visitantes requiere una decisión explícita de la propietaria, además de probar el flujo público y añadir controles antispam proporcionales.
 
+Actualización de stickers (17/09/2026): se reemplazaron únicamente las dos ilustraciones decorativas por tipografía gruesa e irregular, fucsia/verde eléctrico y una estrella amarilla/violeta, siguiendo las nuevas referencias del usuario. Se conserva la interfaz minimalista, posiciones, animaciones accesibles, navegación, mapa y catálogo. Los nuevos archivos llevan sufijo `-neon` para evitar imágenes antiguas en caché; los anteriores siguen disponibles como historial. Procedencia y prompts en `public/brand/STICKERS-PROMPTS.md`.
+
 ## Cómo correrlo
 
 1. Instalar Node 22.18 o posterior y npm (pruebas ejecutadas con Node 26.7).

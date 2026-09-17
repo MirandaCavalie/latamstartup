@@ -34,8 +34,8 @@ test('Every opportunity has a local, attributed program or provider image', () =
 
 test('Original stickers replace the large poster without replacing the combi identity', () => {
   for (const [file, width, height] of [
-    ['sticker-tu-envidia.png', 1536, 1024],
-    ['sticker-hecho-en-latam.png', 1774, 887],
+    ['sticker-tu-envidia-neon.png', 1536, 1024],
+    ['sticker-hecho-en-latam-neon.png', 1774, 887],
   ]) {
     const sticker = readFileSync(new URL(`../public/brand/${file}`, import.meta.url));
     assert.equal(sticker.subarray(1, 4).toString(), 'PNG');
@@ -72,6 +72,8 @@ test('Original stickers replace the large poster without replacing the combi ide
     assert.match(component, /<BrandSticker kind="latam"/);
   }
   const sticker = readFileSync(new URL('../components/brand-sticker.tsx', import.meta.url), 'utf8');
+  assert.match(sticker, /\/brand\/sticker-tu-envidia-neon\.png/);
+  assert.match(sticker, /\/brand\/sticker-hecho-en-latam-neon\.png/);
   assert.match(sticker, /aria-hidden="true"/);
   assert.doesNotMatch(sticker, /<button|onClick/);
   for (const view of ['explore', 'resources', 'matches', 'saved']) {
