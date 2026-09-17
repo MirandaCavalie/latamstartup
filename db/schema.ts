@@ -6,6 +6,9 @@ export const subscribers = sqliteTable('subscribers', {
   email: text('email').notNull(),
   consentAt: text('consent_at').notNull().default(sql`CURRENT_TIMESTAMP`),
   source: text('source').notNull().default('landing'),
+  deletionHash: text('deletion_hash'),
+  privacyVersion: text('privacy_version').notNull().default('legacy'),
+  status: text('status').notNull().default('unverified'),
 }, (table) => [uniqueIndex('subscribers_email_unique').on(table.email)]);
 
 export const suggestions = sqliteTable('suggestions', {
@@ -18,4 +21,19 @@ export const suggestions = sqliteTable('suggestions', {
   replyEmail: text('reply_email'),
   status: text('status').notNull().default('pending'),
   createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+  privacyVersion: text('privacy_version').notNull().default('legacy'),
+});
+
+export const matchProfiles = sqliteTable('match_profiles', {
+  deletionHash: text('deletion_hash').primaryKey(),
+  countryCode: text('country_code').notNull(),
+  stage: text('stage').notNull(),
+  businessType: text('business_type').notNull(),
+  sector: text('sector').notNull(),
+  needs: text('needs').notNull(),
+  recommendedIds: text('recommended_ids').notNull(),
+  privacyVersion: text('privacy_version').notNull(),
+  algorithmVersion: text('algorithm_version').notNull(),
+  consentAt: text('consent_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });

@@ -77,7 +77,7 @@ test('Map opens directly; newsletter is optional and all original details stay a
   assert.match(atlas, /combi-mark.png/);
   assert.match(atlas, /geoMercator/);
   assert.match(newsletter, /if \(!consent\)/);
-  assert.match(newsletter, /JSON.stringify\(\{ email, consent, website \}\)/);
+  assert.match(newsletter, /JSON.stringify\(\{ email, consent, website, deletionToken: token, privacyVersion: PRIVACY_VERSION \}\)/);
 });
 
 test('Country decorations and results use distinct identities on every country change', () => {

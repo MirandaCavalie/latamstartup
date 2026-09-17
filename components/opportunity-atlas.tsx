@@ -195,6 +195,7 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
           <button onClick={() => onExplore('Global')}>Recursos globales <ArrowUpRight size={13} /></button>
           <button onClick={onNewsletter}><Mail size={14} /> Novedades</button>
           <button onClick={onContribute}>Colabora</button>
+          <a href="/privacidad">Privacidad</a>
           <button onClick={onAbout} aria-label="Cómo funciona y privacidad"><CircleHelp size={17} /></button>
         </div>
         <span className="map-attribution">Natural Earth · Marcadores por país, no por sede</span>

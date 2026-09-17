@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "la-combi",
+  "account_id": "0bf0d27309f3760ed9cf10dd111c88bc",
+  "main": "worker.ts",
+  "compatibility_date": "2026-09-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "limits": { "cpu_ms": 50 },
+  "vars": { "COLLECTION_ENABLED": "false", "PRIVACY_CONTACT_EMAIL": "" },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "la-combi-production",
+    "database_id": "ae5a231a-257e-43d8-b302-7a2f6a2a7544",
+    "migrations_dir": "drizzle"
+  }],
+  "ratelimits": [
+    { "name": "FORM_RATE_LIMIT", "namespace_id": "2026091701", "simple": { "limit": 20, "period": 60 } },
+    { "name": "TOTAL_RATE_LIMIT", "namespace_id": "2026091702", "simple": { "limit": 200, "period": 60 } }
+  ],
+  "triggers": { "crons": ["17 5 * * *"] },
+  "observability": { "enabled": true, "logs": { "enabled": true, "invocation_logs": false } }
+}

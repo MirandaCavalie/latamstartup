@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useMemo, useState } from 'react';
+import { deletionToken, MATCH_TOKEN_KEY, PRIVACY_VERSION } from '@/lib/privacy';
 import {
   ArrowUpRight,
   Bookmark,
@@ -252,14 +253,16 @@ function MatchQuiz({
   open: boolean;
   setOpen: (v: boolean) => void;
   profile: Profile | null;
-  onComplete: (p: Profile) => void;
+  onComplete: (p: Profile, shareForAnalytics: boolean) => void;
 }) {
   const [step, setStep] = useState(0);
+  const [shareForAnalytics, setShareForAnalytics] = useState(false);
   const [draft, setDraft] = useState<Partial<Profile>>({ needs: [] });
   const draftCountry = atlasCountries.find((country) => country.code === draft.countryCode);
   useEffect(() => {
     if (open) {
       setStep(0);
+      setShareForAnalytics(false);
       setDraft(profile ?? { needs: [] });
     }
   }, [open, profile]);
@@ -288,7 +291,7 @@ function MatchQuiz({
   const submit = () => {
     const valid = validateProfile(draft);
     if (valid) {
-      onComplete(valid);
+      onComplete(valid, shareForAnalytics);
       setOpen(false);
     }
   };
@@ -449,13 +452,18 @@ function MatchQuiz({
               <div className="profile-preview">
                 <ShieldCheck size={21} />
                 <div>
-                  <strong>Tu perfil se queda contigo.</strong>
+                  <strong>Tú decides si compartes.</strong>
                   <p>
-                    Guardamos tus respuestas solo en este navegador. No
-                    necesitas registrarte ni compartir datos personales.
+                    El match funciona sin registro. Por defecto, tus respuestas
+                    se quedan en este navegador.
                   </p>
                 </div>
               </div>
+              <label className="welcome-consent match-analytics-consent">
+                <input type="checkbox" checked={shareForAnalytics} onChange={(event) => setShareForAnalytics(event.target.checked)} />
+                Acepto compartir país, etapa, sector, tipo de negocio y objetivos con La Combi para mejorar el mapa. No se vincularán con mi correo.
+              </label>
+              <p className="privacy-form-note">Opcional. Conservamos el último perfil compartido hasta 12 meses. Puedes eliminarlo en <a href="/privacidad" target="_blank" rel="noopener noreferrer">Privacidad</a>. Desmarcar esta casilla no elimina un envío anterior.</p>
               <p className="match-caveat">
                 El match compara tu perfil con el enfoque de cada oportunidad.
                 La institución confirma los requisitos y la admisión.
@@ -505,6 +513,7 @@ export default function Home() {
   const [details, setDetails] = useState<Opportunity | null>(null);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [announcement, setAnnouncement] = useState('');
+  const [sharingNotice, setSharingNotice] = useState('');
   const [storageError, setStorageError] = useState(false);
   const [now, setNow] = useState(
     () => new Date(CATALOG_REVIEWED + 'T12:00:00-05:00'),
@@ -651,7 +660,8 @@ export default function Home() {
       (saved.includes(id) ? 'Eliminado de' : 'Añadido a') + ' tus guardados.',
     );
   };
-  const completeMatch = (p: Profile) => {
+  const completeMatch = (p: Profile, shareForAnalytics: boolean) => {
+    setSharingNotice(shareForAnalytics ? 'Compartiendo tus respuestas…' : 'Tu nuevo match se calculó sin enviar respuestas.');
     setProfile(p);
     switchView('matches');
     setAnnouncement(
@@ -661,6 +671,21 @@ export default function Home() {
         ).length +
         ' oportunidades con afinidad.',
     );
+    if (shareForAnalytics) {
+      void (async () => {
+        try {
+          const token = deletionToken(MATCH_TOKEN_KEY);
+          const response = await fetch('/api/match', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ profile: p, consent: true, privacyVersion: PRIVACY_VERSION, deletionToken: token }),
+          });
+          if (!response.ok) throw new Error('No se pudo compartir');
+          setSharingNotice('Compartiste tus respuestas para mejorar el mapa. Puedes eliminarlas en Privacidad.');
+        } catch {
+          setSharingNotice('Tu match está listo, pero no pudimos confirmar el envío para analítica. Puedes gestionar o eliminar un posible envío en Privacidad.');
+        }
+      })();
+    }
   };
   const hasFilters =
     !!query ||
@@ -1123,6 +1148,7 @@ export default function Home() {
             explorando, pero la selección puede perderse al cerrar.
           </p>
         )}
+        {sharingNotice && <div className="sharing-notice" role="status">{sharingNotice} <a href="/privacidad">Privacidad</a><button aria-label="Cerrar aviso" onClick={() => setSharingNotice('')}>×</button></div>}
         <div className="sr-only" role="status" aria-live="polite">
           {announcement}
         </div>
@@ -1357,16 +1383,14 @@ export default function Home() {
             </p>
             <h3>Tus datos</h3>
             <p>
-              Guardados y respuestas del match permanecen en este navegador. No
-              pedimos nombre ni información financiera para explorar. Si eliges
-              recibir novedades, guardamos tu correo y consentimiento por
-              separado; si sugieres un programa, guardamos tu propuesta y solo
-              el correo opcional que escribas. No vinculamos esos datos con tu
-              perfil de match. Puedes eliminar tu perfil desde Mis matches,
-              quitar cada guardado con su marcador y retirar tu correo desde
-              esta sección. Revisamos sugerencias antes de
-              publicarlas; no enviamos correos automáticos desde el sitio.
+              Guardados y perfil permanecen en este navegador. Solo si marcas la
+              casilla del cuestionario enviamos una copia de tus respuestas para
+              analítica interna, sin vincularlas al correo. La suscripción a
+              novedades tiene un consentimiento separado. Las sugerencias se
+              revisan antes de publicarse. No hay publicidad ni seguimiento entre
+              sitios. No enviamos campañas automáticas en esta etapa.
             </p>
+            <p><a href="/privacidad">Privacidad, almacenamiento y eliminación de datos</a></p>
             <UnsubscribeForm />
             <h3>Tu postulación</h3>
             <p>

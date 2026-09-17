@@ -8,6 +8,20 @@
       "when": 1789667414843,
       "tag": "0000_absent_captain_cross",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1789684529136,
+      "tag": "0001_light_night_nurse",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789684608774,
+      "tag": "0002_fluffy_alice",
+      "breakpoints": true
     }
   ]
 }

@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { ArrowRight, CircleCheck, Send } from 'lucide-react';
 import { atlasCountries } from '@/lib/atlas';
+import { PRIVACY_VERSION } from '@/lib/privacy';
+import { DataRemoval } from '@/components/data-controls';
 
 const blank = { name: '', officialUrl: '', country: '', kind: 'programa', note: '', replyEmail: '', website: '' };
 
@@ -10,6 +12,7 @@ export function Contribute() {
   const [form, setForm] = useState(blank);
   const [status, setStatus] = useState<'idle' | 'sending' | 'saved'>('idle');
   const [error, setError] = useState('');
+  const [consent, setConsent] = useState(false);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,7 +22,7 @@ export function Contribute() {
       const response = await fetch('/api/suggest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, consent, privacyVersion: PRIVACY_VERSION }),
       });
       const result = (await response.json()) as { error?: string };
       if (!response.ok) throw new Error(result.error ?? 'No se pudo guardar la sugerencia.');
@@ -43,7 +46,7 @@ export function Contribute() {
             <CircleCheck size={27} />
             <h3>Gracias por sumar al mapa.</h3>
             <p>Guardamos tu propuesta para revisión editorial.</p>
-            <button className="button secondary" onClick={() => setStatus('idle')}>Sugerir otro programa <ArrowRight size={16} /></button>
+            <button className="button secondary" onClick={() => { setStatus('idle'); setConsent(false); }}>Sugerir otro programa <ArrowRight size={16} /></button>
           </div>
         ) : (
           <form onSubmit={submit}>
@@ -81,6 +84,8 @@ export function Contribute() {
               <input type="email" maxLength={254} value={form.replyEmail} onChange={(event) => setForm({ ...form, replyEmail: event.target.value })} placeholder="tu@correo.com" />
             </label>
             <label className="contribute-honeypot" aria-hidden="true">Sitio web <input tabIndex={-1} autoComplete="off" value={form.website} onChange={(event) => setForm({ ...form, website: event.target.value })} /></label>
+            <label className="welcome-consent"><input type="checkbox" required checked={consent} onChange={(event) => setConsent(event.target.checked)} />Acepto el uso de esta información para revisar la propuesta y contactarme solo si dejé mi correo.</label>
+            <p className="privacy-form-note">No incluyas datos personales de terceros. La propuesta se conserva hasta 12 meses para revisión. <a href="/privacidad" target="_blank" rel="noopener noreferrer">Privacidad</a>.</p>
             {error && <p className="contribute-error" role="alert">{error}</p>}
             <div className="contribute-actions">
               <p>No necesitas cuenta. No añadimos tu correo a la lista de novedades.</p>
@@ -94,27 +99,5 @@ export function Contribute() {
 }
 
 export function UnsubscribeForm() {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('');
-  const [sending, setSending] = useState(false);
-  async function unsubscribe(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSending(true);
-    setStatus('');
-    try {
-      const response = await fetch('/api/subscribe', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
-      const result = (await response.json()) as { error?: string };
-      if (!response.ok) throw new Error(result.error ?? 'No pudimos procesar tu baja.');
-      setStatus('Listo: retiramos ese correo de la lista, si estaba registrado.');
-      setEmail('');
-    } catch (reason) { setStatus(reason instanceof Error ? reason.message : 'Inténtalo otra vez.'); }
-    finally { setSending(false); }
-  }
-  return (
-    <form className="unsubscribe-form" onSubmit={unsubscribe}>
-      <label htmlFor="unsubscribe-email">Retirar mi correo de novedades</label>
-      <div><input id="unsubscribe-email" type="email" placeholder="tu@correo.com" required value={email} onChange={(event) => setEmail(event.target.value)} /><button type="submit" disabled={sending}>Dar de baja</button></div>
-      {status && <p role="status">{status}</p>}
-    </form>
-  );
+  return <DataRemoval kind="subscribe" />;
 }

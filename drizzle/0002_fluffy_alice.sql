@@ -1,0 +1,1 @@
+ALTER TABLE `suggestions` ADD `privacy_version` text DEFAULT 'legacy' NOT NULL;
