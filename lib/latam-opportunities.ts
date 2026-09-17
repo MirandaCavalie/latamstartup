@@ -30,6 +30,30 @@ const place = {
 export const latamOpportunities: Opportunity[] = [
   {
     ...common, ...place.MX,
+    id: 'ife-accelerator', name: 'IFE Accelerator', org: 'IFE · Tecnológico de Monterrey', orgType: 'Universidad',
+    category: 'incubacion', mark: 'IFE', matchScope: 'Latinoamérica',
+    description: 'Aceleración EdTech para startups mexicanas e internacionales que buscan expandirse en México y LATAM.',
+    benefit: 'Mentoría e inmersión en México', benefitType: 'Acompañamiento',
+    url: 'https://edtech.tec.mx/en/ife-accelerator-en',
+    sourceUrl: 'https://edtech.tec.mx/sites/g/files/vgjovo1926/files/%5BIFE%20Accelerator%2026%5D%20Bases%20EN.pdf',
+    stages: ['prototipo', 'ventas', 'crecimiento'], businessTypes: ['startup'], sectors: ['tecnologia'],
+    needs: ['mentoria', 'vender'], mode: 'Híbrido', location: 'En línea, Ciudad de México y Monterrey',
+    status: 'closed', cost: 'condicionado', costLabel: 'Sin equity; comisión comercial y gastos de viaje', checkedAt: '2026-09-17',
+    benefits: [
+      'Mentoría especializada, conexiones comerciales y posibles pilotos educativos.',
+      'Inmersión, eventos y presentación ante inversionistas; no garantiza inversión.',
+      'Alojamiento, alimentación y vuelos a Monterrey según cobertura oficial para una persona del equipo.',
+    ],
+    requirements: [
+      'Solución EdTech con producto mínimo viable o más avanzada; revisar las verticales prioritarias.',
+      'Inglés, español y disponibilidad para las actividades presenciales.',
+      'Documentación para viajar y seguro médico internacional; vuelo a CDMX y otros gastos excluidos a cargo del participante.',
+      'Las bases exigen 5% de los ingresos netos de contratos originados por el programa durante 12 meses; no de toda la facturación.',
+    ],
+    note: 'Edición 2026 cerrada. La web indica 26 de julio; el PDF, 19 de julio. También difieren los calendarios de inicio e inmersión: confirmar con IFE. No se verificó una nueva convocatoria. Equity-free no significa totalmente gratuito.',
+  },
+  {
+    ...common, ...place.MX,
     id: 'incmty-accelerator', name: 'incMTY Accelerator', org: 'incMTY · Tecnológico de Monterrey', orgType: 'Universidad',
     category: 'incubacion', mark: 'i',
     description: 'Aceleración para startups con mentoría, comunidad y conexiones del ecosistema de Monterrey.',

@@ -7,6 +7,11 @@ export type ProviderLogoAsset = {
 };
 
 export const providerLogos: Record<string, ProviderLogoAsset> = {
+  'ife-accelerator': {
+    src: '/logos/tecnologico-de-monterrey.svg',
+    name: 'Tecnológico de Monterrey',
+    kind: 'provider',
+  },
   'bcp-contigo': {
     src: '/logos/bcp.svg',
     name: 'BCP',

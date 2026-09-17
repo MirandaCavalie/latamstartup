@@ -3,10 +3,10 @@
 Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping y después Chancletazo; conserva su carpeta, URL y preferencias guardadas.
 
 - Entrada visual con globo, acceso sin cuenta dentro de la aplicación y opción voluntaria de recibir novedades; el atlas interactivo sigue después.
-- 18 oportunidades de origen peruano, 6 beneficios globales, 17 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
+- 18 oportunidades de origen peruano, 6 beneficios globales, 18 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
 
-- 44 fichas editoriales de Estado, universidades, empresas y organizaciones.
+- 45 fichas editoriales de Estado, universidades, empresas y organizaciones.
 - Fellowships e intercambios separados de aceleración e inversión: Puentes (ingeniería, estancia parcialmente cubierta, convocatoria cerrada), YLAI (intercambio en EE. UU., próximo plazo por confirmar) y Makers (remoto y gratuito).
 - Inversión por participación en una categoría propia: Platanus, Latitud, 500 Global y Rockstart no se confunden con subvenciones o capital semilla condonable.
 - Enlaces directos a los sitios oficiales; las postulaciones se realizan allí.
@@ -19,7 +19,7 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Identidad independiente: combi ilustrada y nombre La Combi en entrada, encabezado, pie y favicon; el afiche no es el logo. Papel crema, amarillo, rojo, cobalto y verde en la interfaz; banderas y marcas oficiales conservan sus colores.
 - Animaciones breves de llegada, cartel pegado y respuesta al cursor; sin bucles permanentes y con soporte de movimiento reducido.
 - Tipografía Bowlby One SC local para marca y títulos, inspirada en carteles de letras recortadas; Geist para lectura. Licencia y procedencia en `public/fonts/`.
-- Logos oficiales locales en las 44 fichas, con fuentes y distinción entre marca del programa y de su institución.
+- Logos oficiales locales en las 45 fichas, con fuentes y distinción entre marca del programa y de su institución.
 - Lista de correo y buzón de sugerencias persistentes en D1. Sin cuenta propia, pagos ni envío automático de campañas; las propuestas pasan por revisión humana.
 
 ## Uso local

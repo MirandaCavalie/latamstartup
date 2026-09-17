@@ -6,6 +6,7 @@ Cuando no se dispone de un logotipo específico del programa, se muestra el de s
 
 | Marca | Archivo | Tipo | Fuente oficial | Imagen original |
 | --- | --- | --- | --- | --- |
+| Tecnológico de Monterrey · IFE Accelerator | `tecnologico-de-monterrey.svg` | Institución / proveedor | [Fuente](https://edtech.tec.mx/en/ife-accelerator-en) | [Original](https://edtech.tec.mx/themes/custom/tec/logo.svg) |
 | BCP | `bcp.svg` | Institución / proveedor | [Fuente](https://grupocredicorp.com/) | [Original](https://grupocredicorp.com/wp-content/uploads/2024/12/bcp.svg) |
 | Amazon Web Services | `aws-alt.png` | Institución / proveedor | [Fuente](https://aws.amazon.com/startups/credits/) | [Original](https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png) |
 | NVIDIA | `nvidia.png` | Institución / proveedor | [Fuente](https://nvidianews.nvidia.com/multimedia/corporate/nvidia-logos) | [Original](https://nvidianews.nvidia.com/_gallery/get_file/?file_id=692f50553d6332b453bbc5c2&file_ext=.png&page_id=5e8bac312cfac277698b5c1f) |
@@ -49,6 +50,7 @@ Cuando no se dispone de un logotipo específico del programa, se muestra el de s
 
 ## Notas
 
+- IFE Accelerator: añadido el 17/09/2026. Se usa la marca institucional azul del Tecnológico de Monterrey publicada en el propio sitio; el banner de la edición reúne varias marcas y no se recorta ni se presenta como logo independiente. Identificación editorial, sin afiliación ni patrocinio.
 - BCP: imagen publicada por su matriz, Credicorp.
 - AWS: imagen original del CDN oficial de AWS, con fondo azul oscuro; se conserva ese fondo, sin recolorear la marca.
 - Startup UNI: se utiliza la versión cuadrada a color de su sitio oficial.

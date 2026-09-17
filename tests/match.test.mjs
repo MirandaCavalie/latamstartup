@@ -19,7 +19,7 @@ const tech = {
   countryCode: 'PE',
 };
 test('Every catalogue entry has a unique ID, HTTPS source and sufficient editorial context', () => {
-  assert.equal(opportunities.length, 44);
+  assert.equal(opportunities.length, 45);
   assert.equal(
     new Set(opportunities.map((o) => o.id)).size,
     opportunities.length,
@@ -134,11 +134,11 @@ test('The atlas maps verified country chapters without treating regional eligibi
   assert.equal(local.length, 18);
   assert.equal(global.length, 6);
   assert.equal(regional.length, 3);
-  for (const [code, expected] of Object.entries({ MX: 5, CO: 3, CL: 3, AR: 3, BR: 3 })) {
+  for (const [code, expected] of Object.entries({ MX: 6, CO: 3, CL: 3, AR: 3, BR: 3 })) {
     const country = atlasCountries.find((c) => c.code === code);
     assert.equal(countryOpportunities(opportunities, country).length, expected, code);
   }
-  assert.equal(local.length + global.length + regional.length + 17, opportunities.length);
+  assert.equal(local.length + global.length + regional.length + 18, opportunities.length);
   assert.ok(!local.some((o) => o.id === 'hubspot-bootstrap'));
 });
 
@@ -174,6 +174,22 @@ test('Investment programs disclose equity and regional reach without reopening c
   assert.equal(availability(find('platanus-programa'), date), 'closed');
   assert.equal(availability(find('endeavor-argentina-premio'), new Date('2026-10-01T04:00:00Z')), 'closed');
   assert.equal(find('fondo-emprender-sena').benefitType, 'Capital semilla condonable');
+});
+
+test('IFE Accelerator distinguishes conditional costs, international reach and closed intake', () => {
+  const item = find('ife-accelerator');
+  assert.equal(item.countryCode, 'MX');
+  assert.equal(item.matchScope, 'Latinoamérica');
+  assert.equal(item.category, 'incubacion');
+  assert.equal(item.cost, 'condicionado');
+  assert.equal(item.mode, 'Híbrido');
+  assert.match(item.requirements.join(' '), /5%.*ingresos netos.*12 meses/);
+  assert.match(item.note, /26 de julio.*19 de julio/);
+  assert.match(item.sourceUrl, /Bases%20EN\.pdf$/);
+  assert.ok(matchesText(item, 'edtech ife'));
+  for (const country of atlasCountries) {
+    assert.equal(matchOpportunity(item, { ...tech, countryCode: country.code }, date).eligibleForSuggestions, false);
+  }
 });
 
 test('Every mapped country gets its own local suggestions, not Peru by default', () => {
