@@ -25,6 +25,7 @@ import {
 import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 import type { AtlasCountry } from '@/lib/atlas';
 import { opportunities } from '@/lib/opportunities';
+import { BrandLogo } from '@/components/brand-logo';
 
 const topology = world as unknown as Topology<{
   countries: GeometryCollection<{ name: string }>;
@@ -81,32 +82,8 @@ export function OpportunityAtlas({
           <p className="atlas-eyebrow">
             <span /> EL ATLAS DE LOS QUE EMPRENDEN
           </p>
-          <h1
-            id="atlas-title"
-            className="chicha-title"
-            aria-label="Tu envidia es mi progreso"
-          >
-            <span
-              className="chicha-line chicha-top"
-              data-lettering="Tu envidia"
-              aria-hidden="true"
-            >
-              Tu envidia
-            </span>
-            <span
-              className="chicha-line chicha-middle"
-              data-lettering="es mi"
-              aria-hidden="true"
-            >
-              es mi
-            </span>
-            <span
-              className="chicha-line chicha-bottom"
-              data-lettering="progreso"
-              aria-hidden="true"
-            >
-              progreso
-            </span>
+          <h1 id="atlas-title" className="image-wordmark">
+            <BrandLogo />
           </h1>
           <p className="atlas-description">
             Que no te falten oportunidades.
@@ -209,9 +186,9 @@ export function OpportunityAtlas({
                 cy="30%"
                 r="72%"
               >
-                <stop offset="0%" stopColor="#fff" />
-                <stop offset="72%" stopColor="#f2f7ef" />
-                <stop offset="100%" stopColor="#dce8dd" />
+                <stop offset="0%" stopColor="#ffffff" />
+                <stop offset="72%" stopColor="#f5f5f5" />
+                <stop offset="100%" stopColor="#e5e5e5" />
               </radialGradient>
               <pattern
                 id={patternId + 'dots'}
@@ -219,7 +196,7 @@ export function OpportunityAtlas({
                 height="4.5"
                 patternUnits="userSpaceOnUse"
               >
-                <circle cx="2" cy="2" r="1.05" fill="#628778" />
+                <circle cx="2" cy="2" r="1.05" fill="#7e7e7e" />
               </pattern>
               <pattern
                 id={patternId + 'active'}
@@ -227,8 +204,8 @@ export function OpportunityAtlas({
                 height="4.5"
                 patternUnits="userSpaceOnUse"
               >
-                <rect width="4.5" height="4.5" fill="#d9f68d" />
-                <circle cx="2" cy="2" r="1.3" fill="#24533b" />
+                <rect width="4.5" height="4.5" fill="#e8e8e8" />
+                <circle cx="2" cy="2" r="1.3" fill="#474747" />
               </pattern>
               <filter
                 id={patternId + 'shadow'}
@@ -241,7 +218,7 @@ export function OpportunityAtlas({
                   dx="0"
                   dy="23"
                   stdDeviation="20"
-                  floodColor="#264b34"
+                  floodColor="#414141"
                   floodOpacity=".10"
                 />
               </filter>
@@ -253,13 +230,13 @@ export function OpportunityAtlas({
               r="296"
               fill={`url(#${patternId}ocean)`}
               filter={`url(#${patternId}shadow)`}
-              stroke="#d5e1d7"
+              stroke="#dedede"
               strokeWidth=".8"
             />
             <path
               d={path(graticule) ?? ''}
               fill="none"
-              stroke="#cadaCE"
+              stroke="#d6d6d6"
               strokeWidth=".65"
               opacity=".65"
             />
@@ -273,7 +250,7 @@ export function OpportunityAtlas({
                   key={boundary.id ?? index}
                   d={path(boundary) ?? ''}
                   fill={`url(#${patternId}${isSelected ? 'active' : 'dots'})`}
-                  stroke={isSelected ? '#386343' : '#9bb3a3'}
+                  stroke={isSelected ? '#585858' : '#adadad'}
                   strokeWidth={isSelected ? 1.2 : 0.5}
                   className={country ? 'globe-country' : 'globe-land'}
                   opacity={country ? 1 : 0.5}
@@ -287,12 +264,12 @@ export function OpportunityAtlas({
                 transform={`translate(${selectedPoint[0]},${selectedPoint[1]})`}
                 aria-hidden="true"
               >
-                <circle r="17" fill="#c8f37b" opacity=".45" />
-                <circle r="8" fill="#153c2b" stroke="#fff" strokeWidth="3" />
+                <circle r="17" fill="#e1e1e1" opacity=".45" />
+                <circle r="8" fill="#323232" stroke="#ffffff" strokeWidth="3" />
                 <path
                   d="M 8 -7 L 32 -33 H 94"
                   fill="none"
-                  stroke="#32553b"
+                  stroke="#4c4c4c"
                   strokeWidth="1.2"
                 />
                 <rect
@@ -301,9 +278,15 @@ export function OpportunityAtlas({
                   width={selected.name.length > 12 ? 162 : 105}
                   height="29"
                   rx="6"
-                  fill="#183c2c"
+                  fill="#333333"
                 />
-                <text x="43" y="-34" fill="#fff" fontSize="14" fontWeight="600">
+                <text
+                  x="43"
+                  y="-34"
+                  fill="#ffffff"
+                  fontSize="14"
+                  fontWeight="600"
+                >
                   {selected.name}
                 </text>
               </g>

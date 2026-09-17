@@ -32,7 +32,9 @@ Decisión: construir la experiencia autorizada; mantener manual la aprobación d
 
 Ampliación visual solicitada: el atlas proyecta datos de Natural Earth con D3, sin contratar un servicio de mapas ni automatizar recopilación adicional. Se reutilizaron catálogo, match y almacenamiento local. El nuevo nombre visible no cambia las claves guardadas ni la URL existente.
 
-Branding chicha: el título y las firmas de marca usan Chicle, colores flúor, contornos oscuros y sombra tipográfica. El título sigue siendo texto accesible, no una imagen; la fuente se incluye en la exportación. Este cambio no modifica cartografía, tarjetas de países, datos, filtros ni match.
+Branding chicha: la marca es una imagen PNG original de caligrafía, generada con imagegen integrado, con transparencia real y el texto “Tu envidia es mi progreso”. Se utiliza en portada, encabezado y pie con texto alternativo accesible. La interfaz y el globo usan tonos neutros, mientras que banderas y logos oficiales conservan sus colores. Se eliminó el anterior título tipográfico Chicle. No cambia la interacción del atlas, datos, filtros ni match.
+
+Las 24 fichas muestran 20 imágenes oficiales únicas, almacenadas localmente. Cuando se utiliza la marca de una institución en vez de la del programa, se distingue en el registro y en el texto alternativo. Las fuentes están en `public/logos/SOURCES.md`; el prompt de la marca propia está en `public/brand/PROMPT.md`.
 
 ## Cómo correrlo
 
@@ -40,7 +42,8 @@ Branding chicha: el título y las firmas de marca usan Chicle, colores flúor, c
 2. En una terminal:
 
 ```sh
-cd /Users/mcavalie/Documents/ChatGPT/Mapping
+git clone https://github.com/MirandaCavalie/latamstartup.git
+cd latamstartup
 npm ci
 npm run dev
 ```
@@ -55,12 +58,13 @@ npm run build
 npm run check:links
 ```
 
-5. La exportación pública está en `dist/client`. Sites conserva la configuración del proyecto en `.openai/hosting.json`. Publicar una nueva versión tras cambios validados; conservar acceso privado salvo instrucción del propietario.
+5. La exportación estática está en `dist/client`. Para revisarla sin el servidor de desarrollo, ejecutar `python3 -m http.server 3002 --bind 127.0.0.1 --directory dist/client` y abrir `http://127.0.0.1:3002/` (requiere Python 3). Recompilar después de cada cambio antes de esta revisión. Sites conserva la configuración del proyecto en `.openai/hosting.json`. Publicar una nueva versión tras cambios validados; conservar acceso privado salvo instrucción del propietario. El repositorio GitHub contiene código y recursos públicos, no perfiles ni guardados de los visitantes.
 
 ## Entradas y salidas
 
 - Entrada editorial: `lib/opportunities.ts`, con URL oficial, fuente adicional opcional, descripción, requisitos, beneficios, costo, estado, fechas, alcance, modalidad, tipos, sectores y necesidades.
 - Entrada geográfica: `lib/atlas.ts` y el dataset world-atlas 2.0.2. Coordenadas a escala país, no ubicaciones de proveedores. Los conteos se calculan del catálogo.
+- Entrada visual: PNG de marca en `public/brand/` y logos oficiales PNG/SVG en `public/logos/`. Las imágenes no son enlaces a servicios de logos ni dependen de un proveedor externo durante la visita.
 - Entrada del visitante: etapa, tipo de negocio, sector, objetivos y región.
 - Salida: lista filtrada, explicación de afinidad, ficha detallada y enlace oficial en nueva pestaña.
 - Preferencias: `mapping.saved.v1` y `mapping.profile.v1` en localStorage. Se valida su estructura al recuperar; no se requieren identificadores personales.
@@ -87,6 +91,8 @@ npm run check:links
 - Match: por ahora solo contempla emprendimientos en Perú. Excluye futuras fichas locales de otros países hasta ampliar el perfil y las reglas territoriales.
 - Cartografía: límites simplificados de Natural Earth, no una referencia legal de fronteras; no solicita geolocalización. Si la interacción de arrastre no está disponible, usar los botones de país y rotación.
 - QA: pruebas de reglas y separación territorial, TypeScript y compilación. Comprobación visual y de navegación del atlas en navegador; no es una auditoría integral de accesibilidad. Se preservan las dos herramientas WebMCP previamente verificadas.
+- Logos: si una imagen falla, se muestra el nombre de la institución como texto, no un logo inventado. El original de ITP tiene resolución limitada (137 × 72). Los logos se muestran sin alterar sus proporciones o colores.
+- Vista previa: el servidor de desarrollo presentó un bucle de solicitudes de trazas de error durante esta revisión. La compilación estática terminó correctamente y se revisó con un servidor HTTP local; no se cambió la arquitectura de la aplicación para eludirlo.
 
 ## Umbral de aprobación humana
 
@@ -105,4 +111,5 @@ Responsable: propietario/editor de Mapping; no hay un mantenedor externo contrat
 - Para incorporar otro país: verificar sus fuentes, agregar `countryCode` ISO alfa-2 y `geography` con su nombre del atlas. La selección y los conteos se actualizan con las fichas; los beneficios globales permanecen separados. Ampliar cuestionario y reglas antes de habilitar match para residentes de ese país.
 - Verificar y publicar otra vez tras editar datos o código. No existe actualización automática en segundo plano.
 - Revisar las dependencias antes de ampliar la arquitectura o incorporar funciones de servidor.
-- Mantener el estilo chicha dentro de `.chicha-title`, `.atlas-brand` y `.footer-atlas-brand`; no extenderlo a los estilos del globo o de países sin una nueva solicitud. Si se cambia el texto, actualizar también `data-lettering` y la etiqueta accesible del título.
+- Mantener el PNG de marca y su transparencia. Para cambiar su texto, regenerar el asset y actualizar `components/brand-logo.tsx`, sus dimensiones y su texto alternativo; no reconstruirlo con una fuente CSS. El prompt original está documentado.
+- Para una nueva ficha, agregar su logo oficial a `public/logos/`, registrar su fuente y asignarlo en `lib/provider-logos.ts`. No generar marcas de instituciones con IA. No aplicar filtros globales de escala de grises: las banderas y los logos deben conservar su color.

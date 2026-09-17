@@ -83,6 +83,8 @@ import {
 import type { MatchResult } from '@/lib/match';
 import { useMappingTools } from '@/lib/webmcp';
 import { OpportunityAtlas } from '@/components/opportunity-atlas';
+import { BrandLogo } from '@/components/brand-logo';
+import { ProviderLogo } from '@/components/provider-logo';
 import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 
 type View = 'explore' | 'resources' | 'matches' | 'saved';
@@ -176,9 +178,7 @@ function OpportunityCard({
       }
     >
       <div className="card-top">
-        <span className={'org-mark ' + item.color} aria-hidden="true">
-          {item.mark}
-        </span>
+        <ProviderLogo id={item.id} provider={item.org} />
         <button
           className={'bookmark-button ' + (saved ? 'saved' : '')}
           onClick={toggle}
@@ -770,15 +770,12 @@ export default function Home() {
           className="brand atlas-brand"
           href="#mapa"
           aria-label="Tu envidia es mi progreso, volver al mapa"
+          onClick={(event) => {
+            event.preventDefault();
+            document.getElementById('mapa')?.scrollIntoView({ block: 'start' });
+          }}
         >
-          <span className="brand-mark">
-            <Compass size={25} />
-          </span>
-          <span>
-            tu envidia
-            <br />
-            <strong>es mi progreso.</strong>
-          </span>
+          <BrandLogo variant="header" />
         </a>
         <TabsList
           variant="line"
@@ -1087,8 +1084,17 @@ export default function Home() {
           </section>
         </div>
         <footer className="site-footer">
-          <a href="#mapa" className="footer-atlas-brand">
-            tu envidia es mi progreso. ↗
+          <a
+            href="#mapa"
+            className="footer-atlas-brand"
+            onClick={(event) => {
+              event.preventDefault();
+              document
+                .getElementById('mapa')
+                ?.scrollIntoView({ block: 'start' });
+            }}
+          >
+            <BrandLogo variant="footer" />
           </a>
           <p>Un próximo paso para cada emprendimiento.</p>
           <button className="text-button" onClick={() => setAboutOpen(true)}>
@@ -1150,12 +1156,7 @@ export default function Home() {
                 <X size={20} />
               </SheetClose>
               <div className="detail-scroll">
-                <span
-                  className={'org-mark large ' + details.color}
-                  aria-hidden="true"
-                >
-                  {details.mark}
-                </span>
+                <ProviderLogo id={details.id} provider={details.org} large />
                 <p className="org-name">{details.org}</p>
                 <SheetTitle className="detail-title">{details.name}</SheetTitle>
                 <SheetDescription className="detail-description">

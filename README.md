@@ -13,6 +13,8 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Afinidad explicada, sin prometer elegibilidad o aprobación.
 - Fechas con zona horaria de Perú y revisión de vigencia a los 45 días.
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
+- Logo original como imagen de caligrafía chicha; interfaz en blanco y negro, con banderas y marcas a color.
+- Logos oficiales locales en las 24 fichas, con fuentes y distinción entre marca del programa y de su institución.
 - Sin claves de API, registro de usuarios, pagos ni base de datos.
 
 ## Uso local
@@ -20,7 +22,8 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 Requiere Node 22.13+ y npm. Para las pruebas TypeScript sin compilación, usa Node 22.18+ (validado con Node 26.7).
 
 ```sh
-cd /Users/mcavalie/Documents/ChatGPT/Mapping
+git clone https://github.com/MirandaCavalie/latamstartup.git
+cd latamstartup
 npm ci
 npm run dev
 ```
@@ -46,6 +49,11 @@ El resultado de producción es un sitio estático en `dist/client`. La publicaci
 - `lib/match.ts`: afinidad, búsqueda, validación de perfil y vigencia.
 - `app/page.tsx`: exploración, filtros, formulario, guardados y fichas.
 - `app/globals.css`: diseño adaptable.
+- `components/brand-logo.tsx`: imagen de marca en portada, encabezado y pie.
+- `public/brand/`: logo original y prompt de generación.
+- `lib/provider-logos.ts`: relación entre cada ficha y su logotipo.
+- `public/logos/SOURCES.md`: procedencia de los logos oficiales.
+- `tests/branding.test.mjs`: cobertura de imágenes, seguridad de SVG y paleta neutra.
 - `lib/webmcp.ts`: búsqueda y lectura para navegadores con WebMCP.
 - `tests/match.test.mjs`: pruebas de los criterios de recomendación.
 - `scripts/check-links.mjs`: revisión HTTP de enlaces.
