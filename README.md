@@ -2,7 +2,7 @@
 
 Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping y después Chancletazo; conserva su carpeta, URL y preferencias guardadas.
 
-- El mapa plano ocupa la pantalla inicial debajo de la navegación, con cuadrícula continua en todo el viewport. Seleccionar un país acerca la vista y muestra hasta cuatro tarjetas flotantes con stickers (dos en ventanas pequeñas); «Ver todas» abre su base de datos completa.
+- Una bienvenida sobre el mapa permite entrar como invitado o abrir novedades opcionales. «Inicio» la recupera; no exige correo ni bloquea la navegación. Seleccionar un país acerca la vista y muestra hasta seis tarjetas claras con stickers (cuatro en móvil, desplazables); «Ver todas» abre su base de datos completa.
 - «Base de datos» abre todas las fichas con sus filtros. «Volver al mapa» recupera el último país seleccionado. Los stickers se reemplazan al cambiar de país, entran escalonados y flotan suavemente; con movimiento reducido permanecen quietos.
 - 18 oportunidades de origen peruano, 6 beneficios globales, 18 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
@@ -17,7 +17,7 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Fechas con zona horaria de Perú y revisión de vigencia a los 45 días.
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
 - Mapa monocromático de borde a borde, con selección, zoom y desplazamiento; tarjetas flotantes con marcas oficiales y acceso a cada ficha sin perder el país seleccionado.
-- Cuatro stickers neón originales: «Tu envidia es mi progreso», «HECHO EN LATAM», «SIGUIENTE PARADA» e «IDEAS SIN FRONTERAS». Cada tarjeta lleva uno; la combi permanece solo como marca, sin marcadores en los países. Cada país tiene un acento de hover/foco propio. Banderas y marcas oficiales conservan sus colores.
+- Dieciocho stickers ilustrados tipo souvenir: dos para Perú, México, Colombia, Chile, Argentina, Brasil y Ecuador, más cuatro generales. Los demás países usan los generales. Los stickers neón y la frase «Tu envidia es mi progreso» ya no se muestran. La combi permanece como marca; banderas y logos oficiales conservan sus colores.
 - Entrada escalonada de tarjetas y flotación suave de stickers; movimiento reducido desactiva ambas animaciones.
 - Tipografía Geist para marca, títulos y lectura. La fuente y los carteles del branding anterior se conservan como archivos históricos, sin uso en la interfaz actual.
 - Logos oficiales locales en las 45 fichas, con fuentes y distinción entre marca del programa y de su institución.
@@ -65,6 +65,8 @@ La publicación propia utiliza Cloudflare Workers con assets y D1. `npm run depl
 - `lib/atlas.ts`: países, identificadores ISO, coordenadas de referencia y conteos derivados.
 - `components/opportunity-atlas.tsx`: mapa plano, selección y tarjetas de oportunidades por país.
 - `lib/map-presentation.ts`: acentos por país y límite de tarjetas según espacio disponible.
+- `components/atlas-welcome.tsx`: bienvenida no bloqueante y acceso al formulario seguro de novedades existente.
+- `components/travel-sticker.tsx`: recorte visual por celda de las tres láminas transparentes de souvenirs.
 - `lib/map-camera.ts`: encuadre y zoom, con espacio reservado para tarjetas en escritorio y móvil.
 - `components/newsletter-dialog.tsx`: formulario opcional de novedades; no bloquea el mapa.
 - `components/welcome-gate.tsx`: entrada histórica, sin uso en la página actual.
@@ -77,7 +79,7 @@ La publicación propia utiliza Cloudflare Workers con assets y D1. `npm run depl
 - `components/brand-sticker.tsx`: imágenes decorativas de los cuatro stickers actuales.
 - `components/chicha-poster.tsx`: componente histórico del cartel, actualmente sin uso.
 - `components/site-mark.tsx`: combi y nombre La Combi en entrada, encabezado y pie.
-- `public/brand/`: logo de combi, stickers y sus prompts exactos en `STICKERS-PROMPTS.md` y `COUNTRY-STICKERS-PROMPTS.md`; carteles anteriores conservados como historial.
+- `public/brand/`: logo de combi, souvenirs actuales y prompts exactos en `SOUVENIR-PROMPTS.md`; stickers y carteles anteriores conservados como historial.
 - `lib/provider-logos.ts`: relación entre cada ficha y su logotipo.
 - `public/logos/SOURCES.md`: procedencia de los logos oficiales.
 - `tests/branding.test.mjs`: cobertura de imágenes, seguridad de SVG, identidad y movimiento reducido.

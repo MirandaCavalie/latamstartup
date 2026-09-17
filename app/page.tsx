@@ -496,6 +496,7 @@ function MatchQuiz({
 export default function Home() {
   const [view, setView] = useState<View>('explore');
   const [surface, setSurface] = useState<'map' | 'catalog'>('map');
+  const [showWelcome, setShowWelcome] = useState(true);
   const [mapCountryCode, setMapCountryCode] = useState('');
   const [newsletterOpen, setNewsletterOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -647,6 +648,7 @@ export default function Home() {
     setSort('recommended');
   };
   const switchView = (v: View) => {
+    setShowWelcome(false);
     setSurface('catalog');
     setView(v);
     resetFilters();
@@ -862,6 +864,9 @@ export default function Home() {
         </button>
       </header>
       {surface === 'map' && <OpportunityAtlas
+        showWelcome={showWelcome}
+        onEnter={() => setShowWelcome(false)}
+        onWelcome={() => setShowWelcome(true)}
         initialCountryCode={mapCountryCode}
         onCountryChange={setMapCountryCode}
         onExplore={(selectedScope) => {

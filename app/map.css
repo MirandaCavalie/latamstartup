@@ -25,25 +25,32 @@
 .map-icon-button { display: grid; place-items: center; border: 0; background: transparent; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; }
 .map-icon-button:hover { background: #efedf4; }
 .map-popups { position: absolute; inset: 0; pointer-events: none; }
-.map-opportunity { position: absolute; display: flex; flex-direction: column; width: 244px; height: 190px; gap: 7px; padding: 17px 20px; border: 1px solid #35353b; border-radius: 9px; background: #202025; color: #fff; text-align: left; box-shadow: 0 10px 28px #19192120; cursor: pointer; animation: popup-arrive 550ms cubic-bezier(.2,.8,.3,1.1) both; transition: box-shadow 180ms, border-color 180ms; }
-.map-opportunity:hover, .map-opportunity:focus-visible { z-index: 5; border-color: #9991ad; box-shadow: 0 14px 34px #19192138; }
-.popup-1 { left: 5%; top: 22%; }
-.popup-2 { right: 5%; top: 19%; animation-delay: 110ms; }
-.popup-3 { left: 10%; bottom: 20%; animation-delay: 220ms; }
-.popup-4 { right: 10%; bottom: 18%; animation-delay: 330ms; }
+.map-opportunity { position: absolute; display: flex; flex-direction: column; width: 222px; min-height: 160px; gap: 5px; padding: 14px 16px; border: 1px solid #d6d7da; border-radius: 9px; background: #fff; color: #24242a; text-align: left; box-shadow: 2px 6px 15px #19192112; cursor: pointer; rotate: var(--card-angle, -1deg); animation: popup-arrive 550ms cubic-bezier(.2,.8,.3,1.1) both; transition: box-shadow 180ms, border-color 180ms, rotate 180ms; }
+.map-opportunity:nth-child(even) { background: #f3f4f5; }
+.map-opportunity:hover, .map-opportunity:focus-visible { z-index: 5; border-color: #aaa6b3; box-shadow: 0 10px 24px #19192122; rotate: 0deg; }
+.popup-1 { left: 5%; top: 20%; --card-angle: -2deg; }
+.popup-2 { right: 6%; top: 23%; animation-delay: 110ms; --card-angle: 1.5deg; }
+.popup-3 { left: 12%; bottom: 20%; animation-delay: 220ms; --card-angle: 1deg; }
+.popup-4 { right: 10%; bottom: 17%; animation-delay: 330ms; --card-angle: -1.5deg; }
+.layout-six .popup-1 { left: 7%; top: 15%; }
+.layout-six .popup-2 { right: 8%; top: 18%; }
+.layout-six .popup-3 { left: 3%; top: 42%; bottom: auto; }
+.layout-six .popup-4 { right: 3%; top: 44%; bottom: auto; }
+.layout-six .popup-5 { left: 12%; bottom: 9%; animation-delay: 440ms; --card-angle: -1.5deg; }
+.layout-six .popup-6 { right: 13%; bottom: 8%; animation-delay: 550ms; --card-angle: 2deg; }
 .map-card-top { display: flex; align-items: center; margin-bottom: 3px; }
 .map-card-top .provider-logo { width: 85px; height: 34px; background: #fff; padding: 4px; border-radius: 4px; }
 .map-card-top .provider-logo-inverse { background: #242428; }
-.map-card-category { color: #bab7c5; font-size: 11px; line-height: 1.3; }
+.map-card-category { color: #6b6872; font-size: 12px; line-height: 1.3; }
 .map-opportunity strong { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 17px; line-height: 1.25; letter-spacing: -.25px; padding-right: 6px; }
-.map-card-status { display: flex; align-items: center; gap: 5px; margin-top: auto; color: #ccc9d2; font-size: 11px; padding-right: 16px; }
-.map-card-arrow { position: absolute; right: 14px; bottom: 17px; color: #e2ddea; }
-.map-opportunity > .brand-sticker { width: 112px; right: -22px; top: -36px; --sticker-angle: 8deg; animation: none; user-select: none; }
-.map-opportunity .brand-sticker img { -webkit-user-drag: none; animation: popup-sticker-float 5s ease-in-out infinite; }
-.popup-2 > .brand-sticker { --sticker-angle: -10deg; top: -29px; }
-.popup-3 > .brand-sticker { --sticker-angle: 6deg; }
-.popup-4 > .brand-sticker { --sticker-angle: -8deg; }
-.popup-2 .brand-sticker img, .popup-4 .brand-sticker img { animation-delay: -2s; animation-direction: reverse; }
+.map-card-status { display: flex; align-items: center; gap: 5px; margin-top: 8px; color: #686570; font-size: 12px; padding-right: 16px; }
+.map-card-arrow { position: absolute; right: 12px; bottom: 15px; color: #6a6671; }
+.travel-sticker { position: relative; display: block; width: 100%; aspect-ratio: 1; overflow: hidden; pointer-events: none; user-select: none; }
+.travel-sticker img { position: absolute; display: block; width: 300%; height: 200%; max-width: none; -webkit-user-drag: none; }
+.map-opportunity > .travel-sticker { position: absolute; width: 93px; right: -27px; top: -42px; --sticker-angle: 8deg; animation: popup-sticker-float 5s ease-in-out infinite; }
+.popup-2 > .travel-sticker, .popup-5 > .travel-sticker { --sticker-angle: -10deg; width: 86px; top: -34px; animation-delay: -2s; }
+.popup-3 > .travel-sticker { --sticker-angle: 6deg; right: -19px; }
+.popup-4 > .travel-sticker, .popup-6 > .travel-sticker { --sticker-angle: -8deg; animation-direction: reverse; }
 @keyframes popup-arrive { from { opacity: 0; translate: 0 18px; scale: .95; } to { opacity: 1; translate: 0 0; scale: 1; } }
 @keyframes popup-sticker-float { 0%, 100% { transform: translateY(0) rotate(var(--sticker-angle)); } 50% { transform: translateY(-5px) rotate(calc(var(--sticker-angle) + 4deg)); } }
 .map-catalog-link { position: absolute; bottom: 102px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; white-space: nowrap; padding: 10px 22px; border: 1px solid #d8d5e0; border-radius: 30px; background: #fff; color: #24232b; font-size: 14px; box-shadow: 0 4px 14px #24242910; cursor: pointer; }
@@ -80,10 +87,31 @@
 .newsletter-dialog .welcome-email-row { flex-wrap: wrap; }
 .newsletter-dialog .welcome-email-row input { min-width: 120px; }
 .newsletter-dialog .welcome-consent { font-size: 13px; }
+.has-welcome .flat-map { opacity: .45; }
+.atlas-welcome { position: absolute; z-index: 4; top: 45%; left: 50%; transform: translate(-50%, -50%); width: min(500px, calc(100% - 36px)); padding: 35px 50px 27px; text-align: center; background: #fffffff5; border: 1px solid #dedee2; border-radius: 18px; box-shadow: 0 18px 80px #22222a0b; }
+.atlas-welcome-label { display: block; color: #797780; font-size: 12px; letter-spacing: 1.2px; }
+.atlas-welcome h2 { font-size: clamp(38px, 5vw, 62px); line-height: 1.01; letter-spacing: -2.8px; font-weight: 650; margin: 20px 0; }
+.atlas-welcome > p { font-size: 16px; line-height: 1.5; color: #716d79; margin: 0 auto 24px; max-width: 295px; }
+.welcome-map-enter, .welcome-map-news { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 46px; width: 100%; padding: 10px 18px; font-size: 15px; border-radius: 30px; cursor: pointer; }
+.welcome-map-enter { background: #242328; color: white; border: 1px solid #242328; }
+.welcome-map-enter:hover { background: #45424d; }
+.welcome-map-news { background: transparent; color: #53505d; border: 0; margin-top: 8px; }
+.welcome-map-news:hover { background: #f2f1f5; }
+.atlas-welcome-note { display: block; color: #83808a; font-size: 12px; margin-top: 8px; }
+.welcome-souvenir { position: absolute; width: 145px; pointer-events: none; --sticker-angle: -10deg; animation: popup-sticker-float 7s ease-in-out infinite; }
+.souvenir-a { left: -120px; top: 10px; }
+.souvenir-b { right: -95px; top: -35px; --sticker-angle: 10deg; animation-delay: -3s; }
+.souvenir-c { left: -80px; bottom: -30px; width: 120px; --sticker-angle: 7deg; }
+.souvenir-d { right: -130px; bottom: 15px; width: 155px; animation-delay: -2s; }
 @media (min-width: 760px) and (max-width: 999px) {
-  .map-opportunity { width: 215px; }
-  .popup-1 { left: 3%; top: 30%; }
-  .popup-2 { right: 3%; top: 34%; }
+  .map-opportunity { width: 200px; }
+  .popup-1 { left: 3%; top: 20%; }
+  .popup-2 { right: 3%; top: 23%; }
+  .popup-3 { left: 5%; }
+  .popup-4 { right: 5%; }
+  .welcome-souvenir { width: 110px; }
+  .souvenir-a { left: -75px; }
+  .souvenir-d { right: -75px; }
 }
 @media (max-width: 759px) {
   .site-shell.map-mode { min-height: 700px; }
@@ -102,14 +130,21 @@
   .map-chapter { font-size: 11px; }
   .map-country-heading .map-icon-button { width: 32px; height: 36px; }
   .map-popups { top: auto; bottom: 159px; height: 226px; display: flex; align-items: flex-end; gap: 30px; padding: 36px 25px 6px 16px; overflow-x: auto; overscroll-behavior: contain; scroll-snap-type: x mandatory; pointer-events: auto; scrollbar-width: thin; }
-  .map-opportunity { position: relative; inset: auto; flex: 0 0 min(244px, 77vw); width: auto; height: 180px; padding: 14px 17px; scroll-snap-align: center; }
-  .map-opportunity > .brand-sticker { width: 100px; right: -16px; top: -28px; }
+  .map-opportunity { position: relative; inset: auto; flex: 0 0 min(244px, 77vw); width: auto; height: 175px; padding: 14px 17px; scroll-snap-align: center; rotate: 0deg; }
+  .map-opportunity > .travel-sticker { width: 86px; right: -16px; top: -33px; }
   .map-opportunity strong { font-size: 16px; }
   .map-catalog-link { bottom: 107px; min-height: 40px; font-size: 13px; }
   .map-empty-country { top: 45%; }
+  .atlas-welcome { top: 46%; padding: 30px 24px 22px; width: calc(100% - 42px); }
+  .atlas-welcome h2 { font-size: 46px; margin: 18px 0; }
+  .atlas-welcome > p { font-size: 15px; margin-bottom: 20px; }
+  .welcome-souvenir { width: 85px; }
+  .souvenir-a { left: -18px; top: -45px; }
+  .souvenir-b { right: -18px; top: -40px; }
+  .souvenir-c, .souvenir-d { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .map-opportunity, .map-opportunity > .brand-sticker, .map-opportunity .brand-sticker img { animation: none; }
+  .map-opportunity, .travel-sticker, .map-opportunity > .travel-sticker, .welcome-souvenir { animation: none; }
   .map-opportunity, .flat-country { transition: none; }
 }
 .sharing-notice { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; width: min(90vw, 620px); padding: 16px 42px 16px 18px; background: #fff; color: #242424; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 24px #0002; font-size: 14px; }

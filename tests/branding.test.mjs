@@ -4,6 +4,20 @@ import { readFileSync, existsSync } from 'node:fs';
 import { opportunities } from '../lib/opportunities.ts';
 import { providerLogos } from '../lib/provider-logos.ts';
 
+test('Souvenir sheets are local RGBA images and welcome no longer uses phrase stickers', () => {
+  for (const name of ['andes','sur','latam']) {
+    const png = readFileSync(new URL(`../public/brand/souvenirs-${name}.png`, import.meta.url));
+    assert.equal(png.subarray(1,4).toString(), 'PNG');
+    assert.equal(png.readUInt32BE(16), 1536);
+    assert.equal(png.readUInt32BE(20), 1024);
+    assert.equal(png[25], 6);
+  }
+  const welcome=readFileSync(new URL('../components/atlas-welcome.tsx', import.meta.url),'utf8');
+  assert.match(welcome, /Entrar como invitado/);
+  assert.match(welcome, /Recibir novedades/);
+  assert.doesNotMatch(welcome, /envidia|fetch\(|<form/);
+});
+
 test('Every opportunity has a local, attributed program or provider image', () => {
   const sources = readFileSync(
     new URL('../public/logos/SOURCES.md', import.meta.url),
@@ -68,9 +82,8 @@ test('Original stickers replace the large poster without replacing the combi ide
   assert.doesNotMatch(mark + page + layout, /chancla-mark|chancletazo|WelcomeGate/i);
   assert.doesNotMatch(atlas, /ChichaPoster|tu-envidia-es-mi-progreso-combi|geoOrthographic/);
   assert.match(atlas, /selected && <>/);
-  assert.match(atlas, /<BrandSticker kind=\{stickerKinds\[index\]\}/);
-  assert.match(atlas, /'envidia', 'latam', 'parada', 'fronteras'/);
-  assert.match(atlas, /'envidia'.*'parada'.*'fronteras'/);
+  assert.match(atlas, /<TravelSticker country=\{selected.code\} index=\{index\}/);
+  assert.doesNotMatch(atlas, /BrandSticker|envidia/);
   const sticker = readFileSync(new URL('../components/brand-sticker.tsx', import.meta.url), 'utf8');
   assert.match(sticker, /\/brand\/sticker-tu-envidia-neon\.png/);
   assert.match(sticker, /\/brand\/sticker-hecho-en-latam-neon\.png/);

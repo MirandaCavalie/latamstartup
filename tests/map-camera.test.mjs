@@ -6,7 +6,7 @@ import { feature } from 'topojson-client';
 import world from 'world-atlas/countries-110m.json' with { type: 'json' };
 import { atlasCountries } from '../lib/atlas.ts';
 import { fitMapCamera, zoomMapAt } from '../lib/map-camera.ts';
-import { countryColor, previewLimit } from '../lib/map-presentation.ts';
+import { countryColor, diversePreview, previewLimit, stickerCell } from '../lib/map-presentation.ts';
 
 const projection = geoMercator().scale(1).translate([0, 0]);
 const path = geoPath(projection);
@@ -65,7 +65,7 @@ test('Country tap coordinates can be inverted after zoom and pan', () => {
   assert.ok(geoContains(peru, restored));
 });
 
-test('Map opens directly; newsletter is optional and all original details stay available', () => {
+test('Welcome is optional, the map stays available, and all original details remain', () => {
   const page = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8');
   const atlas = readFileSync(new URL('../components/opportunity-atlas.tsx', import.meta.url), 'utf8');
   const newsletter = readFileSync(new URL('../components/newsletter-dialog.tsx', import.meta.url), 'utf8');
@@ -73,6 +73,8 @@ test('Map opens directly; newsletter is optional and all original details stay a
   assert.match(page, /onDetails=\{setDetails\}/);
   assert.match(page, /href=\{details.url\}/);
   assert.doesNotMatch(page, /if \(!entered\)|WelcomeGate/);
+  assert.match(page, /\[showWelcome, setShowWelcome\] = useState\(true\)/);
+  assert.match(atlas, /<AtlasWelcome onEnter=\{\(\) => \{ onEnter\(\); picker.current\?\.focus\(\); \}\} onNewsletter=\{onNewsletter\}/);
   assert.match(atlas, /prefers-reduced-motion: reduce/);
   assert.match(atlas, /onPointerCancel/);
   assert.match(atlas, /onLostPointerCapture/);
@@ -86,7 +88,7 @@ test('Country previews remount cleanly and stickers belong to individual cards',
   const atlas = readFileSync(new URL('../components/opportunity-atlas.tsx', import.meta.url), 'utf8');
   // Equal sibling keys left orphaned sticker layers when switching countries.
   assert.match(atlas, /key=\{`\$\{selected.code\}-\$\{item.id\}`\}/);
-  assert.match(atlas, /BrandSticker kind=\{stickerKinds\[index\]\}/);
+  assert.match(atlas, /TravelSticker country=\{selected.code\} index=\{index\}/);
   assert.doesNotMatch(atlas, /country-stickers|map-results/);
   assert.match(atlas, /key=\{`results-\$\{selected.code\}`\}/);
   assert.doesNotMatch(atlas, /key=\{selected.code\}/);
@@ -97,7 +99,7 @@ test('Map gestures block native selection/drag without disabling country keyboar
   const css = readFileSync(new URL('../app/map.css', import.meta.url), 'utf8');
   assert.match(atlas, /onDragStart=\{\(event\) => event.preventDefault\(\)\}/);
   assert.match(atlas, /onPointerDown=[\s\S]*?event.preventDefault\(\);[\s\S]*?setPointerCapture/);
-  const sticker = readFileSync(new URL('../components/brand-sticker.tsx', import.meta.url), 'utf8');
+  const sticker = readFileSync(new URL('../components/travel-sticker.tsx', import.meta.url), 'utf8');
   assert.match(sticker, /draggable=\{false\}/);
   assert.match(atlas, /event.key === 'Enter' \|\| event.key === ' '/);
   assert.match(css, /\.flat-map, \.flat-map \*[^}]*user-select: none;[^}]*-webkit-user-select: none;/);
@@ -133,10 +135,30 @@ test('Every LATAM country has a distinct valid sticker accent; previews are boun
   const colors = atlasCountries.map(country => countryColor(country.code));
   assert.equal(new Set(colors).size, atlasCountries.length);
   colors.forEach(color => assert.match(color, /^#[0-9a-f]{6}$/i));
-  assert.equal(previewLimit(1440, 800), 4);
-  assert.equal(previewLimit(1440, 600), 2);
-  assert.equal(previewLimit(1000, 759), 2);
+  assert.equal(previewLimit(1440, 900), 6);
+  assert.equal(previewLimit(1440, 620), 4);
+  assert.equal(previewLimit(1000, 559), 2);
   assert.equal(previewLimit(1000, 760), 4);
-  assert.equal(previewLimit(800, 900), 2);
-  assert.equal(previewLimit(390, 700), 2);
+  assert.equal(previewLimit(800, 900), 4);
+  assert.equal(previewLimit(390, 700), 4);
+});
+
+test('Preview includes different support categories without duplicating records', () => {
+  const records = [{id:1,category:'a'},{id:2,category:'a'},{id:3,category:'b'},{id:4,category:'c'}];
+  assert.deepEqual(diversePreview(records, 3).map(r=>r.id), [1,3,4]);
+  assert.deepEqual(diversePreview(records, 6).map(r=>r.id), [1,3,4,2]);
+  assert.deepEqual(diversePreview([], 4), []);
+});
+
+test('Seven country pairs use distinct cells and other countries receive general art', () => {
+  const pairs = ['PE','MX','CO','CL','AR','BR','EC'].flatMap(c => [stickerCell(c,0), stickerCell(c,1)]);
+  assert.equal(new Set(pairs.map(p=>p.sheet+p.cell)).size, 14);
+  for (const code of atlasCountries.map(c=>c.code)) {
+    for (let i=0;i<6;i++) {
+      const cell=stickerCell(code,i);
+      assert.ok(['andes','sur','latam'].includes(cell.sheet));
+      assert.ok(cell.cell>=0 && cell.cell<6);
+    }
+  }
+  assert.deepEqual(stickerCell('BO',0), {sheet:'latam',cell:2});
 });

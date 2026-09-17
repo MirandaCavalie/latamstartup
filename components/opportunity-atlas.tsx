@@ -14,9 +14,10 @@ import type { Opportunity } from '@/lib/opportunities';
 import { availability, availabilityLabels } from '@/lib/match';
 import { fitMapCamera, zoomMapAt } from '@/lib/map-camera';
 import type { MapCamera, MapBounds } from '@/lib/map-camera';
-import { BrandSticker } from '@/components/brand-sticker';
+import { TravelSticker } from '@/components/travel-sticker';
+import { AtlasWelcome } from '@/components/atlas-welcome';
 import { ProviderLogo } from '@/components/provider-logo';
-import { countryColor, previewLimit } from '@/lib/map-presentation';
+import { countryColor, diversePreview, previewLimit } from '@/lib/map-presentation';
 
 const topology = world as unknown as Topology<{ countries: GeometryCollection<{ name: string }> }>;
 const boundaries = feature(topology, topology.objects.countries).features;
@@ -27,9 +28,11 @@ const countries = boundaries.map((boundary) => ({
   country: atlasCountries.find((country) => country.id === String(boundary.id).padStart(3, '0')),
 }));
 const latamBounds: MapBounds = [projection([-119, 34])!, projection([-33, -57])!];
-const stickerKinds = ['envidia', 'latam', 'parada', 'fronteras'] as const;
 
-export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, onContribute, initialCountryCode, onCountryChange, now }: {
+export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, onContribute, initialCountryCode, onCountryChange, now, showWelcome, onEnter, onWelcome }: {
+  showWelcome: boolean;
+  onEnter: () => void;
+  onWelcome: () => void;
   onExplore: (scope: string) => void;
   onDetails: (item: Opportunity) => void;
   onNewsletter: () => void;
@@ -86,16 +89,17 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
     picker.current?.focus();
   };
   const selectCountry = (country: AtlasCountry) => {
+    onEnter();
     setSelected(country);
     onCountryChange(country.code);
     const boundary = countries.find((item) => item.country?.code === country.code)?.boundary;
     if (boundary) moveTo(fitMapCamera(path.bounds(boundary), size.width, size.height, true));
   };
-  const previewItems = selectedItems.slice(0, previewLimit(size.width, size.height));
+  const previewItems = diversePreview(selectedItems, previewLimit(size.width, size.height));
   const gridStep = Math.max(28, Math.min(110, camera.scale * Math.PI / 18));
 
   return (
-    <section ref={container} className={'flat-atlas' + (selected ? ' has-country' : '')} id="mapa" aria-label="Mapa de oportunidades de Latinoamérica"
+    <section ref={container} className={'flat-atlas' + (selected ? ' has-country' : '') + (showWelcome && !selected ? ' has-welcome' : '')} id="mapa" aria-label="Mapa de oportunidades de Latinoamérica"
       onKeyDown={(event) => { if (event.key === 'Escape' && selected) { reset(); picker.current?.focus(); } }}>
       <h1 className="sr-only">La Combi: explora oportunidades por país</h1>
       <svg className={'flat-map ' + (dragging ? 'is-dragging' : '')} viewBox={`0 0 ${size.width} ${size.height}`} role="group" aria-label="Mapa plano. Selecciona un país o arrastra para desplazarte."
@@ -166,9 +170,9 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
             <button className="map-icon-button" onClick={reset} aria-label="Cerrar país y volver a Latinoamérica"><X size={20} /></button>
           </div>
           {selectedItems.length ? <>
-            <div className="map-popups" aria-label="Selección de oportunidades">
+            <div className={'map-popups' + (previewItems.length > 4 ? ' layout-six' : '')} aria-label="Selección de oportunidades">
               {previewItems.map((item, index) => <button className={`map-opportunity popup-${index + 1}`} key={`${selected.code}-${item.id}`} onClick={() => onDetails(item)}>
-                <BrandSticker kind={stickerKinds[index]} />
+                <TravelSticker country={selected.code} index={index} />
                 <span className="map-card-top"><ProviderLogo id={item.id} provider={item.org} /></span>
                 <span className="map-card-category">{categoryLabels[item.category]}</span>
                 <strong>{item.name}</strong>
@@ -180,9 +184,11 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
           </> : <div className="map-empty-country"><p>Aún no hemos mapeado programas de {selected.name}. Puedes explorar las opciones regionales o ayudarnos a sumar una.</p><button className="button primary" onClick={() => onExplore('Latinoamérica')}>Ver programas regionales</button><button className="text-button" onClick={onContribute}>Proponer un programa <ArrowUpRight size={15} /></button></div>}
         </aside>
       </>}
+      {showWelcome && !selected && <AtlasWelcome onEnter={() => { onEnter(); picker.current?.focus(); }} onNewsletter={onNewsletter} />}
       <div className="map-bottom-bar">
-        {!selected && <p className="map-hint">Elige un país.<span>Tu próxima parada empieza ahí.</span></p>}
+        {!selected && !showWelcome && <p className="map-hint">Elige un país.<span>Tu próxima parada empieza ahí.</span></p>}
         <div className="map-shortcuts">
+          {!showWelcome && <button onClick={() => { reset(); onWelcome(); }}>Inicio</button>}
           <button onClick={() => onExplore('Latinoamérica')}>Programas regionales <ArrowUpRight size={13} /></button>
           <button onClick={() => onExplore('Global')}>Recursos globales <ArrowUpRight size={13} /></button>
           <button onClick={onNewsletter}><Mail size={14} /> Novedades</button>

@@ -2,7 +2,7 @@
 
 ## Qué hace
 
-Abre directamente con un mapa plano a pantalla completa debajo de la navegación; elegir un país acerca la vista y muestra sus oportunidades con logos. Las novedades por correo son opcionales y se abren desde el mapa. El atlas permite descubrir programas, aceleradoras, inversión y recursos por país, y proponer fuentes faltantes para revisión. El match pregunta el país entre los 20 del atlas y combina el catálogo local disponible con opciones regionales o globales; la inscripción sucede en el sitio de cada institución.
+Abre con una bienvenida opcional sobre el mapa plano debajo de la navegación; elegir un país acerca la vista y muestra sus oportunidades con logos. Las novedades por correo son opcionales y se abren desde el mapa. El atlas permite descubrir programas, aceleradoras, inversión y recursos por país, y proponer fuentes faltantes para revisión. El match pregunta el país entre los 20 del atlas y combina el catálogo local disponible con opciones regionales o globales; la inscripción sucede en el sitio de cada institución.
 
 ## Por qué se construyó así (build/buy/kill)
 
@@ -93,7 +93,7 @@ npm run check:links
 ## Casos límite conocidos
 
 - Mapa plano: 30 pruebas automatizadas cubren el catálogo, los 20 encuadres nacionales, zoom anclado, inversión de coordenadas después de desplazar, acceso directo, assets y consentimiento. TypeScript y compilación de producción completados; no se realizó QA de navegador de esta versión. Las comprobaciones de navegador descritas más abajo son históricas.
-- En móvil las dos tarjetas de vista previa se desplazan horizontalmente; en escritorio se muestran hasta cuatro tarjetas distribuidas alrededor del país. «Ver todas» abre la base de datos filtrada. Se reserva espacio al encuadrar para la vista previa. En pantallas de muy poca altura la página conserva una altura mínima utilizable y puede requerir desplazamiento vertical. El zoom y arrastre no requieren gestos multitáctiles: hay controles y un selector de los 20 países como alternativa.
+- En móvil hasta cuatro tarjetas de vista previa se desplazan horizontalmente; en escritorio se muestran hasta seis tarjetas distribuidas alrededor del país. «Ver todas» abre la base de datos filtrada. Se reserva espacio al encuadrar para la vista previa. En pantallas de muy poca altura la página conserva una altura mínima utilizable y puede requerir desplazamiento vertical. El zoom y arrastre no requieren gestos multitáctiles: hay controles y un selector de los 20 países como alternativa.
 - Abrir/cerrar una ficha conserva país y encuadre. La navegación visible se llama «Base de datos»; «Volver al mapa» recupera el país seleccionado y ajusta su encuadre (no conserva desplazamientos manuales). El logo también devuelve al mapa. No hay enlaces permanentes ni historial de navegador por país en esta versión. Las coordenadas representan países y no ubicaciones de programas.
 
 - Convocatorias cerradas: visibles para referencia, excluidas del match.
@@ -127,6 +127,10 @@ La publicación de una nueva ficha o el cambio de monto, fechas, gratuidad, eleg
 Cada sugerencia recibida queda en estado `pending` hasta revisión de la fuente, condiciones, logo y vigencia. No promoverla al catálogo por volumen de votos ni por recibir un formulario; no usar la lista de correos para campañas sin verificar consentimiento, bajas y proveedor elegido.
 
 ## Mantenimiento
+
+Bienvenida y souvenirs (17/09/2026, versión actual): vuelve una landing no bloqueante sobre el mapa. Ofrece invitado o el formulario de novedades existente, sin usar el antiguo WelcomeGate ni su envío obsoleto. «Inicio» vuelve a mostrarla; navegar a la base de datos la descarta hasta recargar o elegir Inicio. No se añade almacenamiento de preferencias de entrada. Las tarjetas son blancas/gris, compactas y con inclinaciones leves; se prioriza diversidad de categorías en la vista previa. Se muestran hasta seis en escritorio de 1200 × 840 px, cuatro a partir de 620 px de altura o en móvil con desplazamiento horizontal, dos en escritorio de poca altura. «Ver todas» mantiene el listado completo. Dieciocho souvenirs originales reemplazan los neones: dos para siete países y cuatro generales. Las tres láminas PNG RGBA se muestran por celda sin editar sus píxeles. Arte y prompts en `public/brand/SOUVENIR-PROMPTS.md`; no son marcas oficiales. Sin cambios en D1, recepción de correos, consentimientos ni controles de coste. Las notas siguientes documentan versiones anteriores.
+
+Verificación de la colección souvenir: 44 pruebas, TypeScript y compilación. Se revisaron visualmente bienvenida, seis tarjetas de Perú y carrusel móvil de México; el formulario de novedades abre su consentimiento desmarcado sin enviar datos de prueba a producción. Los originales tienen canal alfa real; se descartó una variante con cuadrícula opaca. La recepción sigue desactivada hasta confirmar un contacto público de privacidad.
 
 Tarjetas flotantes (17/09/2026, sustituye la distribución anterior): se retiraron las combis del mapa y el panel lateral. Cada vista previa usa un sticker existente, logo oficial y detalle original. Hasta cuatro tarjetas en ventanas de al menos 1000 × 760 px; dos en el resto, con desplazamiento horizontal móvil. Las tarjetas entran en 550 ms con desfases y sus stickers flotan hasta 5 px/4 grados; movimiento reducido desactiva ambas animaciones. Los 20 países reciben acentos distintos en hover/foco. La cuadrícula ahora es un patrón SVG de viewport, independiente del límite mundial de Mercator, para evitar el corte vertical al encuadrar o arrastrar. No cambia la información editorial, la base D1, los consentimientos ni los límites de coste. La combi se conserva como logo. Las notas inferiores de marcadores y paneles describen versiones históricas.
 
