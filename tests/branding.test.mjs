@@ -36,6 +36,8 @@ test('Original stickers replace the large poster without replacing the combi ide
   for (const [file, width, height] of [
     ['sticker-tu-envidia-neon.png', 1536, 1024],
     ['sticker-hecho-en-latam-neon.png', 1774, 887],
+    ['sticker-siguiente-parada-neon.png', 1774, 887],
+    ['sticker-ideas-sin-fronteras-neon.png', 1536, 1024],
   ]) {
     const sticker = readFileSync(new URL(`../public/brand/${file}`, import.meta.url));
     assert.equal(sticker.subarray(1, 4).toString(), 'PNG');
@@ -61,23 +63,20 @@ test('Original stickers replace the large poster without replacing the combi ide
   const combi = readFileSync(new URL('../public/brand/combi-mark.png', import.meta.url));
   assert.equal(combi.subarray(1, 4).toString(), 'PNG');
   assert.equal(combi.readUInt32BE(16), combi.readUInt32BE(20));
-  const welcome = readFileSync(new URL('../components/welcome-gate.tsx', import.meta.url), 'utf8');
   const layout = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8');
-  assert.match(welcome, /<SiteMark\s*\/>/);
   assert.match(layout, /La Combi/);
-  assert.doesNotMatch(mark + welcome + layout, /chancla-mark|chancletazo/i);
-  assert.doesNotMatch(atlas + welcome, /ChichaPoster|tu-envidia-es-mi-progreso-combi/);
-  for (const component of [atlas, welcome]) {
-    assert.match(component, /<BrandSticker kind="envidia"/);
-    assert.match(component, /<BrandSticker kind="latam"/);
-  }
+  assert.doesNotMatch(mark + page + layout, /chancla-mark|chancletazo|WelcomeGate/i);
+  assert.doesNotMatch(atlas, /ChichaPoster|tu-envidia-es-mi-progreso-combi|geoOrthographic/);
+  assert.match(atlas, /selected && <>/);
+  assert.match(atlas, /<BrandSticker kind="latam"/);
+  assert.match(atlas, /'envidia'.*'parada'.*'fronteras'/);
   const sticker = readFileSync(new URL('../components/brand-sticker.tsx', import.meta.url), 'utf8');
   assert.match(sticker, /\/brand\/sticker-tu-envidia-neon\.png/);
   assert.match(sticker, /\/brand\/sticker-hecho-en-latam-neon\.png/);
   assert.match(sticker, /aria-hidden="true"/);
   assert.doesNotMatch(sticker, /<button|onClick/);
   for (const view of ['explore', 'resources', 'matches', 'saved']) {
-    assert.ok(welcome.includes(`onNavigate('${view}')`));
+    assert.ok(page.includes(`switchView('${view}')`));
   }
   assert.match(page, /<SiteMark variant="header"/);
   assert.match(page, /<SiteMark variant="footer"/);

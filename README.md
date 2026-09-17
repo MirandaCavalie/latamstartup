@@ -2,7 +2,7 @@
 
 Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping y después Chancletazo; conserva su carpeta, URL y preferencias guardadas.
 
-- Entrada visual con globo, acceso sin cuenta dentro de la aplicación y opción voluntaria de recibir novedades; el atlas interactivo sigue después.
+- El mapa plano ocupa la pantalla inicial debajo de la navegación. No hay pantalla de acceso previa: seleccionar un país acerca el mapa y muestra programas, combi y stickers.
 - 18 oportunidades de origen peruano, 6 beneficios globales, 18 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
 
@@ -15,8 +15,8 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Afinidad explicada, sin prometer elegibilidad o aprobación.
 - Fechas con zona horaria de Perú y revisión de vigencia a los 45 días.
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
-- Interfaz minimalista blanca y negra con detalles lila y verde ácido, fondo punteado y marcos ligeros de ventana para el mapa.
-- Dos stickers originales de letras gruesas irregulares, colores neón planos y siluetas recortadas: «Tu envidia es mi progreso» y «HECHO EN LATAM». Reemplazan el póster grande; la combi ilustrada sigue siendo el logo y las banderas y marcas oficiales conservan sus colores.
+- Mapa monocromático de borde a borde, con selección, zoom y desplazamiento; tarjetas flotantes con marcas oficiales y acceso a cada ficha sin perder el país seleccionado.
+- Cuatro stickers neón originales: «Tu envidia es mi progreso», «HECHO EN LATAM», «SIGUIENTE PARADA» e «IDEAS SIN FRONTERAS». Solo aparecen al seleccionar un país; la combi es logo y marcador. Banderas y marcas oficiales conservan sus colores.
 - Entrada breve de stickers y respuesta sutil al cursor; sin bucles permanentes y con soporte de movimiento reducido.
 - Tipografía Geist para marca, títulos y lectura. La fuente y los carteles del branding anterior se conservan como archivos históricos, sin uso en la interfaz actual.
 - Logos oficiales locales en las 45 fichas, con fuentes y distinción entre marca del programa y de su institución.
@@ -61,18 +61,20 @@ La publicación incluye la interfaz, dos rutas de recepción de datos y la base 
 - `lib/latam-opportunities.ts`: fichas revisadas de los cinco países incorporados.
 - `lib/regional-opportunities.ts`: fellowships transfronterizos, cobertura, restricciones y fechas.
 - `lib/atlas.ts`: países, identificadores ISO, coordenadas de referencia y conteos derivados.
-- `components/opportunity-atlas.tsx`: globo y acceso al catálogo por origen.
-- `components/welcome-gate.tsx`: entrada y formulario voluntario de novedades.
+- `components/opportunity-atlas.tsx`: mapa plano, combis, selección y tarjetas de oportunidades por país.
+- `lib/map-camera.ts`: encuadre y zoom, con espacio reservado para tarjetas en escritorio y móvil.
+- `components/newsletter-dialog.tsx`: formulario opcional de novedades; no bloquea el mapa.
+- `components/welcome-gate.tsx`: entrada histórica, sin uso en la página actual.
 - `components/contribute.tsx`: propuesta de programas y baja de novedades.
 - `app/api/subscribe/route.ts` y `app/api/suggest/route.ts`: validación y escritura de formularios.
 - `db/schema.ts`, `db/index.ts`, `drizzle/`: estructura y migración de la base.
 - `lib/match.ts`: afinidad, búsqueda, validación de perfil y vigencia.
 - `app/page.tsx`: exploración, filtros, formulario, guardados y fichas.
-- `app/globals.css`: diseño adaptable.
-- `components/brand-sticker.tsx`: imágenes decorativas de los dos stickers actuales.
+- `app/globals.css` y `app/map.css`: diseño adaptable y superficie cartográfica.
+- `components/brand-sticker.tsx`: imágenes decorativas de los cuatro stickers actuales.
 - `components/chicha-poster.tsx`: componente histórico del cartel, actualmente sin uso.
 - `components/site-mark.tsx`: combi y nombre La Combi en entrada, encabezado y pie.
-- `public/brand/`: logo de combi, stickers y sus prompts exactos en `STICKERS-PROMPTS.md`; carteles anteriores conservados como historial.
+- `public/brand/`: logo de combi, stickers y sus prompts exactos en `STICKERS-PROMPTS.md` y `COUNTRY-STICKERS-PROMPTS.md`; carteles anteriores conservados como historial.
 - `lib/provider-logos.ts`: relación entre cada ficha y su logotipo.
 - `public/logos/SOURCES.md`: procedencia de los logos oficiales.
 - `tests/branding.test.mjs`: cobertura de imágenes, seguridad de SVG, identidad y movimiento reducido.
@@ -83,7 +85,7 @@ La publicación incluye la interfaz, dos rutas de recepción de datos y la base 
 
 ## Privacidad
 
-El perfil y los guardados se almacenan exclusivamente en localStorage en el navegador del visitante. La entrada como invitado se recuerda solo en la sesión. Si la persona marca consentimiento y envía un correo, se guarda en D1 para futuras novedades; puede retirarlo desde «Cómo funciona y privacidad». Las propuestas de programas se guardan pendientes de revisión, con un correo opcional para pedir aclaraciones; no se publican automáticamente ni se añaden a la lista de novedades. No hay envíos de correo automatizados. Los proveedores externos aplican sus propias políticas cuando el visitante abre sus enlaces. El acceso al sitio publicado sigue privado y lo controla Sites; «invitado» significa sin cuenta adicional de la aplicación, no acceso público hasta que la propietaria decida cambiarlo.
+El perfil y los guardados se almacenan exclusivamente en localStorage en el navegador del visitante. El mapa abre directamente sin registro. Si la persona marca consentimiento y envía un correo, se guarda en D1 para futuras novedades; puede retirarlo desde «Cómo funciona y privacidad». Las propuestas de programas se guardan pendientes de revisión, con un correo opcional para pedir aclaraciones; no se publican automáticamente ni se añaden a la lista de novedades. No hay envíos de correo automatizados. Los proveedores externos aplican sus propias políticas cuando el visitante abre sus enlaces. El acceso al sitio publicado sigue privado y lo controla Sites; explorar sin registro no evita ese control ni significa acceso público.
 
 ## Estado de la revisión
 
@@ -91,6 +93,6 @@ Fecha editorial inicial: 16 de septiembre de 2026; nuevas fichas regionales revi
 
 ## Cartografía y expansión
 
-El globo usa [D3 Geo](https://d3js.org/d3-geo) y [world-atlas](https://github.com/topojson/world-atlas) 2.0.2, a partir de Natural Earth 1:110m. Se incluye en el sitio, sin claves ni peticiones a un proveedor de mapas. Los marcadores sitúan países, no sedes de instituciones. Consultar `public/map-attribution.txt` para la licencia.
+El mapa plano usa [D3 Geo](https://d3js.org/d3-geo) y [world-atlas](https://github.com/topojson/world-atlas) 2.0.2, a partir de Natural Earth 1:110m. Se incluye en el sitio, sin claves ni peticiones a un proveedor de mapas. Los marcadores sitúan países, no sedes de instituciones. Consultar `public/map-attribution.txt` para la licencia.
 
 Para un nuevo país, añadir fichas revisadas con `geography` igual a su nombre en español y `countryCode` ISO alfa-2. Las opciones y conteos se derivan de los datos; nunca añadir cifras manuales. El cuestionario permite elegir los 20 países del atlas. El match combina fichas locales del país seleccionado con programas regionales o globales; no mezcla las fichas nacionales de otros países. Los programas con sede nacional y alcance regional confirmado usan `matchScope: 'Latinoamérica'`, sin cambiar su capítulo en el mapa. Cuando falta catálogo local se avisa y solo se buscan opciones transfronterizas. La afinidad no confirma elegibilidad, residencia, inscripción del negocio ni disponibilidad para viajar. Puentes queda fuera porque evalúa perfiles individuales de ingeniería. Los perfiles antiguos con un departamento peruano válido se migran a Perú conservando las otras respuestas; el país puede cambiarse desde «Editar mi perfil».

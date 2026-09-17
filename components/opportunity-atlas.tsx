@@ -1,396 +1,203 @@
 'use client';
 
-import { useId, useMemo, useRef, useState } from 'react';
-import {
-  geoContains,
-  geoDistance,
-  geoGraticule10,
-  geoOrthographic,
-  geoPath,
-} from 'd3-geo';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { geoContains, geoGraticule10, geoMercator, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import world from 'world-atlas/countries-110m.json';
-import {
-  ArrowDown,
-  ArrowRight,
-  ArrowUpRight,
-  ChevronLeft,
-  ChevronRight,
-  Globe2,
-  UsersRound,
-  RotateCcw,
-  Sparkles,
-} from 'lucide-react';
+import { ArrowUpRight, CircleHelp, Mail, Minus, Plus, RotateCcw, X } from 'lucide-react';
 import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 import type { AtlasCountry } from '@/lib/atlas';
-import { opportunities } from '@/lib/opportunities';
+import { opportunities, categoryLabels } from '@/lib/opportunities';
+import type { Opportunity } from '@/lib/opportunities';
+import { availability, availabilityLabels } from '@/lib/match';
+import { fitMapCamera, zoomMapAt } from '@/lib/map-camera';
+import type { MapCamera, MapBounds } from '@/lib/map-camera';
 import { BrandSticker } from '@/components/brand-sticker';
+import { ProviderLogo } from '@/components/provider-logo';
 
-const topology = world as unknown as Topology<{
-  countries: GeometryCollection<{ name: string }>;
-}>;
+const topology = world as unknown as Topology<{ countries: GeometryCollection<{ name: string }> }>;
 const boundaries = feature(topology, topology.objects.countries).features;
-const graticule = geoGraticule10();
-const initialRotation: [number, number, number] = [78, 8, -8];
+const projection = geoMercator().scale(1).translate([0, 0]);
+const path = geoPath(projection).digits(6);
+const graticulePath = path(geoGraticule10()) ?? '';
+const countries = boundaries.map((boundary) => ({
+  boundary, d: path(boundary) ?? '',
+  country: atlasCountries.find((country) => country.id === String(boundary.id).padStart(3, '0')),
+}));
+const latamBounds: MapBounds = [projection([-119, 34])!, projection([-33, -57])!];
+const mapped = atlasCountries.filter((country) => countryOpportunities(opportunities, country).length > 0);
 
-export function OpportunityAtlas({
-  onExplore,
-  onMatch,
-}: {
+export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, onContribute, now }: {
   onExplore: (scope: string) => void;
-  onMatch: () => void;
+  onDetails: (item: Opportunity) => void;
+  onNewsletter: () => void;
+  onAbout: () => void;
+  onContribute: () => void;
+  now: Date;
 }) {
-  const [selected, setSelected] = useState<AtlasCountry>(atlasCountries[0]);
-  const [rotation, setRotation] = useState(initialRotation);
+  const container = useRef<HTMLElement>(null);
+  const picker = useRef<HTMLSelectElement>(null);
+  const [size, setSize] = useState({ width: 1440, height: 800 });
+  const [selected, setSelected] = useState<AtlasCountry | null>(null);
   const [dragging, setDragging] = useState(false);
-  const drag = useRef<{
-    x: number;
-    y: number;
-    start: typeof initialRotation;
-    moved: boolean;
-  } | null>(null);
-  const patternId = useId().replace(/:/g, '');
-  const projection = useMemo(
-    () =>
-      geoOrthographic()
-        .translate([360, 350])
-        .scale(296)
-        .rotate(rotation)
-        .clipAngle(90),
-    [rotation],
-  );
-  const path = useMemo(() => geoPath(projection), [projection]);
-  const selectedItems = countryOpportunities(opportunities, selected);
-  const globals = opportunities.filter((item) => item.geography === 'Global');
-  const regionals = opportunities.filter((item) => item.geography === 'Latinoamérica');
-  const mappedCountries = atlasCountries.filter(
-    (country) => countryOpportunities(opportunities, country).length,
-  );
-  const selectedPoint = projection([...selected.coordinates]);
-  const pointIsVisible =
-    geoDistance([...selected.coordinates], [-rotation[0], -rotation[1]]) <
-    Math.PI / 2;
+  const [camera, setCamera] = useState<MapCamera>(() => fitMapCamera(latamBounds, 1440, 800));
+  const cameraRef = useRef(camera);
+  const animation = useRef<number>(0);
+  const drag = useRef<{ id: number; x: number; y: number; start: MapCamera; moved: boolean } | null>(null);
+
+  const updateCamera = (next: MapCamera) => { cameraRef.current = next; setCamera(next); };
+  function moveTo(next: MapCamera) {
+    cancelAnimationFrame(animation.current);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { updateCamera(next); return; }
+    const from = cameraRef.current;
+    const started = performance.now();
+    const frame = (time: number) => {
+      const progress = Math.min(1, (time - started) / 650);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      updateCamera({ x: from.x + (next.x - from.x) * ease, y: from.y + (next.y - from.y) * ease, scale: from.scale + (next.scale - from.scale) * ease });
+      if (progress < 1) animation.current = requestAnimationFrame(frame);
+    };
+    animation.current = requestAnimationFrame(frame);
+  }
+  useEffect(() => {
+    if (!container.current) return;
+    const observer = new ResizeObserver(([entry]) => setSize({ width: entry.contentRect.width, height: entry.contentRect.height }));
+    observer.observe(container.current);
+    return () => { observer.disconnect(); cancelAnimationFrame(animation.current); };
+  }, []);
+  useEffect(() => {
+    const boundary = selected && countries.find((item) => item.country?.code === selected.code)?.boundary;
+    moveTo(fitMapCamera(boundary ? path.bounds(boundary) : latamBounds, size.width, size.height, !!selected));
+    // Only selection/resize reframes the map; manual panning remains independent.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, size.width, size.height]);
+
+  const selectedItems = useMemo(() => selected ? countryOpportunities(opportunities, selected).sort((a, b) =>
+    Number(availability(a, now) === 'closed') - Number(availability(b, now) === 'closed')) : [], [selected, now]);
+  const reset = () => {
+    setSelected(null);
+    moveTo(fitMapCamera(latamBounds, size.width, size.height));
+    picker.current?.focus();
+  };
   const selectCountry = (country: AtlasCountry) => {
     setSelected(country);
-    setRotation([-country.coordinates[0], -country.coordinates[1], -8]);
+    const boundary = countries.find((item) => item.country?.code === country.code)?.boundary;
+    if (boundary) moveTo(fitMapCamera(path.bounds(boundary), size.width, size.height, true));
   };
+  const markers = selected ? [selected] : mapped;
 
   return (
-    <section className="atlas-section" id="mapa" aria-labelledby="atlas-title">
-      <div className="atlas-main">
-        <div className="atlas-copy">
-          <BrandSticker kind="envidia" />
-          <h1 id="atlas-title" className="atlas-headline">Tu próxima<br />parada<span>.</span></h1>
-          <div className="atlas-actions">
-            <button
-              className="button atlas-primary"
-              onClick={() => onExplore('all')}
-            >
-              Explorar oportunidades <ArrowDown size={18} />
-            </button>
-            <button className="atlas-match-link" onClick={onMatch}>
-              <Sparkles size={17} /> Haz tu match
-            </button>
-          </div>
+    <section ref={container} className={'flat-atlas' + (selected ? ' has-country' : '')} id="mapa" aria-label="Mapa de oportunidades de Latinoamérica"
+      onKeyDown={(event) => { if (event.key === 'Escape' && selected) { reset(); picker.current?.focus(); } }}>
+      <h1 className="sr-only">La Combi: explora oportunidades por país</h1>
+      <svg className={'flat-map ' + (dragging ? 'is-dragging' : '')} viewBox={`0 0 ${size.width} ${size.height}`} role="group" aria-label="Mapa plano. Selecciona un país o arrastra para desplazarte."
+        onPointerDown={(event) => {
+          if (event.button !== 0 || drag.current) return;
+          cancelAnimationFrame(animation.current);
+          drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY, start: cameraRef.current, moved: false };
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }}
+        onPointerMove={(event) => {
+          const current = drag.current;
+          if (!current || current.id !== event.pointerId) return;
+          const dx = event.clientX - current.x;
+          const dy = event.clientY - current.y;
+          if (!current.moved && Math.abs(dx) + Math.abs(dy) < 6) return;
+          current.moved = true; setDragging(true);
+          updateCamera({ ...current.start, x: current.start.x + dx, y: current.start.y + dy });
+        }}
+        onPointerUp={(event) => {
+          const current = drag.current;
+          if (!current || current.id !== event.pointerId) return;
+          if (!current.moved) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const live = cameraRef.current;
+            const point = projection.invert?.([(event.clientX - rect.left - live.x) / live.scale, (event.clientY - rect.top - live.y) / live.scale]);
+            const hit = point && countries.find((item) => item.country && geoContains(item.boundary, point));
+            if (hit?.country) selectCountry(hit.country);
+          }
+          drag.current = null; setDragging(false);
+          if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+        }}
+        onPointerCancel={() => { drag.current = null; setDragging(false); }}
+        onLostPointerCapture={() => { drag.current = null; setDragging(false); }}>
+        <g transform={`translate(${camera.x} ${camera.y}) scale(${camera.scale})`}>
+          <path d={graticulePath} className="flat-graticule" vectorEffect="non-scaling-stroke" />
+          {countries.map(({ boundary, d, country }) => (
+            <path key={boundary.id} d={d} vectorEffect="non-scaling-stroke"
+              className={'flat-country' + (country ? ' is-latam' : '') + (selected?.code === country?.code && country ? ' is-selected' : '')}
+              role={country ? 'button' : undefined} tabIndex={country ? 0 : undefined}
+              aria-label={country ? `Explorar ${country.name}` : undefined} aria-pressed={country ? selected?.code === country.code : undefined}
+              onKeyDown={country ? (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectCountry(country); } } : undefined}>
+              {country && <title>{country.name}</title>}
+            </path>
+          ))}
+        </g>
+      </svg>
+      <div className="map-picker">
+        <label htmlFor="map-country">Explorar</label>
+        <select ref={picker} id="map-country" value={selected?.code ?? ''} onChange={(event) => {
+          const country = atlasCountries.find((item) => item.code === event.target.value);
+          if (country) selectCountry(country); else reset();
+        }}>
+          <option value="">Latinoamérica</option>
+          {atlasCountries.map((country) => <option key={country.code} value={country.code}>{country.flag} {country.name}</option>)}
+        </select>
+      </div>
+      <div className="map-markers">
+        {markers.map((country) => {
+          const point = projection([...country.coordinates])!;
+          const x = camera.x + point[0] * camera.scale;
+          const y = camera.y + point[1] * camera.scale;
+          if (x < -60 || x > size.width + 60 || y < -60 || y > size.height + 60) return null;
+          return <button key={country.code} className={'map-bus' + (selected ? ' is-current' : '')} style={{ left: x, top: y }} onClick={() => selectCountry(country)} aria-label={`Explorar ${country.name}`} aria-pressed={selected?.code === country.code}>
+            <img src="/brand/combi-mark.png" width="48" height="48" alt="" />
+            <span>{country.flag} {country.name}</span>
+          </button>;
+        })}
+      </div>
+      {selected && <>
+        <div className="country-stickers" key={selected.code} aria-hidden="true">
+          <BrandSticker kind={selected.code === 'PE' ? 'envidia' : selected.code === 'MX' || selected.code === 'CO' ? 'parada' : 'fronteras'} />
           <BrandSticker kind="latam" />
         </div>
-        <div className="globe-stage">
-          <div className="map-window-bar" aria-hidden="true"><span className="window-dots"><i /><i /><i /></span><span>latam.map</span><Globe2 size={14} /></div>
-          <svg
-            viewBox="0 0 720 700"
-            className={'atlas-globe ' + (dragging ? 'is-dragging' : '')}
-            role="group"
-            aria-label="Globo de Latinoamérica. Arrastra para girar o usa los controles. Selecciona un país en la lista inferior."
-            onPointerDown={(event) => {
-              if (event.button !== 0) return;
-              drag.current = {
-                x: event.clientX,
-                y: event.clientY,
-                start: [...rotation],
-                moved: false,
-              };
-              event.currentTarget.setPointerCapture(event.pointerId);
-              setDragging(true);
-            }}
-            onPointerMove={(event) => {
-              if (!drag.current) return;
-              const dx = event.clientX - drag.current.x;
-              const dy = event.clientY - drag.current.y;
-              if (Math.abs(dx) + Math.abs(dy) < 4) return;
-              drag.current.moved = true;
-              setRotation([
-                drag.current.start[0] + dx * 0.28,
-                Math.max(-60, Math.min(60, drag.current.start[1] - dy * 0.28)),
-                -8,
-              ]);
-            }}
-            onPointerUp={(event) => {
-              // Resolve a tap geometrically because pointer capture retargets SVG clicks.
-              if (drag.current && !drag.current.moved) {
-                const rect = event.currentTarget.getBoundingClientRect();
-                const coordinates = projection.invert?.([
-                  ((event.clientX - rect.left) * 720) / rect.width,
-                  ((event.clientY - rect.top) * 700) / rect.height,
-                ]);
-                if (coordinates) {
-                  const boundary = boundaries.find((item) =>
-                    geoContains(item, coordinates),
-                  );
-                  const country =
-                    boundary &&
-                    atlasCountries.find(
-                      (item) =>
-                        item.id === String(boundary.id).padStart(3, '0'),
-                    );
-                  if (country) selectCountry(country);
-                }
-              }
-              drag.current = null;
-              setDragging(false);
-            }}
-            onPointerCancel={() => {
-              drag.current = null;
-              setDragging(false);
-            }}
-            onLostPointerCapture={() => {
-              drag.current = null;
-              setDragging(false);
-            }}
-          >
-            <defs>
-              <radialGradient
-                id={patternId + 'ocean'}
-                cx="36%"
-                cy="30%"
-                r="72%"
-              >
-                <stop offset="0%" stopColor="#ffffff" />
-                <stop offset="72%" stopColor="#f6f5f8" />
-                <stop offset="100%" stopColor="#e9e7ee" />
-              </radialGradient>
-              <pattern
-                id={patternId + 'dots'}
-                width="4.5"
-                height="4.5"
-                patternUnits="userSpaceOnUse"
-              >
-                <circle cx="2" cy="2" r="1.05" fill="#9b97a7" />
-              </pattern>
-              <pattern
-                id={patternId + 'active'}
-                width="4.5"
-                height="4.5"
-                patternUnits="userSpaceOnUse"
-              >
-                <rect width="4.5" height="4.5" fill="#ddd4f4" />
-                <circle cx="2" cy="2" r="1.3" fill="#514460" />
-              </pattern>
-              <filter
-                id={patternId + 'shadow'}
-                x="-30%"
-                y="-30%"
-                width="160%"
-                height="180%"
-              >
-                <feDropShadow
-                  dx="0"
-                  dy="23"
-                  stdDeviation="20"
-                  floodColor="#414141"
-                  floodOpacity=".10"
-                />
-              </filter>
-            </defs>
-            <circle cx="360" cy="350" r="320" className="globe-orbit" />
-            <circle
-              cx="360"
-              cy="350"
-              r="296"
-              fill={`url(#${patternId}ocean)`}
-              filter={`url(#${patternId}shadow)`}
-              stroke="#dedede"
-              strokeWidth=".8"
-            />
-            <path
-              d={path(graticule) ?? ''}
-              fill="none"
-              stroke="#d6d6d6"
-              strokeWidth=".65"
-              opacity=".65"
-            />
-            {boundaries.map((boundary, index) => {
-              const country = atlasCountries.find(
-                (c) => c.id === String(boundary.id).padStart(3, '0'),
-              );
-              const isSelected = country?.code === selected.code;
-              return (
-                <path
-                  key={boundary.id ?? index}
-                  d={path(boundary) ?? ''}
-                  fill={`url(#${patternId}${isSelected ? 'active' : 'dots'})`}
-                  stroke={isSelected ? '#514460' : '#adadad'}
-                  strokeWidth={isSelected ? 1.2 : 0.5}
-                  className={country ? 'globe-country' : 'globe-land'}
-                  opacity={country ? 1 : 0.5}
-                >
-                  <title>{country?.name ?? boundary.properties?.name}</title>
-                </path>
-              );
-            })}
-            {pointIsVisible && selectedPoint && (
-              <g
-                transform={`translate(${selectedPoint[0]},${selectedPoint[1]})`}
-                aria-hidden="true"
-              >
-                <circle r="17" fill="#d4c6fa" opacity=".55" />
-                <circle r="8" fill="#25212c" stroke="#ffffff" strokeWidth="3" />
-                <path
-                  d="M 8 -7 L 32 -33 H 94"
-                  fill="none"
-                  stroke="#4c4c4c"
-                  strokeWidth="1.2"
-                />
-                <rect
-                  x="31"
-                  y="-54"
-                  width={selected.name.length > 12 ? 162 : 105}
-                  height="29"
-                  rx="6"
-                  fill="#25212c"
-                />
-                <text
-                  x="43"
-                  y="-34"
-                  fill="#ffffff"
-                  fontSize="14"
-                  fontWeight="600"
-                >
-                  {selected.name}
-                </text>
-              </g>
-            )}
-          </svg>
-          <div className="atlas-count-card">
-            <span className="atlas-count-icon">
-              <Globe2 size={20} />
-            </span>
-            <div>
-              <strong>{opportunities.length}</strong>
-              <span>oportunidades en ruta</span>
-            </div>
-            <span className="count-card-spark" aria-hidden="true">
-              ✳
-            </span>
+        <aside key={selected.code} className="map-results" aria-label={`Oportunidades de ${selected.name}`}>
+          <div className="map-country-heading">
+            <div><span className="map-chapter">{selectedItems.length ? `${selectedItems.length} oportunidades` : 'Por mapear'}</span><h2>{selected.flag} {selected.name}</h2></div>
+            <button className="map-icon-button" onClick={reset} aria-label="Cerrar país y volver a Latinoamérica"><X size={20} /></button>
           </div>
-          <div className="country-preview" aria-live="polite">
-            <div className="country-preview-top">
-              <span className="country-flag" aria-hidden="true">
-                {selected.flag}
-              </span>
-              <span
-                className={
-                  'country-state ' + (selectedItems.length ? 'mapped' : '')
-                }
-              >
-                {selectedItems.length ? 'EN EL MAPA' : 'POR MAPEAR'}
-              </span>
+          {selectedItems.length ? <>
+            <div className="map-opportunities" tabIndex={0} aria-label="Lista de oportunidades; desplázate para ver más">
+              {selectedItems.map((item) => <button className="map-opportunity" key={item.id} onClick={() => onDetails(item)}>
+                <span className="map-card-top"><ProviderLogo id={item.id} provider={item.org} /><ArrowUpRight size={17} /></span>
+                <span className="map-card-category">{categoryLabels[item.category]}</span>
+                <strong>{item.name}</strong>
+                <span className="map-card-org">{item.org}</span>
+                <span className="map-card-status"><i className={'status-dot ' + availability(item, now)} />{availabilityLabels[availability(item, now)]}</span>
+              </button>)}
             </div>
-            <h2>{selected.name}</h2>
-            <p>
-              {selectedItems.length
-                ? `${selectedItems.length} programas y recursos en este mapa.`
-                : 'Aún no hemos mapeado programas aquí.'}
-            </p>
-            {selectedItems.length ? (
-              <button onClick={() => onExplore(selected.name)}>
-                Explorar {selected.name} <ArrowUpRight size={18} />
-              </button>
-            ) : (
-              <button onClick={() => selectCountry(atlasCountries[0])}>
-                Volver a Perú <ArrowRight size={17} />
-              </button>
-            )}
-          </div>
-          <div className="globe-controls">
-            <span>Arrastra para explorar</span>
-            <div>
-              <button
-                aria-label="Girar globo a la izquierda"
-                onClick={() => setRotation(([x, y, z]) => [x - 20, y, z])}
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                aria-label="Centrar globo en Latinoamérica"
-                onClick={() => setRotation(initialRotation)}
-              >
-                <RotateCcw size={15} />
-              </button>
-              <button
-                aria-label="Girar globo a la derecha"
-                onClick={() => setRotation(([x, y, z]) => [x + 20, y, z])}
-              >
-                <ChevronRight size={18} />
-              </button>
-            </div>
-          </div>
+            <button className="map-catalog-link" onClick={() => onExplore(selected.name)}>Ver en catálogo <ArrowUpRight size={16} /></button>
+          </> : <div className="map-empty-country"><p>Aún no hemos mapeado programas de {selected.name}. Puedes explorar las opciones regionales o ayudarnos a sumar una.</p><button className="button primary" onClick={() => onExplore('Latinoamérica')}>Ver programas regionales</button><button className="text-button" onClick={onContribute}>Proponer un programa <ArrowUpRight size={15} /></button></div>}
+        </aside>
+      </>}
+      <div className="map-bottom-bar">
+        {!selected && <p className="map-hint">Elige un país.<span>Tu próxima parada empieza ahí.</span></p>}
+        <div className="map-shortcuts">
+          <button onClick={() => onExplore('Latinoamérica')}>Programas regionales <ArrowUpRight size={13} /></button>
+          <button onClick={() => onExplore('Global')}>Recursos globales <ArrowUpRight size={13} /></button>
+          <button onClick={onNewsletter}><Mail size={14} /> Novedades</button>
+          <button onClick={onContribute}>Colabora</button>
+          <button onClick={onAbout} aria-label="Cómo funciona y privacidad"><CircleHelp size={17} /></button>
         </div>
+        <span className="map-attribution">Natural Earth · Marcadores por país, no por sede</span>
       </div>
-      <div className="atlas-country-bar">
-        <div className="country-bar-heading">
-          <span>ELIGE TU PUNTO DE PARTIDA</span>
-          <small>
-            {mappedCountries.length}{' '}
-            {mappedCountries.length === 1 ? 'país' : 'países'} con catálogo ·
-            más por explorar
-          </small>
-        </div>
-        <div
-          className="country-rail"
-          role="group"
-          aria-label="Países de Latinoamérica"
-        >
-          {atlasCountries.map((country) => (
-            <button
-              key={country.code}
-              className={
-                'country-chip ' +
-                (selected.code === country.code ? 'selected' : '')
-              }
-              aria-pressed={selected.code === country.code}
-              onClick={() => selectCountry(country)}
-            >
-              <span aria-hidden="true">{country.flag}</span>
-              {country.name}
-              <span className="country-chip-count">
-                {countryOpportunities(opportunities, country).length ||
-                  'Por mapear'}
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="international-paths">
-          <button className="global-benefits" onClick={() => onExplore('Latinoamérica')}>
-            <UsersRound size={18} />
-            <span>
-              <strong>Oportunidades para LATAM.</strong> Explora{' '}
-              {regionals.length} fellowships e intercambios regionales.
-              <small>Compara cobertura, edad y plazos antes de postular.</small>
-            </span>
-            <ArrowUpRight size={21} />
-          </button>
-          <button className="global-benefits" onClick={() => onExplore('Global')}>
-            <Globe2 size={18} />
-            <span>
-              <strong>¿Tu idea no tiene fronteras?</strong> Explora{' '}
-              {globals.length} beneficios globales.
-              <small>Revisa la elegibilidad de tu país en cada proveedor.</small>
-            </span>
-            <ArrowUpRight size={21} />
-          </button>
-        </div>
+      <div className="map-controls" aria-label="Controles del mapa">
+        <button onClick={reset} aria-label="Ver toda Latinoamérica" title="Ver Latinoamérica"><RotateCcw size={18} /></button>
+        <button onClick={() => moveTo(zoomMapAt(cameraRef.current, 1.4, [size.width * (selected && size.width >= 760 ? .35 : .5), size.height * (selected && size.width < 760 ? .3 : .5)]))} aria-label="Acercar mapa"><Plus size={20} /></button>
+        <button onClick={() => moveTo(zoomMapAt(cameraRef.current, 1 / 1.4, [size.width * (selected && size.width >= 760 ? .35 : .5), size.height * (selected && size.width < 760 ? .3 : .5)]))} aria-label="Alejar mapa"><Minus size={20} /></button>
       </div>
+      <p className="sr-only" role="status">{selected ? `${selected.name}: ${selectedItems.length} oportunidades en el catálogo. Los marcadores no indican sedes físicas.` : 'Selecciona un país para ver sus oportunidades.'}</p>
     </section>
   );
 }

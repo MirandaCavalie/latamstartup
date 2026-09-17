@@ -2,7 +2,7 @@
 
 ## Qué hace
 
-Abre con una entrada visual que permite pasar al atlas como invitado o apuntarse voluntariamente a novedades. El atlas permite descubrir programas, aceleradoras, inversión y recursos por país, y proponer fuentes faltantes para revisión. El match pregunta el país entre los 20 del atlas y combina el catálogo local disponible con opciones regionales o globales; la inscripción sucede en el sitio de cada institución.
+Abre directamente con un mapa plano a pantalla completa debajo de la navegación; elegir un país acerca la vista y muestra sus oportunidades con logos. Las novedades por correo son opcionales y se abren desde el mapa. El atlas permite descubrir programas, aceleradoras, inversión y recursos por país, y proponer fuentes faltantes para revisión. El match pregunta el país entre los 20 del atlas y combina el catálogo local disponible con opciones regionales o globales; la inscripción sucede en el sitio de cada institución.
 
 ## Por qué se construyó así (build/buy/kill)
 
@@ -52,6 +52,8 @@ El Site permanece con acceso privado de una sola persona. «Invitado» significa
 
 Actualización de stickers (17/09/2026): se reemplazaron únicamente las dos ilustraciones decorativas por tipografía gruesa e irregular, fucsia/verde eléctrico y una estrella amarilla/violeta, siguiendo las nuevas referencias del usuario. Se conserva la interfaz minimalista, posiciones, animaciones accesibles, navegación, mapa y catálogo. Los nuevos archivos llevan sufijo `-neon` para evitar imágenes antiguas en caché; los anteriores siguen disponibles como historial. Procedencia y prompts en `public/brand/STICKERS-PROMPTS.md`.
 
+Mapa como superficie principal (17/09/2026): se eliminó el paso de bienvenida del flujo activo y el globo se sustituyó por Mercator con zoom y desplazamiento. La combi marca países, no oficinas; seleccionar cualquiera de los 20 países muestra su catálogo local o un aviso de falta de fichas. Las tarjetas abren el detalle existente, conservando mapa y país detrás, y enlazan al proveedor oficial. Los cuatro stickers solo se montan después de seleccionar un país; los dos nuevos se documentan en `public/brand/COUNTRY-STICKERS-PROMPTS.md`. Se preservan catálogo, recursos, guardados, match, propuestas, bajas y consentimiento para correo. Ya no se utiliza la antigua preferencia de entrada de sesión. El botón del logo vuelve al mapa; el selector y restablecer permiten cambiar de país. No se añadieron empleos, sedes inventadas ni nuevos programas.
+
 ## Cómo correrlo
 
 1. Instalar Node 22.18 o posterior y npm (pruebas ejecutadas con Node 26.7).
@@ -88,6 +90,10 @@ npm run check:links
 - Persistencia: D1 contiene `subscribers` y `suggestions`, separadas del perfil y guardados locales. La baja borra un correo de la lista. No se generan postulaciones ni se envían correos, mensajes o solicitudes a instituciones desde el sitio.
 
 ## Casos límite conocidos
+
+- Mapa plano: 30 pruebas automatizadas cubren el catálogo, los 20 encuadres nacionales, zoom anclado, inversión de coordenadas después de desplazar, acceso directo, assets y consentimiento. TypeScript y compilación de producción completados; no se realizó QA de navegador de esta versión. Las comprobaciones de navegador descritas más abajo son históricas.
+- En móvil las tarjetas se desplazan horizontalmente; en escritorio, verticalmente. Se reserva espacio al encuadrar para que el panel no tape el país. En pantallas de muy poca altura la página conserva una altura mínima utilizable y puede requerir desplazamiento vertical. El zoom y arrastre no requieren gestos multitáctiles: hay controles y un selector de los 20 países como alternativa.
+- Abrir/cerrar una ficha conserva país y encuadre. Navegar al catálogo y volver desde el logo reinicia la vista regional. No hay enlaces permanentes ni historial de navegador por país en esta versión. Las coordenadas representan países y no ubicaciones de programas.
 
 - Convocatorias cerradas: visibles para referencia, excluidas del match.
 - Fechas: se almacenan con desfase explícito de la fuente, normalmente UTC-5 y, para Puentes, UTC-7. Cuando solo se publica el día, se utiliza el final del día de manera editorial y se advierte que la hora real debe verificarse.

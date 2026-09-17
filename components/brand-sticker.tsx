@@ -1,11 +1,16 @@
 // Decorative artwork: never a button, never a replacement for the site logo.
-export function BrandSticker({ kind }: { kind: 'envidia' | 'latam' }) {
+const stickers = {
+  envidia: { src: '/brand/sticker-tu-envidia-neon.png', width: 1536, height: 1024 },
+  latam: { src: '/brand/sticker-hecho-en-latam-neon.png', width: 1774, height: 887 },
+  parada: { src: '/brand/sticker-siguiente-parada-neon.png', width: 1774, height: 887 },
+  fronteras: { src: '/brand/sticker-ideas-sin-fronteras-neon.png', width: 1536, height: 1024 },
+};
+
+export function BrandSticker({ kind }: { kind: keyof typeof stickers }) {
   return (
     <span className={`brand-sticker sticker-${kind}`} aria-hidden="true">
       <img
-        src={kind === 'envidia' ? '/brand/sticker-tu-envidia-neon.png' : '/brand/sticker-hecho-en-latam-neon.png'}
-        width={kind === 'envidia' ? 1536 : 1774}
-        height={kind === 'envidia' ? 1024 : 887}
+        {...stickers[kind]}
         alt=""
         decoding="async"
       />

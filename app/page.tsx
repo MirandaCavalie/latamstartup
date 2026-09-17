@@ -86,7 +86,7 @@ import { useMappingTools } from '@/lib/webmcp';
 import { OpportunityAtlas } from '@/components/opportunity-atlas';
 import { SiteMark } from '@/components/site-mark';
 import { ProviderLogo } from '@/components/provider-logo';
-import { WelcomeGate } from '@/components/welcome-gate';
+import { NewsletterDialog } from '@/components/newsletter-dialog';
 import { Contribute, UnsubscribeForm } from '@/components/contribute';
 import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 
@@ -487,6 +487,8 @@ function MatchQuiz({
 
 export default function Home() {
   const [view, setView] = useState<View>('explore');
+  const [surface, setSurface] = useState<'map' | 'catalog'>('map');
+  const [newsletterOpen, setNewsletterOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const [orgType, setOrgType] = useState('all');
@@ -503,12 +505,10 @@ export default function Home() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [announcement, setAnnouncement] = useState('');
   const [storageError, setStorageError] = useState(false);
-  const [entered, setEntered] = useState(false);
   const [now, setNow] = useState(
     () => new Date(CATALOG_REVIEWED + 'T12:00:00-05:00'),
   );
   useEffect(() => {
-    try { setEntered(sessionStorage.getItem('chancletazo.entered.v1') === 'yes'); } catch { /* La entrada funciona igual sin almacenamiento. */ }
     setNow(new Date());
     try {
       const localSaved: unknown = JSON.parse(
@@ -536,10 +536,6 @@ export default function Home() {
     const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
-  const enterMap = () => {
-    setEntered(true);
-    try { sessionStorage.setItem('chancletazo.entered.v1', 'yes'); } catch { /* No es necesario para explorar. */ }
-  };
   useEffect(() => {
     if (loaded) {
       try {
@@ -641,9 +637,10 @@ export default function Home() {
     setSort('recommended');
   };
   const switchView = (v: View) => {
+    setSurface('catalog');
     setView(v);
     resetFilters();
-    scrollToCatalog();
+    requestAnimationFrame(scrollToCatalog);
   };
   const toggleSaved = (id: string) => {
     setSaved((prev) =>
@@ -676,11 +673,11 @@ export default function Home() {
     setQuery,
     category,
     setCategory,
-    view,
-    setView,
+    view: surface === 'map' ? 'map' : view,
+    setView: (nextView) => { setView(nextView); setSurface('catalog'); requestAnimationFrame(scrollToCatalog); },
     saved,
     setSaved,
-    visible: filtered,
+    visible: surface === 'map' ? [] : filtered,
     resetFilters,
   });
   const title =
@@ -775,24 +772,13 @@ export default function Home() {
     </>
   );
 
-  if (!entered) return <WelcomeGate
-    onEnter={enterMap}
-    onNavigate={(nextView) => {
-      enterMap();
-      setView(nextView);
-      resetFilters();
-      requestAnimationFrame(scrollToCatalog);
-    }}
-    onMatch={() => { enterMap(); setQuizOpen(true); }}
-  />;
-
   return (
     <Tabs
-      value={view}
+      value={surface === 'map' ? 'map' : view}
       onValueChange={(value) => switchView(value as View)}
-      className="site-shell"
+      className={'site-shell ' + (surface === 'map' ? 'map-mode' : 'catalog-mode')}
     >
-      <a className="skip-link" href="#oportunidades">
+      <a className="skip-link" href="#oportunidades" onClick={() => switchView('explore')}>
         Saltar a oportunidades
       </a>
       <header className="site-header">
@@ -802,7 +788,7 @@ export default function Home() {
           aria-label="La Combi, volver al mapa"
           onClick={(event) => {
             event.preventDefault();
-            document.getElementById('mapa')?.scrollIntoView({ block: 'start' });
+            setSurface('map');
           }}
         >
           <SiteMark variant="header" />
@@ -815,21 +801,21 @@ export default function Home() {
           <TabsTrigger
             className="nav-link"
             value="explore"
-            onClick={scrollToCatalog}
+            onClick={() => switchView('explore')}
           >
             Catálogo
           </TabsTrigger>
           <TabsTrigger
             className="nav-link"
             value="resources"
-            onClick={scrollToCatalog}
+            onClick={() => switchView('resources')}
           >
             Recursos
           </TabsTrigger>
           <TabsTrigger
             className="nav-link"
             value="matches"
-            onClick={scrollToCatalog}
+            onClick={() => switchView('matches')}
           >
             <Sparkles size={15} />
             Mis matches
@@ -838,7 +824,7 @@ export default function Home() {
           <TabsTrigger
             className="nav-link"
             value="saved"
-            onClick={scrollToCatalog}
+            onClick={() => switchView('saved')}
           >
             <Bookmark size={16} />
             Guardados<span className="count-pill">{saved.length}</span>
@@ -849,14 +835,18 @@ export default function Home() {
           <span>{profile ? 'Editar mi perfil' : 'Hacer mi match'}</span>
         </button>
       </header>
-      <OpportunityAtlas
+      {surface === 'map' && <OpportunityAtlas
         onExplore={(selectedScope) => {
           switchView('explore');
           setScope(selectedScope);
         }}
-        onMatch={() => setQuizOpen(true)}
-      />
-      <main className="main-wrap">
+        onDetails={setDetails}
+        onNewsletter={() => setNewsletterOpen(true)}
+        onAbout={() => setAboutOpen(true)}
+        onContribute={() => { switchView('explore'); requestAnimationFrame(() => document.getElementById('colabora')?.scrollIntoView({ block: 'start' })); }}
+        now={now}
+      />}
+      <main className="main-wrap" hidden={surface === 'map'}>
         <div className="catalog-anchor" id="catalogo" />
         <div className="workspace">
           <aside
@@ -1102,9 +1092,8 @@ export default function Home() {
             className="footer-atlas-brand"
             onClick={(event) => {
               event.preventDefault();
-              document
-                .getElementById('mapa')
-                ?.scrollIntoView({ block: 'start' });
+              setSurface('map');
+              window.scrollTo({ top: 0 });
             }}
           >
             <SiteMark variant="footer" />
@@ -1126,6 +1115,7 @@ export default function Home() {
           {announcement}
         </div>
       </main>
+      <NewsletterDialog open={newsletterOpen} onOpenChange={setNewsletterOpen} />
       <MatchQuiz
         open={quizOpen}
         setOpen={setQuizOpen}
@@ -1362,7 +1352,7 @@ export default function Home() {
               el correo opcional que escribas. No vinculamos esos datos con tu
               perfil de match. Puedes eliminar tu perfil desde Mis matches,
               quitar cada guardado con su marcador y retirar tu correo desde
-              el formulario de novedades. Revisamos sugerencias antes de
+              esta sección. Revisamos sugerencias antes de
               publicarlas; no enviamos correos automáticos desde el sitio.
             </p>
             <UnsubscribeForm />
