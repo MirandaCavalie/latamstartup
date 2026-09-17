@@ -7,7 +7,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "preview_urls": false,
-  "limits": { "cpu_ms": 50 },
+  "limits": { "cpu_ms": 50, "subrequests": 10 },
   "vars": { "COLLECTION_ENABLED": "false", "PRIVACY_CONTACT_EMAIL": "" },
   "d1_databases": [{
     "binding": "DB",
@@ -16,9 +16,10 @@
     "migrations_dir": "drizzle"
   }],
   "ratelimits": [
+    { "name": "PAGE_RATE_LIMIT", "namespace_id": "2026091703", "simple": { "limit": 60, "period": 60 } },
     { "name": "FORM_RATE_LIMIT", "namespace_id": "2026091701", "simple": { "limit": 20, "period": 60 } },
     { "name": "TOTAL_RATE_LIMIT", "namespace_id": "2026091702", "simple": { "limit": 200, "period": 60 } }
   ],
   "triggers": { "crons": ["17 5 * * *"] },
-  "observability": { "enabled": true, "logs": { "enabled": true, "invocation_logs": false } }
+  "observability": { "enabled": false }
 }

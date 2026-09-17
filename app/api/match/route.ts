@@ -1,4 +1,5 @@
 import { getDatabase } from '@/db';
+import { reserveIntake, intakePaused } from '@/lib/intake-budget';
 import { readSmallJson, sameOriginJson } from '@/lib/request-checks';
 import { hashToken, PRIVACY_VERSION, MATCH_POLICY_VERSION, validDeletionToken } from '@/lib/privacy';
 import { validateProfile, matchOpportunity } from '@/lib/match';
@@ -17,6 +18,7 @@ export async function POST(request: Request) {
   // Store only enumerated fields, never an email, free text, IP or user agent.
   const recommended = opportunities.filter((item) => matchOpportunity(item, profile, now).eligibleForSuggestions).map((item) => item.id);
   try {
+    if (!await reserveIntake(getDatabase(), 'match')) return intakePaused();
     await getDatabase().prepare(`INSERT INTO match_profiles
       (deletion_hash, country_code, stage, business_type, sector, needs, recommended_ids, privacy_version, algorithm_version)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)

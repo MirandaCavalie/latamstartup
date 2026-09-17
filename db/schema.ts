@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { index, integer, primaryKey, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 export const subscribers = sqliteTable('subscribers', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -9,7 +9,11 @@ export const subscribers = sqliteTable('subscribers', {
   deletionHash: text('deletion_hash'),
   privacyVersion: text('privacy_version').notNull().default('legacy'),
   status: text('status').notNull().default('unverified'),
-}, (table) => [uniqueIndex('subscribers_email_unique').on(table.email)]);
+}, (table) => [
+  uniqueIndex('subscribers_email_unique').on(table.email),
+  index('subscribers_deletion_hash_idx').on(table.deletionHash),
+  index('subscribers_consent_at_idx').on(table.consentAt),
+]);
 
 export const suggestions = sqliteTable('suggestions', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -22,7 +26,7 @@ export const suggestions = sqliteTable('suggestions', {
   status: text('status').notNull().default('pending'),
   createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
   privacyVersion: text('privacy_version').notNull().default('legacy'),
-});
+}, (table) => [index('suggestions_created_at_idx').on(table.createdAt)]);
 
 export const matchProfiles = sqliteTable('match_profiles', {
   deletionHash: text('deletion_hash').primaryKey(),
@@ -36,4 +40,11 @@ export const matchProfiles = sqliteTable('match_profiles', {
   algorithmVersion: text('algorithm_version').notNull(),
   consentAt: text('consent_at').notNull().default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
-});
+}, (table) => [index('match_profiles_updated_at_idx').on(table.updatedAt)]);
+
+// Only aggregate daily counters. No IPs, emails or device identifiers.
+export const dailyIntake = sqliteTable('daily_intake', {
+  day: text('day').notNull(),
+  kind: text('kind').notNull(),
+  used: integer('used').notNull(),
+}, (table) => [primaryKey({ columns: [table.day, table.kind] })]);

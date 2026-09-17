@@ -62,9 +62,19 @@ try {
   assert.equal(sql(`SELECT count(*) AS n FROM match_profiles WHERE deletion_hash='${hash}'`)[0].n, 0);
   assert.equal(sql(`SELECT count(*) AS n FROM subscribers WHERE email='${email}'`)[0].n, 0);
   // Rate checks last, after API deletion has been verified.
+  const intake = sql("SELECT used FROM daily_intake WHERE day=date('now') AND kind='match'")[0].used;
+  try {
+    sql("UPDATE daily_intake SET used=1000 WHERE day=date('now') AND kind='match'");
+    const paused = await call('match', { ...consent, profile });
+    assert.equal(paused.status, 429);
+    assert.match((await paused.json()).error, /hoy pausamos/);
+    assert.equal((await call('match', { deletionToken: token }, 'DELETE')).status, 200);
+  } finally {
+    sql(`UPDATE daily_intake SET used=${Number(intake)} WHERE day=date('now') AND kind='match'`);
+  }
   const burst = await Promise.all(Array.from({ length: 25 }, () => call('match', {})));
   assert.ok(burst.some((r) => r.status === 429), 'Rate limit should reject bursts');
-  console.log('Local HTTP/D1 checks passed: consent, origin, no public reads, deduplication, isolated match, deletion, suggestions, scheduled retention, rate limits.');
+  console.log('Local HTTP/D1 checks passed: consent, origin, no public reads, deduplication, isolated match, deletion, suggestions, scheduled retention, daily pause with deletion preserved, rate limits.');
 } finally {
   sql(`DELETE FROM subscribers WHERE email='${email}'; DELETE FROM match_profiles WHERE deletion_hash IN ('${hash}', '${await hashToken(other)}'); DELETE FROM suggestions WHERE official_url='https://example.invalid/${token}'`);
 }

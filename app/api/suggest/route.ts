@@ -1,4 +1,5 @@
 import { getDatabase } from '@/db';
+import { reserveIntake, intakePaused } from '@/lib/intake-budget';
 import { readSmallJson, sameOriginJson } from '@/lib/request-checks';
 import { validSuggestion } from '@/lib/submission-validation';
 import { PRIVACY_VERSION } from '@/lib/privacy';
@@ -14,6 +15,7 @@ export async function POST(request: Request) {
   const suggestion = validSuggestion(data);
   if (!suggestion) return Response.json({ error: 'Completa nombre, país, tipo y un enlace oficial HTTPS válido.' }, { status: 400 });
   try {
+    if (!await reserveIntake(getDatabase(), 'suggest')) return intakePaused();
     await getDatabase().prepare(
       'INSERT INTO suggestions (name, official_url, country, kind, note, reply_email, privacy_version) VALUES (?, ?, ?, ?, ?, ?, ?)',
     ).bind(suggestion.name, suggestion.officialUrl, suggestion.country, suggestion.kind, suggestion.note, suggestion.replyEmail, PRIVACY_VERSION).run();

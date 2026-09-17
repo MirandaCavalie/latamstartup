@@ -4,6 +4,7 @@ interface AppEnv {
   DB: D1Database;
   FORM_RATE_LIMIT: RateLimit;
   TOTAL_RATE_LIMIT: RateLimit;
+  PAGE_RATE_LIMIT: RateLimit;
   COLLECTION_ENABLED: string;
   PRIVACY_CONTACT_EMAIL: string;
 }
@@ -24,6 +25,18 @@ function secure(response: Response, api: boolean) {
 export default {
   async fetch(request: Request, env: AppEnv, ctx: ExecutionContext) {
     const api = new URL(request.url).pathname.startsWith('/api/');
+    if (!api) {
+      // No server actions are used by this application. Reject unexpected
+      // methods before booting React or doing any database work.
+      if (!['GET', 'HEAD'].includes(request.method)) return secure(new Response('Método no permitido.', { status: 405 }), false);
+      try {
+        if (!env.PAGE_RATE_LIMIT) return secure(new Response('Servicio temporalmente no disponible.', { status: 503 }), false);
+        const allowed = await env.PAGE_RATE_LIMIT.limit({ key: request.headers.get('CF-Connecting-IP') ?? 'local' });
+        if (!allowed.success) return secure(new Response('Demasiados intentos. Vuelve en un minuto.', { status: 429, headers: { 'Retry-After': '60', 'Cache-Control': 'no-store' } }), false);
+      } catch {
+        return secure(new Response('Servicio temporalmente no disponible.', { status: 503 }), false);
+      }
+    }
     if (api) {
       if (!['POST', 'DELETE'].includes(request.method)) return secure(Response.json({ error: 'Método no permitido.' }, { status: 405 }), true);
       if (request.method === 'POST' && (env.COLLECTION_ENABLED !== 'true' || !env.PRIVACY_CONTACT_EMAIL)) return secure(Response.json({ error: 'Los formularios aún no están disponibles. Puedes explorar y hacer tu match sin compartir datos.' }, { status: 503 }), true);
@@ -48,6 +61,7 @@ export default {
       env.DB.prepare("DELETE FROM match_profiles WHERE updated_at < datetime('now', '-12 months')"),
       env.DB.prepare("DELETE FROM subscribers WHERE consent_at < datetime('now', '-24 months')"),
       env.DB.prepare("DELETE FROM suggestions WHERE created_at < datetime('now', '-12 months')"),
+      env.DB.prepare("DELETE FROM daily_intake WHERE day < date('now', '-35 days')"),
     ]);
   },
 };
