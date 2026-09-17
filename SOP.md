@@ -32,9 +32,11 @@ Decisión: construir la experiencia autorizada; mantener manual la aprobación d
 
 Ampliación visual solicitada: el atlas proyecta datos de Natural Earth con D3, sin contratar un servicio de mapas ni automatizar recopilación adicional. Se reutilizaron catálogo, match y almacenamiento local. El nuevo nombre visible no cambia las claves guardadas ni la URL existente.
 
-Branding chicha: la marca es una imagen PNG original de caligrafía, generada con imagegen integrado, con transparencia real y el texto “Tu envidia es mi progreso”. Se utiliza en portada, encabezado y pie con texto alternativo accesible. La interfaz y el globo usan tonos neutros, mientras que banderas y logos oficiales conservan sus colores. Se eliminó el anterior título tipográfico Chicle. No cambia la interacción del atlas, datos, filtros ni match.
+Cartel chicha e identidad separados: la portada usa un PNG original de 1448 × 1086, generado con imagegen integrado, con el texto “Tu envidia es mi progreso”. Representa papel negro mate con bordes ligeramente irregulares, pliegues sutiles y caligrafía de tintas planas fucsia, amarillo y lima; el exterior del papel es transparente. No es el logo. Encabezado, pie y favicon usan el símbolo monocromo MapPinned de Lucide, con licencia en `public/brand/ICON-LICENSE.txt`. La interfaz y el globo siguen en tonos neutros; banderas y logos oficiales conservan sus colores. No cambia la interacción del atlas, datos, filtros ni match.
 
-Las 24 fichas muestran 20 imágenes oficiales únicas, almacenadas localmente. Cuando se utiliza la marca de una institución en vez de la del programa, se distingue en el registro y en el texto alternativo. Las fuentes están en `public/logos/SOURCES.md`; el prompt de la marca propia está en `public/brand/PROMPT.md`.
+Presentación del cartel: inclinación de −2°, sombra tenue y entrada de 850 ms, una sola vez. Al pasar el cursor se endereza y levanta ligeramente; no hay bucle de animación. `prefers-reduced-motion: reduce` desactiva entrada, transición y movimiento al pasar el cursor. El texto alternativo conserva el encabezado accesible. No se aplican filtros de color a las imágenes.
+
+Las 24 fichas muestran 20 imágenes oficiales únicas, almacenadas localmente. Cuando se utiliza la marca de una institución en vez de la del programa, se distingue en el registro y en el texto alternativo. Las fuentes están en `public/logos/SOURCES.md`; el prompt exacto del cartel está en `public/brand/POSTER-PROMPT.md`. El PNG y prompt de la antigua caligrafía transparente se conservan como versión histórica, sin referencias desde la interfaz.
 
 ## Cómo correrlo
 
@@ -64,7 +66,7 @@ npm run check:links
 
 - Entrada editorial: `lib/opportunities.ts`, con URL oficial, fuente adicional opcional, descripción, requisitos, beneficios, costo, estado, fechas, alcance, modalidad, tipos, sectores y necesidades.
 - Entrada geográfica: `lib/atlas.ts` y el dataset world-atlas 2.0.2. Coordenadas a escala país, no ubicaciones de proveedores. Los conteos se calculan del catálogo.
-- Entrada visual: PNG de marca en `public/brand/` y logos oficiales PNG/SVG en `public/logos/`. Las imágenes no son enlaces a servicios de logos ni dependen de un proveedor externo durante la visita.
+- Entrada visual: PNG del cartel en `public/brand/`, símbolo de mapa local y logos oficiales PNG/SVG en `public/logos/`. Las imágenes no son enlaces a servicios de logos ni dependen de un proveedor externo durante la visita.
 - Entrada del visitante: etapa, tipo de negocio, sector, objetivos y región.
 - Salida: lista filtrada, explicación de afinidad, ficha detallada y enlace oficial en nueva pestaña.
 - Preferencias: `mapping.saved.v1` y `mapping.profile.v1` en localStorage. Se valida su estructura al recuperar; no se requieren identificadores personales.
@@ -111,5 +113,5 @@ Responsable: propietario/editor de Mapping; no hay un mantenedor externo contrat
 - Para incorporar otro país: verificar sus fuentes, agregar `countryCode` ISO alfa-2 y `geography` con su nombre del atlas. La selección y los conteos se actualizan con las fichas; los beneficios globales permanecen separados. Ampliar cuestionario y reglas antes de habilitar match para residentes de ese país.
 - Verificar y publicar otra vez tras editar datos o código. No existe actualización automática en segundo plano.
 - Revisar las dependencias antes de ampliar la arquitectura o incorporar funciones de servidor.
-- Mantener el PNG de marca y su transparencia. Para cambiar su texto, regenerar el asset y actualizar `components/brand-logo.tsx`, sus dimensiones y su texto alternativo; no reconstruirlo con una fuente CSS. El prompt original está documentado.
+- Mantener el cartel separado del símbolo de identidad. Para cambiar su texto, regenerar el asset y actualizar `components/chicha-poster.tsx`, dimensiones, texto alternativo y pruebas; no reconstruirlo con una fuente CSS. Conservar colores sin filtros y respetar movimiento reducido. El prompt exacto está documentado en `public/brand/POSTER-PROMPT.md`.
 - Para una nueva ficha, agregar su logo oficial a `public/logos/`, registrar su fuente y asignarlo en `lib/provider-logos.ts`. No generar marcas de instituciones con IA. No aplicar filtros globales de escala de grises: las banderas y los logos deben conservar su color.

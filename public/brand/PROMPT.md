@@ -1,5 +1,7 @@
 # Logo: Tu envidia es mi progreso
 
+Versión histórica, ya no utilizada en la interfaz. El cartel actual de portada está documentado en `POSTER-PROMPT.md`; el símbolo de identidad es independiente.
+
 Archivo: `tu-envidia-es-mi-progreso.png`.
 
 Generado con la herramienta integrada imagegen (no CLI) el 16 de septiembre de 2026. PNG original de 1536 × 1024 píxeles, con canal alfa real. Sin recortes ni recoloreado posterior. Las tres referencias chicha aportadas por la usuaria se usaron como orientación de caligrafía, no como marcas a copiar. Las referencias no se incluyen en este repositorio.

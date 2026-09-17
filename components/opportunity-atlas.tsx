@@ -24,7 +24,7 @@ import {
 import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 import type { AtlasCountry } from '@/lib/atlas';
 import { opportunities } from '@/lib/opportunities';
-import { BrandLogo } from '@/components/brand-logo';
+import { ChichaPoster } from '@/components/chicha-poster';
 
 const topology = world as unknown as Topology<{
   countries: GeometryCollection<{ name: string }>;
@@ -78,8 +78,8 @@ export function OpportunityAtlas({
     <section className="atlas-section" id="mapa" aria-labelledby="atlas-title">
       <div className="atlas-main">
         <div className="atlas-copy">
-          <h1 id="atlas-title" className="image-wordmark">
-            <BrandLogo />
+          <h1 id="atlas-title" className="chicha-poster">
+            <ChichaPoster />
           </h1>
           <p className="atlas-description">
             Que no te falten oportunidades.

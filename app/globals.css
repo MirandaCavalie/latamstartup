@@ -1666,20 +1666,60 @@ p {
   display: flex;
   flex-shrink: 0;
 }
-.brand-logo {
+.site-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: #171717;
+}
+.site-mark-footer {
+  width: 40px;
+  height: 40px;
+}
+.chicha-poster {
+  width: min(100%, 452px);
+  margin: 0;
+  padding: 8px 12px 10px 4px;
+}
+.poster-mount {
   display: block;
-  object-fit: contain;
+  animation: poster-settle 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.poster-sheet {
+  display: block;
+  width: 100%;
   height: auto;
-  max-width: 100%;
+  transform: rotate(-2deg);
+  transform-origin: 48% 15%;
+  filter: drop-shadow(0 4px 3px #00000012) drop-shadow(0 16px 12px #00000012);
+  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.brand-logo-header {
-  width: 130px;
+@keyframes poster-settle {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) rotate(1deg) scale(1.025);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0) scale(1);
+  }
 }
-.brand-logo-hero {
-  width: 490px;
+@media (hover: hover) and (pointer: fine) {
+  .chicha-poster:hover .poster-sheet {
+    transform: rotate(-0.7deg) translateY(-2px);
+  }
 }
-.brand-logo-footer {
-  width: 150px;
+@media (prefers-reduced-motion: reduce) {
+  .poster-mount {
+    animation: none;
+  }
+  .poster-sheet {
+    transition: none;
+  }
+  .chicha-poster:hover .poster-sheet {
+    transform: rotate(-2deg);
+  }
 }
 .site-header > .button {
   border-radius: 30px;
@@ -1702,10 +1742,6 @@ p {
   position: relative;
   z-index: 1;
   padding: 20px 0 34px;
-}
-.atlas-copy .image-wordmark {
-  max-width: 100%;
-  margin: -8px 0 0;
 }
 .atlas-description {
   margin: 26px 0 28px;
@@ -2112,9 +2148,6 @@ p {
   }
 }
 @media (max-width: 520px) {
-  .brand-logo-header {
-    width: 110px;
-  }
   .site-header > .button {
     font-size: 13px;
   }

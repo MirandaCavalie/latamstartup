@@ -32,17 +32,51 @@ test('Every opportunity has a local, attributed program or provider image', () =
   }
 });
 
-test('The brand is a real PNG and site styles do not grayscale brand or flag images', () => {
-  const logo = readFileSync(
-    new URL('../public/brand/tu-envidia-es-mi-progreso.png', import.meta.url),
+test('The homepage poster is a real image, separate from the monochrome site mark', () => {
+  const poster = readFileSync(
+    new URL(
+      '../public/brand/tu-envidia-es-mi-progreso-poster.png',
+      import.meta.url,
+    ),
   );
-  assert.equal(logo.subarray(1, 4).toString(), 'PNG');
+  assert.equal(poster.subarray(1, 4).toString(), 'PNG');
+  assert.equal(poster.readUInt32BE(16), 1448);
+  assert.equal(poster.readUInt32BE(20), 1086);
+  const mark = readFileSync(
+    new URL('../components/site-mark.tsx', import.meta.url),
+    'utf8',
+  );
+  const atlas = readFileSync(
+    new URL('../components/opportunity-atlas.tsx', import.meta.url),
+    'utf8',
+  );
+  const page = readFileSync(
+    new URL('../app/page.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.match(mark, /MapPinned/);
+  assert.doesNotMatch(mark, /<img|poster|BrandLogo/);
+  assert.match(atlas, /<ChichaPoster\s*\/>/);
+  assert.match(page, /<SiteMark variant="header"/);
+  assert.match(page, /<SiteMark variant="footer"/);
+  assert.doesNotMatch(page, /BrandLogo|ChichaPoster/);
+});
+
+test('The UI preserves image colors and the poster respects reduced motion', () => {
   const css = readFileSync(
     new URL('../app/globals.css', import.meta.url),
     'utf8',
   );
   assert.doesNotMatch(css, /grayscale\s*\(/);
   assert.doesNotMatch(css, /chicha-title|font-chicha/);
+  assert.match(css, /animation: poster-settle 850ms[^;]*both;/);
+  assert.doesNotMatch(css, /animation: poster-settle[^;]*infinite/);
+  assert.match(
+    css,
+    /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.poster-mount\s*\{\s*animation: none;/,
+  );
+  assert.match(css, /\.poster-sheet\s*\{\s*transition: none;/);
+  assert.doesNotMatch(css, /(?:saturate|hue-rotate|sepia|brightness)\s*\(/);
   for (const [color] of css.matchAll(/#[0-9a-f]{6}(?:[0-9a-f]{2})?\b/gi)) {
     assert.equal(
       color.slice(1, 3),

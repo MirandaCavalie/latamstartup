@@ -83,7 +83,7 @@ import {
 import type { MatchResult } from '@/lib/match';
 import { useMappingTools } from '@/lib/webmcp';
 import { OpportunityAtlas } from '@/components/opportunity-atlas';
-import { BrandLogo } from '@/components/brand-logo';
+import { SiteMark } from '@/components/site-mark';
 import { ProviderLogo } from '@/components/provider-logo';
 import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 
@@ -775,7 +775,7 @@ export default function Home() {
             document.getElementById('mapa')?.scrollIntoView({ block: 'start' });
           }}
         >
-          <BrandLogo variant="header" />
+          <SiteMark variant="header" />
         </a>
         <TabsList
           variant="line"
@@ -1093,7 +1093,7 @@ export default function Home() {
                 ?.scrollIntoView({ block: 'start' });
             }}
           >
-            <BrandLogo variant="footer" />
+            <SiteMark variant="footer" />
           </a>
           <p>Un próximo paso para cada emprendimiento.</p>
           <button className="text-button" onClick={() => setAboutOpen(true)}>
