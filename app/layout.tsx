@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: 'Tu envidia es mi progreso · El atlas para emprender',
   icons: { icon: '/favicon.svg' },
   description:
-    'Un mapa de programas, mentorías y recursos para emprender. Empezamos en Perú, con la mirada en Latinoamérica. Encuentra tu match y visita las fuentes oficiales.',
+    'Un mapa de programas, mentorías y recursos para emprender. Encuentra tu match y visita las fuentes oficiales.',
 };
 
 export default function RootLayout({

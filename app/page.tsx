@@ -829,7 +829,6 @@ export default function Home() {
       <main className="main-wrap">
         <section className="intro catalog-intro" id="catalogo">
           <div>
-            <p className="eyebrow">DEL MAPA A TU PRÓXIMO PASO</p>
             <h2>Menos vueltas. Más oportunidades.</h2>
             <p className="intro-copy">
               Programas, recursos y conexiones para impulsar tu negocio.

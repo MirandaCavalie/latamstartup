@@ -17,7 +17,6 @@ import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  Compass,
   Globe2,
   RotateCcw,
   Sparkles,
@@ -79,9 +78,6 @@ export function OpportunityAtlas({
     <section className="atlas-section" id="mapa" aria-labelledby="atlas-title">
       <div className="atlas-main">
         <div className="atlas-copy">
-          <p className="atlas-eyebrow">
-            <span /> EL ATLAS DE LOS QUE EMPRENDEN
-          </p>
           <h1 id="atlas-title" className="image-wordmark">
             <BrandLogo />
           </h1>
@@ -102,16 +98,6 @@ export function OpportunityAtlas({
             <button className="atlas-match-link" onClick={onMatch}>
               <Sparkles size={17} /> Hacer mi match
             </button>
-          </div>
-          <div className="atlas-start-note">
-            <span className="mini-compass">
-              <Compass size={20} />
-            </span>
-            <p>
-              Empezamos en Perú.
-              <br />
-              <strong>La mirada está en LATAM.</strong>
-            </p>
           </div>
         </div>
         <div className="globe-stage">

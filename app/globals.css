@@ -1703,22 +1703,6 @@ p {
   z-index: 1;
   padding: 20px 0 34px;
 }
-.atlas-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: #595959;
-  font-size: 12px;
-  font-weight: 650;
-  letter-spacing: 1.8px;
-  margin-bottom: 28px;
-}
-.atlas-eyebrow > span {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #6b6b6b;
-}
 .atlas-copy .image-wordmark {
   max-width: 100%;
   margin: -8px 0 0;
@@ -1759,27 +1743,6 @@ p {
 }
 .atlas-match-link:hover {
   text-decoration: underline;
-}
-.atlas-start-note {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  margin-top: 33px;
-  color: #787878;
-  font-size: 13px;
-  line-height: 1.65;
-}
-.atlas-start-note strong {
-  font-weight: 550;
-  color: #484848;
-}
-.mini-compass {
-  width: 38px;
-  height: 38px;
-  border: 1px solid #e2e2e2;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
 }
 .globe-stage {
   position: relative;
@@ -2076,10 +2039,6 @@ p {
     grid-template-columns: 0.9fr 1.1fr;
     min-height: 580px;
   }
-  .atlas-eyebrow {
-    font-size: 10px;
-    letter-spacing: 1.3px;
-  }
   .atlas-description {
     font-size: 16px;
   }
@@ -2124,18 +2083,11 @@ p {
   .atlas-copy {
     padding: 0;
   }
-  .atlas-eyebrow {
-    margin-bottom: 18px;
-    font-size: 11px;
-  }
   .atlas-description {
     margin: 22px 0;
     max-width: 440px;
   }
   .desktop-break {
-    display: none;
-  }
-  .atlas-start-note {
     display: none;
   }
   .atlas-actions {
