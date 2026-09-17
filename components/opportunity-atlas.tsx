@@ -124,8 +124,8 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
         onLostPointerCapture={() => { drag.current = null; setDragging(false); }}>
         <g transform={`translate(${camera.x} ${camera.y}) scale(${camera.scale})`}>
           <path d={graticulePath} className="flat-graticule" vectorEffect="non-scaling-stroke" />
-          {countries.map(({ boundary, d, country }) => (
-            <path key={boundary.id} d={d} vectorEffect="non-scaling-stroke"
+          {countries.map(({ boundary, d, country }, index) => (
+            <path key={`${boundary.id ?? 'unmapped'}-${index}`} d={d} vectorEffect="non-scaling-stroke"
               className={'flat-country' + (country ? ' is-latam' : '') + (selected?.code === country?.code && country ? ' is-selected' : '')}
               role={country ? 'button' : undefined} tabIndex={country ? 0 : undefined}
               aria-label={country ? `Explorar ${country.name}` : undefined} aria-pressed={country ? selected?.code === country.code : undefined}
