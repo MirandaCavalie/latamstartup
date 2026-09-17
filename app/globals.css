@@ -1750,15 +1750,6 @@ p {
   max-width: 740px;
   margin-left: -5px;
 }
-.globe-coordinate {
-  position: absolute;
-  top: 1.5%;
-  left: 24%;
-  font-family: var(--font-geist-mono), monospace;
-  letter-spacing: 1.5px;
-  font-size: 10px;
-  color: #878787;
-}
 .atlas-globe {
   display: block;
   width: 100%;
@@ -2062,9 +2053,6 @@ p {
     width: 205px;
     right: -1%;
     padding: 14px;
-  }
-  .globe-coordinate {
-    display: none;
   }
   .atlas-country-bar {
     margin-left: 32px;

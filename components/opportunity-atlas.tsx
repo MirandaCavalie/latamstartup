@@ -101,9 +101,6 @@ export function OpportunityAtlas({
           </div>
         </div>
         <div className="globe-stage">
-          <div className="globe-coordinate" aria-hidden="true">
-            LATAM / UN MUNDO DE POSIBILIDADES
-          </div>
           <svg
             viewBox="0 0 720 700"
             className={'atlas-globe ' + (dragging ? 'is-dragging' : '')}
