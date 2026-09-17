@@ -36,14 +36,15 @@ npm run dev
 
 Abrir la URL que muestre la consola. El puerto se ajusta si ya está ocupado.
 
-La vista previa de formularios necesita una base D1 local. Tras generar la compilación, aplicar la migración una vez (no repetirla si ya existe):
+La vista previa de formularios usa D1 local, nunca la base de producción. Aplicar las migraciones pendientes es repetible:
 
 ```sh
+npm run db:local
 npm run build
-npx wrangler d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_absent_captain_cross.sql
+npm start -- --port 8787 --var COLLECTION_ENABLED:true --var PRIVACY_CONTACT_EMAIL:privacy@example.invalid
 ```
 
-Después iniciar `npm run dev`. Los datos de prueba locales no se envían al sitio publicado.
+En otra terminal: `npm run test:forms`. Esta prueba solo acepta localhost, usa direcciones ficticias y elimina sus registros. En desarrollo normal la recepción permanece desactivada salvo configuración explícita.
 
 ## Verificación
 
@@ -54,7 +55,7 @@ npm run build
 npm run check:links
 ```
 
-La publicación incluye la interfaz, dos rutas de recepción de datos y la base D1. La plataforma aplica las migraciones versionadas antes de publicar el Worker. El catálogo de oportunidades permanece editorial en archivos TypeScript; D1 almacena solo correos con consentimiento y sugerencias pendientes.
+La publicación propia utiliza Cloudflare Workers con assets y D1. `npm run deploy` verifica, compila, aplica migraciones pendientes y publica en la cuenta indicada en `wrangler.jsonc`. El catálogo y los logos permanecen en GitHub; los correos, matches compartidos y sugerencias están en D1 privado. Ver [operación de producción](docs/PRODUCTION.md) para requisitos, seguridad, despliegue y consultas de analítica. `.openai/hosting.json` corresponde al alojamiento histórico y no controla este despliegue.
 
 ## Archivos principales
 
@@ -86,7 +87,9 @@ La publicación incluye la interfaz, dos rutas de recepción de datos y la base 
 
 ## Privacidad
 
-El perfil y los guardados se almacenan exclusivamente en localStorage en el navegador del visitante. El mapa abre directamente sin registro. Si la persona marca consentimiento y envía un correo, se guarda en D1 para futuras novedades; puede retirarlo desde «Cómo funciona y privacidad». Las propuestas de programas se guardan pendientes de revisión, con un correo opcional para pedir aclaraciones; no se publican automáticamente ni se añaden a la lista de novedades. No hay envíos de correo automatizados. Los proveedores externos aplican sus propias políticas cuando el visitante abre sus enlaces. El acceso al sitio publicado sigue privado y lo controla Sites; explorar sin registro no evita ese control ni significa acceso público.
+Explorar y hacer match no requiere registro. Perfil y guardados se recuerdan localmente. Solo una casilla opcional, inicialmente desmarcada, permite guardar una copia estructurada del match para analítica; no se vincula al correo. La lista de novedades tiene un consentimiento independiente. Las propuestas requieren consentimiento y revisión humana. `/privacidad` explica los campos, proveedores, plazos y permite borrar registros con códigos privados conservados en el navegador. Los correos aún no se verifican ni se envían campañas. Retención automática: 12 meses para matches y propuestas, 24 meses para suscripciones. Cloudflare procesa información técnica de conexión; no se añaden trackers de marketing. No subir exports, claves, correos ni respuestas a GitHub.
+
+La recepción se mantiene desactivada si faltan `COLLECTION_ENABLED=true` o un contacto de privacidad. Desactivar recepción no bloquea las bajas. El sitio anterior en Sites permanece privado y sin cambios; el nuevo destino será público por solicitud de la propietaria. La publicación y la conexión automática con GitHub deben comprobarse en Cloudflare, no se deducen de tener código en el repositorio.
 
 ## Estado de la revisión
 

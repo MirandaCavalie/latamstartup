@@ -48,7 +48,7 @@ El filtro «Programa regional» distingue esas fichas de los beneficios globales
 
 Entrada y colaboración (17/09/2026): la portada adicional abre con un globo de los seis países con catálogo, número de fichas y dos acciones. «Entrar como invitado» no crea cuenta y se recuerda durante esa sesión; el formulario de novedades guarda solo el correo normalizado y la fecha de consentimiento en D1. El formulario «¿Conoces otro programa?» guarda nombre, enlace oficial, país/alcance, tipo, nota y correo opcional con estado `pending`. No alimenta automáticamente el catálogo. Se eligió un buzón del propio sitio en lugar de publicar el correo personal de la propietaria: permite estructurar fuentes, moderar y no exponer una dirección a spam. La lista no envía correos por sí sola; un proveedor y una política de campañas quedan como trabajo posterior.
 
-El Site permanece con acceso privado de una sola persona. «Invitado» significa sin una segunda cuenta dentro de la aplicación; no evita el control de acceso de Sites. Abrirlo a visitantes requiere una decisión explícita de la propietaria, además de probar el flujo público y añadir controles antispam proporcionales.
+Historial: el Site original permanece privado y sin cambios. El 17/09/2026 la propietaria autorizó publicar una instancia pública en su propia cuenta Cloudflare y almacenar correos y matches voluntarios. El estado y procedimiento actuales están en `docs/PRODUCTION.md`; la antigua pantalla de invitado ya no forma parte del flujo.
 
 Actualización de stickers (17/09/2026): se reemplazaron únicamente las dos ilustraciones decorativas por tipografía gruesa e irregular, fucsia/verde eléctrico y una estrella amarilla/violeta, siguiendo las nuevas referencias del usuario. Se conserva la interfaz minimalista, posiciones, animaciones accesibles, navegación, mapa y catálogo. Los nuevos archivos llevan sufijo `-neon` para evitar imágenes antiguas en caché; los anteriores siguen disponibles como historial. Procedencia y prompts en `public/brand/STICKERS-PROMPTS.md`.
 
@@ -76,7 +76,8 @@ npm run build
 npm run check:links
 ```
 
-5. Para una vista previa local con formularios, generar la compilación y aplicar una sola vez `drizzle/0000_absent_captain_cross.sql` al D1 local usando `npx wrangler d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_absent_captain_cross.sql`; después usar `npm run dev`. No repetir la migración inicial sobre las tablas existentes. Sites conserva la configuración del proyecto en `.openai/hosting.json` y aplica migraciones versionadas al publicar. Conservar acceso privado salvo instrucción del propietario. El repositorio GitHub contiene código y marcas públicas, no la base de correos ni las sugerencias de visitantes.
+5. Formularios locales: `npm run db:local`, `npm run build`, `npm start -- --port 8787 --var COLLECTION_ENABLED:true --var PRIVACY_CONTACT_EMAIL:privacy@example.invalid`. En otra terminal, `npm run test:forms`. El directorio de persistencia debe ser `.wrangler/state` tanto para CLI como para el servidor; otro directorio crea otra base local y produce errores de tablas ausentes.
+6. Producción: seguir `docs/PRODUCTION.md`, autenticar Wrangler en la cuenta autorizada y ejecutar `npm run deploy`. No publicar mediante Sites; `.openai/hosting.json` queda como historial. GitHub contiene solo código, catálogo y recursos públicos.
 
 ## Entradas y salidas
 
@@ -87,7 +88,7 @@ npm run check:links
 - Entrada voluntaria: correo y consentimiento para novedades; propuestas de programas con nombre, país, enlace HTTPS y correo de respuesta opcional.
 - Salida: lista filtrada, explicación de afinidad, ficha detallada y enlace oficial en nueva pestaña.
 - Preferencias: `mapping.saved.v1` y `mapping.profile.v1` en localStorage. Se valida su estructura al recuperar; no se requieren identificadores personales. Los perfiles antiguos sin `countryCode` y con una región peruana válida se migran a `PE`, conservando las otras respuestas y descartando `region`. Un país explícito inválido no se sustituye silenciosamente. Los guardados no cambian.
-- Persistencia: D1 contiene `subscribers` y `suggestions`, separadas del perfil y guardados locales. La baja borra un correo de la lista. No se generan postulaciones ni se envían correos, mensajes o solicitudes a instituciones desde el sitio.
+- Persistencia: D1 privado contiene `subscribers`, `suggestions` y `match_profiles`. El match se envía solo con consentimiento opcional independiente del correo. Un hash de un código aleatorio permite actualizar/borrar el último perfil compartido; no identifica usuarios únicos. La baja de correo requiere su propio código privado, no conocer una dirección. No se generan postulaciones ni envíos de campañas.
 
 ## Casos límite conocidos
 
@@ -117,7 +118,7 @@ npm run check:links
 - QA: pruebas de reglas y separación territorial, TypeScript y compilación. El rebranding se comprobó en navegador a 1440 × 1000 y 390 × 844: entrada como invitado, selección de México y catálogo, imágenes sin fallos, ausencia de desbordamiento horizontal móvil y marca sin animación con movimiento reducido. No es una auditoría integral de accesibilidad. Se preservan las dos herramientas WebMCP previamente verificadas.
 - Corrección territorial del match (17/09/2026): 24 pruebas automatizadas cubren los seis catálogos nacionales, opciones transfronterizas desde los 20 países, exclusión de convocatorias cerradas y migración de perfiles. En navegador se completó el cuestionario con México y Brasil, se comprobó que no aparecen departamentos, se verificaron el aviso para Ecuador, la edición tras recargar y la migración de un perfil antiguo de Cusco sin perder objetivos. La vista móvil de 390 × 844 no mostró desbordamiento horizontal.
 - Logos: si una imagen falla, se muestra el nombre de la institución como texto, no un logo inventado. El original de ITP tiene resolución limitada (137 × 72). Los logos se muestran sin alterar sus proporciones o colores.
-- Formularios: si D1 no responde, conservan los campos y muestran un error recuperable. Se validan longitud, correo, URL HTTPS y origen; los campos trampa descartan spam sencillo, pero no reemplazan una protección antispam cuando el sitio sea público. La baja por correo es una operación sin verificación de propiedad: una persona que conoce otro correo podría retirarlo; incorporar confirmación por email al activar campañas reales.
+- Formularios: validación de origen exacto, JSON acotado a 3000 bytes, campos cerrados y SQL parametrizado. Honeypot en newsletter/propuestas y límites anónimos de 20 peticiones/minuto por IP y 200 por punto de presencia. No son protección perfecta contra bots ni un techo de facturación. La baja exige un código privado de 256 bits; si se pierde, la responsable gestiona la solicitud proporcionalmente. No activar campañas sin verificar correos y configurar doble opt-in.
 
 ## Umbral de aprobación humana
 
@@ -142,7 +143,7 @@ Responsable: propietario/editor de Mapping; no hay un mantenedor externo contrat
 - La lógica de afinidad vive en `lib/match.ts`. Ajustar pruebas cuando cambien reglas.
 - Para incorporar otro país: verificar sus fuentes, agregar `countryCode` ISO alfa-2 y `geography` con su nombre del atlas. La selección y los conteos se actualizan con las fichas; los beneficios globales permanecen separados. El cuestionario deriva los países de `atlasCountries`. Usar `matchScope` solo cuando la fuente editorial confirme alcance regional; añadir pruebas de inclusión local, exclusión de otros países y alcance transfronterizo.
 - Verificar y publicar otra vez tras editar datos o código. No existe actualización automática en segundo plano.
-- Consultar periódicamente las tablas privadas `suggestions` y `subscribers` mediante herramientas de Sites o acceso D1 autorizado. No exponerlas con un GET público ni escribir direcciones en el repositorio. El formulario no es una bandeja de administración.
+- Consultar las tablas privadas desde Cloudflare D1 con acceso autorizado. `docs/PRODUCTION.md` incluye consultas agregadas sin correos. No exponerlas con GET público ni guardar exports en GitHub. El formulario no es una bandeja de administración.
 - No editar migraciones ya aplicadas. Para cambios de esquema, actualizar `db/schema.ts`, correr `npm run db:generate`, inspeccionar el nuevo SQL y probarlo localmente antes de publicar.
 - Revisar dependencias y el gasto/abuso de escrituras antes de abrir el sitio al público. Implementar protección antispam y un proveedor de correo con doble opt-in si se lanzan campañas; mantener baja disponible.
 - Mantener los stickers separados del símbolo de combi. Para cambiarlos, regenerar los assets y actualizar `components/brand-sticker.tsx`, dimensiones y pruebas. Son decorativos y no deben recibir interacción falsa. Conservar transparencia, colores sin filtros y movimiento reducido. Prompts actuales en `public/brand/STICKERS-PROMPTS.md`; tokens y posiciones adaptables en `app/globals.css`. La interfaz usa Geist; Bowlby y los carteles antiguos se conservan como historial, no como tipografía activa.
