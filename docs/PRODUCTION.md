@@ -7,7 +7,7 @@ Actualizado: 17/09/2026. Responsable: Miranda Cavalie.
 - GitHub: `MirandaCavalie/latamstartup`, rama `main`. Código, fichas y logos públicos; ningún registro de visitantes.
 - Cloudflare Workers + Static Assets: aplicación `la-combi` en cuenta `0bf0d27309f3760ed9cf10dd111c88bc`.
 - D1: `la-combi-production`, ID `ae5a231a-257e-43d8-b302-7a2f6a2a7544`, binding `DB`. Creada en WNAM; no implica residencia exclusiva en LATAM.
-- Las tres migraciones de `drizzle/` se aplicaron a la base remota nueva. Las tablas del Site anterior estaban vacías; no se migraron datos de visitantes.
+- Las cuatro migraciones de `drizzle/` se aplicaron a la base remota nueva, incluidos contadores e índices. Las tablas del Site anterior estaban vacías; no se migraron datos de visitantes.
 - Publicada y verificada por HTTP el 17/09/2026: https://la-combi.mapping-emprende-peru.workers.dev. Versión inicial protegida: `f84838b6-5b49-497c-bd95-2f3be974f411`. `COLLECTION_ENABLED=false` hasta configurar un correo público de privacidad autorizado; el destinatario privado de alertas no se convierte automáticamente en contacto público.
 - El dominio `workers.dev` proporciona HTTPS sin comprar dominio. La portada, privacidad y logo respondieron 200; la lectura pública de API y métodos inesperados respondieron 405, y la captura pausada respondió 503.
 - El Site histórico se conserva privado y no se vuelve a publicar desde este repositorio.
