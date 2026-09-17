@@ -23,6 +23,7 @@ import {
   Handshake,
   ShieldCheck,
   Clock3,
+  TrendingUp,
 } from 'lucide-react';
 import {
   Dialog,
@@ -91,6 +92,7 @@ type View = 'explore' | 'resources' | 'matches' | 'saved';
 const icons = {
   incubacion: GraduationCap,
   financiamiento: Landmark,
+  inversion: TrendingUp,
   herramientas: Gift,
   capacitacion: BookOpen,
   asesoria: Building2,
@@ -751,7 +753,8 @@ export default function Home() {
         <span>Disponibles o abiertas</span>
       </label>
       <p className="filter-help">
-        Los descuentos y créditos de uso tienen condiciones propias.
+        Los descuentos, créditos de uso e inversiones tienen condiciones
+        propias. Revisa cada propuesta antes de postular.
       </p>
     </>
   );
@@ -769,7 +772,7 @@ export default function Home() {
         <a
           className="brand atlas-brand"
           href="#mapa"
-          aria-label="Tu envidia es mi progreso, volver al mapa"
+          aria-label="Chancletazo, volver al mapa"
           onClick={(event) => {
             event.preventDefault();
             document.getElementById('mapa')?.scrollIntoView({ block: 'start' });
@@ -802,7 +805,7 @@ export default function Home() {
             onClick={scrollToCatalog}
           >
             <Sparkles size={15} />
-            Mis matches
+            Matches · Perú
             {profile && <span className="count-pill">{matchCount}</span>}
           </TabsTrigger>
           <TabsTrigger
@@ -816,7 +819,7 @@ export default function Home() {
         </TabsList>
         <button className="button primary" onClick={() => setQuizOpen(true)}>
           <Sparkles size={16} />
-          <span>{profile ? 'Editar mi perfil' : 'Encuentra tu match'}</span>
+          <span>{profile ? 'Editar mi perfil' : 'Match para Perú'}</span>
         </button>
       </header>
       <OpportunityAtlas
@@ -829,9 +832,9 @@ export default function Home() {
       <main className="main-wrap">
         <section className="intro catalog-intro" id="catalogo">
           <div>
-            <h2>Menos vueltas. Más oportunidades.</h2>
+            <h2>Menos búsqueda. Más movimiento.</h2>
             <p className="intro-copy">
-              Programas, recursos y conexiones para impulsar tu negocio.
+              Programas, inversión y recursos para emprender en Latinoamérica.
             </p>
           </div>
           <div className="intro-note">
@@ -841,7 +844,7 @@ export default function Home() {
                 {opportunities.length} oportunidades · {resourceCount} recursos
               </strong>
               <br />
-              Estado, universidades y empresas.
+              Estado, universidades, empresas y fondos.
             </p>
           </div>
         </section>
@@ -1076,8 +1079,8 @@ export default function Home() {
               <ShieldCheck size={15} />
               <p>
                 Revisión editorial: {reviewedLabel}. Confirma requisitos y
-                vigencia en la fuente oficial. Los programas globales pueden
-                tener restricciones para Perú.
+                vigencia en la fuente oficial. Consulta el alcance de cada
+                programa antes de postular.
               </p>
             </div>
           </section>
@@ -1095,11 +1098,11 @@ export default function Home() {
           >
             <SiteMark variant="footer" />
           </a>
-          <p>Un próximo paso para cada emprendimiento.</p>
+          <p>Oportunidades para moverte.</p>
           <button className="text-button" onClick={() => setAboutOpen(true)}>
             Cómo funciona y privacidad <ArrowUpRight size={13} />
           </button>
-          <span>Hecho para emprender desde Perú</span>
+          <span>Hecho para emprender en Latinoamérica</span>
         </footer>
         {storageError && (
           <p className="storage-note">
@@ -1287,19 +1290,18 @@ export default function Home() {
           >
             <X size={20} />
           </DialogClose>
-          <DialogTitle>Un mapa para tomar tu siguiente paso.</DialogTitle>
+          <DialogTitle>Un mapa para encontrar tu siguiente paso.</DialogTitle>
           <DialogDescription>
-            Tu envidia es mi progreso reúne oportunidades y recursos publicados
-            por las propias instituciones.
+            Reunimos programas, inversión y recursos publicados por las propias
+            instituciones.
           </DialogDescription>
           <div className="about-copy">
-            <h3>Un atlas que empieza en Perú</h3>
+            <h3>Un atlas en expansión</h3>
             <p>
               Los países marcados como “Por mapear” todavía no tienen fichas
-              locales en este catálogo. Los beneficios internacionales se
-              muestran por separado: su alcance no garantiza elegibilidad en
-              todos los países. El match, por ahora, está pensado para negocios
-              en Perú.
+              en este catálogo. Los programas regionales pueden aceptar equipos
+              de varios países; comprueba su alcance en la ficha oficial. El
+              match, por ahora, está pensado para negocios en Perú.
             </p>
             <p>
               El mapa sitúa países, no sedes de instituciones. Cartografía de{' '}

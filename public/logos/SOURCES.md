@@ -26,6 +26,23 @@ Cuando no se dispone de un logotipo específico del programa, se muestra el de s
 | Notion | `notion.png` | Institución / proveedor | [Fuente](https://www.notion.com/startups) | [Original](https://www.notion.com/front-static/logo-ios.png) |
 | Endeavor Perú | `endeavor.svg` | Institución / proveedor | [Fuente](https://endeavor.org.pe/dream-bigger-program-2026/) | [Original](https://endeavor.org.pe/wp-content/uploads/2026/08/Logo.svg) |
 | Programa Nacional Tu Empresa | `tu-empresa.png` | Institución / proveedor | [Fuente](https://www.gob.pe/tuempresa) | [Original](https://www.gob.pe/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTQ0NjcxLCJwdXIiOiJibG9iX2lkIn19--d31f43daf15e1ac580c3751da5f584c0e9bd78e1/1.png) |
+| incMTY | `incmty.svg` | Institución / proveedor | [Fuente](https://incmty.com/es/) | [Original](https://incmty.com/sites/default/files/2026-01/INCMty-Logo_0.svg) |
+| Startup México | `startup-mexico.png` | Institución / proveedor | [Fuente](https://startupmexico.com/) | [Original](https://startupmexico.com/wp-content/uploads/2024/02/denali_Recurso-1@4x.png) |
+| Nacional Financiera | `nafin.png` | Institución / proveedor | [Fuente](https://www.nafin.com/portalnf/content/home/home.html) | [Original](https://www.nafin.com/portalnf/content/home/assets/logo_nf_ok.png) |
+| 500 Global | `500-global.svg` | Institución / proveedor | [Fuente](https://500.co/) | [Original](https://500.co/images/500-logo-black.svg) |
+| Latitud | `latitud.png` | Institución / proveedor | [Fuente](https://latitud.com/) | [Original](https://framerusercontent.com/images/L9aVg0QXUcvRISj9xfOtC2oT78c.png) |
+| iNNpulsa Colombia | `innpulsa.png` | Institución / proveedor | [Fuente](https://www.innpulsacolombia.com/) | [Original](https://www.innpulsacolombia.com/wp-content/uploads/2022/05/Logo_innpulsa_color.png) |
+| Fondo Emprender | `fondo-emprender.svg` | Programa | [Fuente](https://www.fondoemprender.com/SitePages/Home.aspx) | [Original](https://www.fondoemprender.com/SiteAssets/FE%202020%20Home/img/LOFO%20FE%20COLOR%202022.svg) |
+| Rockstart | `rockstart.svg` | Institución / proveedor | [Fuente](https://rockstart.com/latam/) | [Original](https://rockstart.com/wp-content/themes/rockstart/assets/img/rockstart.svg) |
+| Start-Up Chile | `startup-chile.png` | Institución / proveedor | [Fuente](https://startupchile.org/) | [Original](https://startupchile.org/content/uploads/logo-sup-by-corfo-web-1.png) |
+| Sercotec | `sercotec.svg` | Institución / proveedor | [Fuente](https://www.sercotec.cl/) | [Original](https://www.sercotec.cl/wp-content/themes/templatewordpress-main/img/logo-sercotec.svg) |
+| Platanus | `platanus.svg` | Institución / proveedor | [Fuente](https://platan.us/programa) | [Original](https://cdn.platan.us/assets/icons/brand/platanus-logo-horizontal-8be940842629025aa0260c83d8a1b4ca0435e853b1d8b5f3de1d502f33b704cf.svg) |
+| Endeavor Argentina | `endeavor-argentina.svg` | Institución / proveedor | [Fuente](https://www.endeavor.org.ar/) | [Original](https://www.endeavor.org.ar/wp-content/uploads/2021/03/Logo_black.svg) |
+| Fundación Empretec Argentina | `empretec.png` | Institución / proveedor | [Fuente](https://campus.empretec.org.ar/) | [Original](https://campus.empretec.org.ar/pluginfile.php/1/theme_moove/logo/1743538151/LogoAzul.png) |
+| Gobierno de Argentina | `argentina-gob.svg` | Institución / proveedor | [Fuente](https://www.argentina.gob.ar/) | [Original](https://www.argentina.gob.ar/profiles/argentinagobar/themes/argentinagobar/argentinagobar_theme/logo_argentina-azul.svg) |
+| Sebrae | `sebrae.svg` | Institución / proveedor | [Fuente](https://sebrae.com.br/subsites/sebrae-startups) | [Original](https://sebrae.com.br/content/dam/portal-sebrae/na/pt/imagens/logo/logo-sebrae.svg) |
+| BNDES Garagem | `bndes-garagem.png` | Programa | [Fuente](https://garagem.bndes.gov.br/) | [Original](https://garagem.bndes.gov.br/wp-content/uploads/2024/07/bndes-logoAtivo-4.png) |
+| Brasil Mais Produtivo | `brasil-mais-produtivo.webp` | Programa | [Fuente](https://brasilmaisprodutivo.mdic.gov.br/) | [Imagen servida](https://brasilmaisprodutivo.mdic.gov.br/_next/image?url=%2Fimg%2Flogo_brasilmaisprodutivo.png&w=640&q=75) |
 
 ## Notas
 

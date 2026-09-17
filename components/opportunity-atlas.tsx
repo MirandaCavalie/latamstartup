@@ -82,11 +82,10 @@ export function OpportunityAtlas({
             <ChichaPoster />
           </h1>
           <p className="atlas-description">
-            Que no te falten oportunidades.
+            Encuentra el impulso que necesitas.
             <br />
-            Programas, mentorías y recursos para
-            <br className="desktop-break" /> hacer crecer eso que tienes en
-            mente.
+            Programas, inversión y recursos para
+            <br className="desktop-break" /> emprender en Latinoamérica.
           </p>
           <div className="atlas-actions">
             <button
@@ -96,7 +95,7 @@ export function OpportunityAtlas({
               Explorar oportunidades <ArrowDown size={18} />
             </button>
             <button className="atlas-match-link" onClick={onMatch}>
-              <Sparkles size={17} /> Hacer mi match
+              <Sparkles size={17} /> Match para Perú
             </button>
           </div>
         </div>
@@ -303,8 +302,8 @@ export function OpportunityAtlas({
             <h2>{selected.name}</h2>
             <p>
               {selectedItems.length
-                ? `${selectedItems.length} programas y recursos de origen local.`
-                : 'Este capítulo todavía está por escribir. Aún no tenemos un catálogo local.'}
+                ? `${selectedItems.length} programas y recursos en este mapa.`
+                : 'Aún no hemos mapeado programas aquí.'}
             </p>
             {selectedItems.length ? (
               <button onClick={() => onExplore(selected.name)}>

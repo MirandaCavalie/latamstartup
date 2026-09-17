@@ -1,12 +1,13 @@
-# Tu envidia es mi progreso
+# Chancletazo
 
 Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping; conserva su carpeta, URL y preferencias guardadas.
 
 - Portada con globo interactivo, selección de países y controles accesibles de rotación.
-- 18 oportunidades de origen peruano y 6 beneficios internacionales, sin atribuir cobertura territorial no verificada.
+- 18 oportunidades de origen peruano, 6 beneficios internacionales y 17 fichas de México, Colombia, Chile, Argentina y Brasil.
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
 
-- 24 fichas editoriales de Estado, universidades, empresas y organizaciones.
+- 41 fichas editoriales de Estado, universidades, empresas y organizaciones.
+- Inversión por participación en una categoría propia: Platanus, Latitud, 500 Global y Rockstart no se confunden con subvenciones o capital semilla condonable.
 - Enlaces directos a los sitios oficiales; las postulaciones se realizan allí.
 - Búsqueda sin sensibilidad a tildes, filtros, recursos y guardados locales.
 - Match en cuatro pasos: etapa, tipo de negocio/sector, objetivos y región.
@@ -14,8 +15,8 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Fechas con zona horaria de Perú y revisión de vigencia a los 45 días.
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
 - Cartel chicha original en la portada, con tintas planas brillantes sobre papel negro y movimiento discreto que respeta la preferencia de movimiento reducido.
-- Identidad independiente: símbolo mínimo de mapa en encabezado, pie y favicon. Interfaz en blanco y negro, con banderas y marcas a color.
-- Logos oficiales locales en las 24 fichas, con fuentes y distinción entre marca del programa y de su institución.
+- Identidad independiente: chancla monocroma y nombre Chancletazo en encabezado y pie; el afiche no es el logo. Interfaz en blanco y negro, con banderas y marcas a color.
+- Logos oficiales locales en las 41 fichas, con fuentes y distinción entre marca del programa y de su institución.
 - Sin claves de API, registro de usuarios, pagos ni base de datos.
 
 ## Uso local
@@ -45,14 +46,15 @@ El resultado de producción es un sitio estático en `dist/client`. La publicaci
 ## Archivos principales
 
 - `lib/opportunities.ts`: catálogo, fuentes, requisitos y reglas editoriales.
+- `lib/latam-opportunities.ts`: fichas revisadas de los cinco países incorporados.
 - `lib/atlas.ts`: países, identificadores ISO, coordenadas de referencia y conteos derivados.
 - `components/opportunity-atlas.tsx`: globo y acceso al catálogo por origen.
 - `lib/match.ts`: afinidad, búsqueda, validación de perfil y vigencia.
 - `app/page.tsx`: exploración, filtros, formulario, guardados y fichas.
 - `app/globals.css`: diseño adaptable.
 - `components/chicha-poster.tsx`: cartel de portada como imagen, no como logo.
-- `components/site-mark.tsx`: símbolo monocromo MapPinned de Lucide en encabezado y pie.
-- `public/brand/`: cartel original, prompt exacto y licencia del icono.
+- `components/site-mark.tsx`: chancla monocroma y nombre breve en encabezado y pie.
+- `public/brand/`: cartel original y chancla, con sus prompts exactos.
 - `lib/provider-logos.ts`: relación entre cada ficha y su logotipo.
 - `public/logos/SOURCES.md`: procedencia de los logos oficiales.
 - `tests/branding.test.mjs`: cobertura de imágenes, seguridad de SVG y paleta neutra.

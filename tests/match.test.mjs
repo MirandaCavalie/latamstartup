@@ -19,7 +19,7 @@ const tech = {
   region: 'Lima',
 };
 test('Every catalogue entry has a unique ID, HTTPS source and sufficient editorial context', () => {
-  assert.equal(opportunities.length, 24);
+  assert.equal(opportunities.length, 41);
   assert.equal(
     new Set(opportunities.map((o) => o.id)).size,
     opportunities.length,
@@ -130,28 +130,31 @@ test('Corrupt stored profiles are rejected and duplicate needs are normalized', 
   );
 });
 
-test('The atlas separates local origin from international benefits without inventing country coverage', () => {
+test('The atlas maps verified country chapters without treating regional eligibility as local', () => {
   const peru = atlasCountries.find((c) => c.code === 'PE');
-  const mexico = atlasCountries.find((c) => c.code === 'MX');
   const local = countryOpportunities(opportunities, peru);
   const global = opportunities.filter((o) => o.geography === 'Global');
   assert.equal(local.length, 18);
   assert.equal(global.length, 6);
-  assert.equal(local.length + global.length, opportunities.length);
-  assert.equal(countryOpportunities(opportunities, mexico).length, 0);
+  for (const [code, expected] of Object.entries({ MX: 5, CO: 3, CL: 3, AR: 3, BR: 3 })) {
+    const country = atlasCountries.find((c) => c.code === code);
+    assert.equal(countryOpportunities(opportunities, country).length, expected, code);
+  }
+  assert.equal(local.length + global.length + 17, opportunities.length);
   assert.ok(!local.some((o) => o.id === 'hubspot-bootstrap'));
 });
 
-test('New country records can appear in their atlas without entering the Peru-only match', () => {
+test('Investment programs disclose equity, closed rounds, and remain outside the Peru-only match', () => {
   const mexico = atlasCountries.find((c) => c.code === 'MX');
-  const fixture = {
-    ...find('uni-incubacion'),
-    geography: 'México',
-    countryCode: 'MX',
-  };
-  assert.equal(countryOpportunities([fixture], mexico).length, 1);
-  assert.equal(
-    matchOpportunity(fixture, tech, date).eligibleForSuggestions,
-    false,
-  );
+  const invest = ['500-latam', 'latitud-fellowship', 'rockstart-latam', 'platanus-programa'];
+  assert.ok(countryOpportunities(opportunities, mexico).some((o) => o.id === '500-latam'));
+  for (const id of invest) {
+    const item = find(id);
+    assert.equal(item.category, 'inversion');
+    assert.equal(item.benefitType, 'Inversión por participación');
+    assert.equal(matchOpportunity(item, tech, date).eligibleForSuggestions, false);
+  }
+  assert.equal(availability(find('platanus-programa'), date), 'closed');
+  assert.equal(availability(find('endeavor-argentina-premio'), new Date('2026-10-01T04:00:00Z')), 'closed');
+  assert.equal(find('fondo-emprender-sena').benefitType, 'Capital semilla condonable');
 });

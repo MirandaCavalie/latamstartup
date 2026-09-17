@@ -1,8 +1,8 @@
-# SOP: Tu envidia es mi progreso — atlas de oportunidades
+# SOP: Chancletazo — mapa de oportunidades
 
 ## Qué hace
 
-Abre con un globo interactivo de Latinoamérica, que permite descubrir el catálogo por país. Reúne programas, incubadoras, servicios y beneficios con enlaces oficiales, filtros, guardados y match para negocios en Perú. La inscripción y evaluación suceden en el sitio de cada institución.
+Abre con un globo interactivo de Latinoamérica, que permite descubrir el catálogo por país. Reúne programas, aceleradoras, inversión y recursos con enlaces oficiales, filtros, guardados y match para negocios en Perú. La inscripción y evaluación suceden en el sitio de cada institución.
 
 ## Por qué se construyó así (build/buy/kill)
 
@@ -10,7 +10,7 @@ Se construyó un prototipo acotado porque el usuario pidió una experiencia prop
 
 Diagnóstico aplicado antes de implementar la lógica:
 
-1. Volumen: tráfico y frecuencia real de uso desconocidos; no se afirma retorno de inversión. Se parte de 24 fichas revisadas como prueba del producto.
+1. Volumen: tráfico y frecuencia real de uso desconocidos; no se afirma retorno de inversión. Hay 41 fichas revisadas como prueba del producto.
 2. Entradas: sitios oficiales, bases y directorios enlazados, más respuestas estructuradas al cuestionario del visitante.
 3. Formato: fuentes HTML/PDF no uniformes, normalizadas editorialmente a registros TypeScript. El cuestionario usa opciones cerradas.
 4. Destino: catálogo y recomendaciones en la web; la acción final siempre va a la institución.
@@ -32,11 +32,13 @@ Decisión: construir la experiencia autorizada; mantener manual la aprobación d
 
 Ampliación visual solicitada: el atlas proyecta datos de Natural Earth con D3, sin contratar un servicio de mapas ni automatizar recopilación adicional. Se reutilizaron catálogo, match y almacenamiento local. El nuevo nombre visible no cambia las claves guardadas ni la URL existente.
 
-Cartel chicha e identidad separados: la portada usa un PNG original de 1448 × 1086, generado con imagegen integrado, con el texto “Tu envidia es mi progreso”. Representa papel negro mate con bordes ligeramente irregulares, pliegues sutiles y caligrafía de tintas planas fucsia, amarillo y lima; el exterior del papel es transparente. No es el logo. Encabezado, pie y favicon usan el símbolo monocromo MapPinned de Lucide, con licencia en `public/brand/ICON-LICENSE.txt`. La interfaz y el globo siguen en tonos neutros; banderas y logos oficiales conservan sus colores. No cambia la interacción del atlas, datos, filtros ni match.
+Cartel chicha e identidad separados: la portada usa un PNG original de 1448 × 1086, generado con imagegen integrado, con el texto “Tu envidia es mi progreso”. Representa papel negro mate con bordes ligeramente irregulares, pliegues sutiles y caligrafía de tintas planas fucsia, amarillo y lima; el exterior del papel es transparente. No es el logo. Encabezado, pie y favicon usan una chancla monocroma original, con el nombre Chancletazo en encabezado y pie. Su prompt y limitación de tinta raster están en `public/brand/CHANCLA-PROMPT.md`. La interfaz y el globo siguen en tonos neutros; banderas y logos oficiales conservan sus colores.
 
 Presentación del cartel: inclinación de −2°, sombra tenue y entrada de 850 ms, una sola vez. Al pasar el cursor se endereza y levanta ligeramente; no hay bucle de animación. `prefers-reduced-motion: reduce` desactiva entrada, transición y movimiento al pasar el cursor. El texto alternativo conserva el encabezado accesible. No se aplican filtros de color a las imágenes.
 
-Las 24 fichas muestran 20 imágenes oficiales únicas, almacenadas localmente. Cuando se utiliza la marca de una institución en vez de la del programa, se distingue en el registro y en el texto alternativo. Las fuentes están en `public/logos/SOURCES.md`; el prompt exacto del cartel está en `public/brand/POSTER-PROMPT.md`. El PNG y prompt de la antigua caligrafía transparente se conservan como versión histórica, sin referencias desde la interfaz.
+Las 41 fichas muestran imágenes oficiales almacenadas localmente. Cuando se utiliza la marca de una institución en vez de la del programa, se distingue en el registro y en el texto alternativo. Las fuentes están en `public/logos/SOURCES.md`; el prompt exacto del cartel está en `public/brand/POSTER-PROMPT.md`. El PNG y prompt de la antigua caligrafía transparente se conservan como versión histórica, sin referencias desde la interfaz.
+
+La expansión regional añade 17 fichas: 5 de México y 3 de cada uno de Colombia, Chile, Argentina y Brasil. Se crea `Inversión de capital` para programas privados que invierten a cambio de participación, separados de subvenciones y del capital semilla condonable del SENA. Algunos programas regionales figuran en el capítulo de su base o referencia principal; ello no limita ni promete elegibilidad territorial. Las convocatorias 2026 cerradas se conservan como referencia, nunca se anuncian como abiertas. El match sigue siendo peruano hasta contar con un perfil territorial para los otros países.
 
 ## Cómo correrlo
 
@@ -64,9 +66,9 @@ npm run check:links
 
 ## Entradas y salidas
 
-- Entrada editorial: `lib/opportunities.ts`, con URL oficial, fuente adicional opcional, descripción, requisitos, beneficios, costo, estado, fechas, alcance, modalidad, tipos, sectores y necesidades.
+- Entrada editorial: `lib/opportunities.ts` y `lib/latam-opportunities.ts`, con URL oficial, fuente adicional opcional, descripción, requisitos, beneficios, costo, estado, fechas, alcance, modalidad, tipos, sectores y necesidades.
 - Entrada geográfica: `lib/atlas.ts` y el dataset world-atlas 2.0.2. Coordenadas a escala país, no ubicaciones de proveedores. Los conteos se calculan del catálogo.
-- Entrada visual: PNG del cartel en `public/brand/`, símbolo de mapa local y logos oficiales PNG/SVG en `public/logos/`. Las imágenes no son enlaces a servicios de logos ni dependen de un proveedor externo durante la visita.
+- Entrada visual: PNG del cartel y marca de chancla en `public/brand/`, logos oficiales PNG/SVG/WebP en `public/logos/`. Las imágenes no son enlaces a servicios de logos ni dependen de un proveedor externo durante la visita.
 - Entrada del visitante: etapa, tipo de negocio, sector, objetivos y región.
 - Salida: lista filtrada, explicación de afinidad, ficha detallada y enlace oficial en nueva pestaña.
 - Preferencias: `mapping.saved.v1` y `mapping.profile.v1` en localStorage. Se valida su estructura al recuperar; no se requieren identificadores personales.
@@ -86,11 +88,11 @@ npm run check:links
 - Guardados: son del navegador/dispositivo y no se sincronizan. Bloqueo de almacenamiento muestra aviso; el catálogo sigue funcionando.
 - Importes: solo se incluyen tarifas ligadas a ediciones identificadas. Confirmar en la fuente.
 - BCP devolvió 403 al verificador automatizado; su página oficial se leyó con la herramienta de búsqueda. No se considera un enlace inexistente.
-- Los demás enlaces del catálogo y la fuente adicional de Alicorp devolvieron HTTP 200 en la revisión del 16/09/2026. HTTP 200 no garantiza que las bases estén actualizadas.
+- En la revisión de enlaces del 16/09/2026, Nafin y Latitud no pudieron verificarse automáticamente; Brasil Mais Produtivo respondió 403 al verificador. Esos resultados no prueban que el sitio esté caído. Los demás enlaces nuevos respondieron HTTP 200. HTTP 200 no garantiza que las bases estén actualizadas.
 - El scaffold incluye dependencias con avisos npm en herramientas y componentes de servidor. Esta entrega publica solo archivos estáticos, sin servidor RSC ni procesador de imágenes. Revisar dependencias antes de añadir backend.
-- Atlas: 18 fichas de origen peruano y 6 internacionales. HubSpot se reclasificó como internacional después de revisar su fuente oficial; su inclusión de Perú no lo convierte en un programa local.
+- Atlas: 18 fichas de origen peruano, 6 internacionales y 17 en los cinco países añadidos. HubSpot se reclasificó como internacional después de revisar su fuente oficial; su inclusión de Perú no lo convierte en un programa local.
 - Otros países: “Por mapear” significa que faltan fichas en este catálogo, no que el país carezca de programas. No hay fechas prometidas de lanzamiento.
-- Match: por ahora solo contempla emprendimientos en Perú. Excluye futuras fichas locales de otros países hasta ampliar el perfil y las reglas territoriales.
+- Match: por ahora solo contempla emprendimientos en Perú. Excluye las fichas de los otros países hasta ampliar el perfil y las reglas territoriales.
 - Cartografía: límites simplificados de Natural Earth, no una referencia legal de fronteras; no solicita geolocalización. Si la interacción de arrastre no está disponible, usar los botones de país y rotación.
 - QA: pruebas de reglas y separación territorial, TypeScript y compilación. Comprobación visual y de navegación del atlas en navegador; no es una auditoría integral de accesibilidad. Se preservan las dos herramientas WebMCP previamente verificadas.
 - Logos: si una imagen falla, se muestra el nombre de la institución como texto, no un logo inventado. El original de ITP tiene resolución limitada (137 × 72). Los logos se muestran sin alterar sus proporciones o colores.
@@ -106,8 +108,9 @@ Responsable: propietario/editor de Mapping; no hay un mantenedor externo contrat
 
 - Revisar semanalmente convocatorias con cierre próximo y mensualmente recursos permanentes.
 - Abrir la fuente oficial antes de actualizar `checkedAt`; que un enlace responda no sustituye la revisión de contenido.
-- Para añadir una ficha: copiar una estructura existente en `lib/opportunities.ts`, asignar ID único, llenar todos los campos y validar la fuente. La cantidad visible se calcula del catálogo; actualizar la expectativa del test si cambia el tamaño.
+- Para añadir una ficha: copiar una estructura existente en `lib/opportunities.ts` o `lib/latam-opportunities.ts`, asignar ID único, llenar todos los campos y validar la fuente. La cantidad visible se calcula del catálogo; actualizar la expectativa del test si cambia el tamaño.
 - No reutilizar fechas de una edición anterior para anunciar una nueva.
+- Revisar con prioridad las fechas y condiciones de Platanus, 500 Global, Latitud y Rockstart: inversión por participación no equivale a subvención. Confirmar la nueva cohorte antes de cambiar `status`.
 - Usar `npm run check:links` para detectar cambios de rutas. Revisar manualmente 403, 429, timeouts y redirecciones.
 - La lógica de afinidad vive en `lib/match.ts`. Ajustar pruebas cuando cambien reglas.
 - Para incorporar otro país: verificar sus fuentes, agregar `countryCode` ISO alfa-2 y `geography` con su nombre del atlas. La selección y los conteos se actualizan con las fichas; los beneficios globales permanecen separados. Ampliar cuestionario y reglas antes de habilitar match para residentes de ese país.

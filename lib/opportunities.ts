@@ -1,6 +1,9 @@
+import { latamOpportunities } from './latam-opportunities.ts';
+
 export type Category =
   | 'incubacion'
   | 'financiamiento'
+  | 'inversion'
   | 'herramientas'
   | 'capacitacion'
   | 'asesoria'
@@ -41,6 +44,8 @@ export type Opportunity = {
   benefit: string;
   benefitType:
     | 'Subvención'
+    | 'Capital semilla condonable'
+    | 'Inversión por participación'
     | 'Créditos de uso'
     | 'Descuento'
     | 'Formación'
@@ -73,6 +78,7 @@ export type Opportunity = {
 export const categoryLabels: Record<Category, string> = {
   incubacion: 'Incubación y mentoría',
   financiamiento: 'Financiamiento',
+  inversion: 'Inversión de capital',
   herramientas: 'Herramientas y beneficios',
   capacitacion: 'Capacitación',
   asesoria: 'Asesoría y servicios',
@@ -909,4 +915,5 @@ export const opportunities: Opportunity[] = [
     ],
     note: 'La convocatoria cerró el 12 de junio de 2026. El programa se conserva para conocerlo y consultar futuras ediciones.',
   },
+  ...latamOpportunities,
 ];
