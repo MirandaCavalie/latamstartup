@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Globe2 } from 'lucide-react';
+import { ArrowRight, Globe2, Sparkles } from 'lucide-react';
 import { geoGraticule10, geoOrthographic, geoPath } from 'd3-geo';
 import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
@@ -9,6 +9,7 @@ import world from 'world-atlas/countries-110m.json';
 import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 import { opportunities } from '@/lib/opportunities';
 import { SiteMark } from '@/components/site-mark';
+import { BrandSticker } from '@/components/brand-sticker';
 
 const topology = world as unknown as Topology<{
   countries: GeometryCollection<{ name: string }>;
@@ -39,23 +40,23 @@ function IntroGlobe() {
     >
       <defs>
         <radialGradient id={patternId} cx="45%" cy="38%" r="67%">
-          <stop stopColor="#2965ad" />
-          <stop offset="1" stopColor="#154d99" />
+          <stop stopColor="#ffffff" />
+          <stop offset="1" stopColor="#ecebf1" />
         </radialGradient>
       </defs>
-      <circle className="welcome-orbit" cx="340" cy="340" r="310" fill="none" stroke="#f4c331" strokeDasharray="4 12" />
-      <circle cx="340" cy="340" r="284" fill={`url(#${patternId})`} stroke="#d9e2da" strokeWidth="1.5" />
-      <path d={path(geoGraticule10()) ?? ''} fill="none" stroke="#9bb8d5" strokeWidth="0.7" />
+      <circle className="welcome-orbit" cx="340" cy="340" r="310" fill="none" stroke="#d3d0df" strokeDasharray="4 12" />
+      <circle cx="340" cy="340" r="284" fill={`url(#${patternId})`} stroke="#d4d3da" strokeWidth="1.5" />
+      <path d={path(geoGraticule10()) ?? ''} fill="none" stroke="#cfccd8" strokeWidth="0.7" />
       {countries.map((country, index) => (
-        <path key={index} d={path(country) ?? ''} fill="#fff8e8" fillOpacity=".12" stroke="#fff8e8" strokeWidth="0.8" />
+        <path key={index} d={path(country) ?? ''} fill="#c1bbd5" fillOpacity=".26" stroke="#aaa5b8" strokeWidth="0.8" />
       ))}
       {mapped.map((country) => {
         const point = projection([...country.coordinates]);
         if (!point || !path({ type: 'Point', coordinates: [...country.coordinates] })) return null;
         return (
           <g key={country.code}>
-            <circle cx={point[0]} cy={point[1]} r="11" fill="#f4c331" fillOpacity=".2" />
-            <circle cx={point[0]} cy={point[1]} r="4" fill="#f4c331" />
+            <circle cx={point[0]} cy={point[1]} r="11" fill="#c5b5ef" fillOpacity=".6" />
+            <circle cx={point[0]} cy={point[1]} r="4" fill="#29252f" />
           </g>
         );
       })}
@@ -63,7 +64,11 @@ function IntroGlobe() {
   );
 }
 
-export function WelcomeGate({ onEnter }: { onEnter: () => void }) {
+export function WelcomeGate({ onEnter, onNavigate, onMatch }: {
+  onEnter: () => void;
+  onNavigate: (view: 'explore' | 'resources' | 'matches' | 'saved') => void;
+  onMatch: () => void;
+}) {
   const guestButton = useRef<HTMLButtonElement>(null);
   const [email, setEmail] = useState('');
   const [consent, setConsent] = useState(false);
@@ -101,14 +106,21 @@ export function WelcomeGate({ onEnter }: { onEnter: () => void }) {
 
   return (
     <section className="welcome-gate" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+      <header className="site-header welcome-header">
+        <SiteMark />
+        <nav className="welcome-nav" aria-label="Navegación principal">
+          <button onClick={() => onNavigate('explore')}>Catálogo</button>
+          <button onClick={() => onNavigate('resources')}>Recursos</button>
+          <button onClick={() => onNavigate('matches')}>Mis matches</button>
+          <button onClick={() => onNavigate('saved')}>Guardados</button>
+        </nav>
+        <button className="button primary" onClick={onMatch}><Sparkles size={16} /> Hacer mi match</button>
+      </header>
       <div className="welcome-layout">
         <div className="welcome-content">
-          <div className="welcome-wordmark">
-            <SiteMark />
-          </div>
-          <h1 id="welcome-title">Tu próxima<br /><span>parada.</span></h1>
+          <h1 id="welcome-title">la combi<span>.</span></h1>
           <p className="welcome-description">
-            Programas, inversión, recursos y fellowships para emprender. Explora el mapa y ve directo a cada fuente oficial.
+            Un mapa para encontrar apoyo y emprender en LATAM.
           </p>
           <div className="welcome-stats" aria-label="Contenido actual del mapa">
             <div><strong>{opportunities.length}</strong><span>oportunidades</span></div>
@@ -137,12 +149,15 @@ export function WelcomeGate({ onEnter }: { onEnter: () => void }) {
               </form>
             )}
           </div>
-          <p className="welcome-fineprint">Sin registro en La Combi. Tu correo se guarda solo si lo envías con consentimiento; tus guardados y el perfil de match siguen en este navegador.</p>
+          <p className="welcome-fineprint">Explora sin registro. Tu perfil y tus guardados se quedan en este navegador.</p>
         </div>
         <div className="welcome-visual" aria-hidden="true">
-          <div className="welcome-route-ticket"><span>RUTA LATINOAMÉRICA</span><strong>Hay lugar<br />para tu idea.</strong></div>
-          <IntroGlobe />
-          <img className="welcome-combi" src="/brand/combi-mark.png" alt="" width="1254" height="1254" />
+          <BrandSticker kind="envidia" />
+          <div className="welcome-map-window">
+            <div className="map-window-bar"><span className="window-dots"><i /><i /><i /></span><span>latam.map</span><Globe2 size={14} /></div>
+            <IntroGlobe />
+          </div>
+          <BrandSticker kind="latam" />
           <span className="welcome-globe-caption"><Globe2 size={16} /> Perú · México · Colombia · Chile · Argentina · Brasil</span>
         </div>
       </div>

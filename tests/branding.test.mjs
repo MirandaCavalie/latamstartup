@@ -32,16 +32,17 @@ test('Every opportunity has a local, attributed program or provider image', () =
   }
 });
 
-test('The homepage poster is a real image, separate from the combi site mark', () => {
-  const poster = readFileSync(
-    new URL(
-      '../public/brand/tu-envidia-es-mi-progreso-combi.png',
-      import.meta.url,
-    ),
-  );
-  assert.equal(poster.subarray(1, 4).toString(), 'PNG');
-  assert.equal(poster.readUInt32BE(16), 1448);
-  assert.equal(poster.readUInt32BE(20), 1086);
+test('Original stickers replace the large poster without replacing the combi identity', () => {
+  for (const [file, width, height] of [
+    ['sticker-tu-envidia.png', 1536, 1024],
+    ['sticker-hecho-en-latam.png', 1774, 887],
+  ]) {
+    const sticker = readFileSync(new URL(`../public/brand/${file}`, import.meta.url));
+    assert.equal(sticker.subarray(1, 4).toString(), 'PNG');
+    assert.equal(sticker.readUInt32BE(16), width);
+    assert.equal(sticker.readUInt32BE(20), height);
+    assert.equal(sticker[25], 6, 'RGBA PNG preserves generated transparency');
+  }
   const mark = readFileSync(
     new URL('../components/site-mark.tsx', import.meta.url),
     'utf8',
@@ -65,26 +66,36 @@ test('The homepage poster is a real image, separate from the combi site mark', (
   assert.match(welcome, /<SiteMark\s*\/>/);
   assert.match(layout, /La Combi/);
   assert.doesNotMatch(mark + welcome + layout, /chancla-mark|chancletazo/i);
-  assert.match(atlas, /<ChichaPoster\s*\/>/);
+  assert.doesNotMatch(atlas + welcome, /ChichaPoster|tu-envidia-es-mi-progreso-combi/);
+  for (const component of [atlas, welcome]) {
+    assert.match(component, /<BrandSticker kind="envidia"/);
+    assert.match(component, /<BrandSticker kind="latam"/);
+  }
+  const sticker = readFileSync(new URL('../components/brand-sticker.tsx', import.meta.url), 'utf8');
+  assert.match(sticker, /aria-hidden="true"/);
+  assert.doesNotMatch(sticker, /<button|onClick/);
+  for (const view of ['explore', 'resources', 'matches', 'saved']) {
+    assert.ok(welcome.includes(`onNavigate('${view}')`));
+  }
   assert.match(page, /<SiteMark variant="header"/);
   assert.match(page, /<SiteMark variant="footer"/);
   assert.doesNotMatch(page, /BrandLogo|ChichaPoster/);
 });
 
-test('The UI preserves image colors and the poster respects reduced motion', () => {
+test('The neutral UI preserves official image colors and respects reduced motion', () => {
   const css = readFileSync(
     new URL('../app/globals.css', import.meta.url),
     'utf8',
   );
   assert.doesNotMatch(css, /grayscale\s*\(/);
   assert.doesNotMatch(css, /chicha-title|font-chicha/);
-  assert.match(css, /animation: poster-settle 850ms[^;]*both;/);
-  assert.doesNotMatch(css, /animation: poster-settle[^;]*infinite/);
-  assert.match(
-    css,
-    /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.poster-mount\s*\{\s*animation: none;/,
-  );
-  assert.match(css, /\.poster-sheet\s*\{\s*transition: none;/);
+  assert.match(css, /animation: sticker-arrive 800ms[^;]*both;/);
+  assert.doesNotMatch(css, /animation: sticker-arrive[^;]*infinite/);
+  assert.match(css, /\.brand-sticker \{ animation: none; \}/);
+  assert.match(css, /\.brand-sticker img \{ transition: none; \}/);
+  assert.match(css, /pointer-events: none; animation: sticker-arrive/);
+  assert.match(css, /--combi-paper: #fafafa/);
+  assert.match(css, /--sticker-lilac: #ded7fa/);
   assert.doesNotMatch(css, /(?:saturate|hue-rotate|sepia|brightness)\s*\(/);
   for (const token of ['yellow', 'red', 'blue', 'green', 'paper']) {
     assert.ok(css.includes(`--combi-${token}:`));

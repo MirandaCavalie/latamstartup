@@ -15,10 +15,10 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Afinidad explicada, sin prometer elegibilidad o aprobación.
 - Fechas con zona horaria de Perú y revisión de vigencia a los 45 días.
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
-- Cartel original «Tu envidia es mi progreso»: letras rojas y azules sobre papel amarillo, textura de impresión y motivos populares latinoamericanos.
-- Identidad independiente: combi ilustrada y nombre La Combi en entrada, encabezado, pie y favicon; el afiche no es el logo. Papel crema, amarillo, rojo, cobalto y verde en la interfaz; banderas y marcas oficiales conservan sus colores.
-- Animaciones breves de llegada, cartel pegado y respuesta al cursor; sin bucles permanentes y con soporte de movimiento reducido.
-- Tipografía Bowlby One SC local para marca y títulos, inspirada en carteles de letras recortadas; Geist para lectura. Licencia y procedencia en `public/fonts/`.
+- Interfaz minimalista blanca y negra con detalles lila y verde ácido, fondo punteado y marcos ligeros de ventana para el mapa.
+- Dos stickers originales: «Tu envidia es mi progreso» y «HECHO EN LATAM». Reemplazan el póster grande; la combi ilustrada sigue siendo el logo y las banderas y marcas oficiales conservan sus colores.
+- Entrada breve de stickers y respuesta sutil al cursor; sin bucles permanentes y con soporte de movimiento reducido.
+- Tipografía Geist para marca, títulos y lectura. La fuente y los carteles del branding anterior se conservan como archivos históricos, sin uso en la interfaz actual.
 - Logos oficiales locales en las 45 fichas, con fuentes y distinción entre marca del programa y de su institución.
 - Lista de correo y buzón de sugerencias persistentes en D1. Sin cuenta propia, pagos ni envío automático de campañas; las propuestas pasan por revisión humana.
 
@@ -69,9 +69,10 @@ La publicación incluye la interfaz, dos rutas de recepción de datos y la base 
 - `lib/match.ts`: afinidad, búsqueda, validación de perfil y vigencia.
 - `app/page.tsx`: exploración, filtros, formulario, guardados y fichas.
 - `app/globals.css`: diseño adaptable.
-- `components/chicha-poster.tsx`: cartel de portada como imagen, no como logo.
+- `components/brand-sticker.tsx`: imágenes decorativas de los dos stickers actuales.
+- `components/chicha-poster.tsx`: componente histórico del cartel, actualmente sin uso.
 - `components/site-mark.tsx`: combi y nombre La Combi en entrada, encabezado y pie.
-- `public/brand/`: `combi-mark.png`, `tu-envidia-es-mi-progreso-combi.png` y `COMBI-PROMPTS.md`; las versiones anteriores se conservan sin uso en la interfaz.
+- `public/brand/`: logo de combi, stickers y sus prompts exactos en `STICKERS-PROMPTS.md`; carteles anteriores conservados como historial.
 - `lib/provider-logos.ts`: relación entre cada ficha y su logotipo.
 - `public/logos/SOURCES.md`: procedencia de los logos oficiales.
 - `tests/branding.test.mjs`: cobertura de imágenes, seguridad de SVG, identidad y movimiento reducido.

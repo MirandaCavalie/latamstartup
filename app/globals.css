@@ -36,31 +36,33 @@
   --radius-xl: 18px;
 }
 :root {
-  --combi-yellow: #f4c331;
-  --combi-red: #c52e20;
-  --combi-blue: #154d99;
-  --combi-green: #0c7165;
-  --combi-paper: #fff8e8;
-  --font-display: 'Bowlby One SC', Impact, sans-serif;
+  --combi-yellow: #e5f7b5;
+  --combi-red: #19191c;
+  --combi-blue: #242329;
+  --combi-green: #555065;
+  --combi-paper: #fafafa;
+  --sticker-lilac: #ded7fa;
+  --sticker-lime: #e5f7b5;
+  --font-display: var(--font-geist-sans), Arial, sans-serif;
   --background: var(--combi-paper);
-  --foreground: #202c35;
+  --foreground: #19191c;
   --card: #ffffff;
   --primary: var(--combi-blue);
   --primary-foreground: #ffffff;
-  --secondary: #f9eed5;
-  --muted: #f6f0e3;
-  --muted-foreground: #616666;
-  --accent: #f4c331;
-  --border: #d8d1bf;
+  --secondary: #f0eef6;
+  --muted: #f2f2f3;
+  --muted-foreground: #66656c;
+  --accent: #ded7fa;
+  --border: #dedee2;
   --ring: var(--combi-blue);
   --radius: 12px;
 }
 .dark {
-  --background: #172d3b;
-  --foreground: #fff8e8;
-  --card: #223c4c;
-  --primary: #f4c331;
-  --primary-foreground: #172d3b;
+  --background: #19191c;
+  --foreground: #fafafa;
+  --card: #242329;
+  --primary: #ded7fa;
+  --primary-foreground: #19191c;
   --secondary: #444444;
   --muted: #323232;
   --muted-foreground: #c2c2c2;
@@ -2494,4 +2496,208 @@ p {
   .welcome-combi, .welcome-orbit, .welcome-route-ticket, .site-mark img, .site-mark:hover img { animation: none; }
   .welcome-enter, .button svg, .welcome-enter svg, .country-preview button svg { transition: none; }
   .welcome-enter:hover, .button:hover svg, .country-preview button:hover svg, .welcome-enter:hover svg { transform: none; }
+}
+
+/* Minimal digital desk: neutral working surfaces, original vinyl stickers. */
+.site-header {
+  min-height: 76px;
+  padding: 10px max(28px, calc((100vw - 1320px) / 2));
+  border-top: 0;
+  background: #fafafaf5;
+  gap: 22px;
+}
+.site-mark, .site-mark-footer { height: 40px; gap: 7px; color: #19191c; }
+.site-mark img, .site-mark-footer img { width: 34px; height: 34px; animation: none; }
+.site-wordmark, .site-mark-footer .site-wordmark {
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  text-transform: lowercase;
+  font-size: 24px;
+  font-weight: 720;
+  letter-spacing: -1.1px;
+}
+.site-wordmark-stop { color: inherit; }
+.main-nav[data-slot='tabs-list'] { gap: 9px; height: auto; }
+.main-nav .nav-link { padding: 10px 13px; border-radius: 999px; min-height: 40px; color: #69676e; font-size: 14px; }
+.main-nav .nav-link[data-active] { color: #19191c; background: #ecebf0; }
+.main-nav .nav-link[data-active]:after { display: none; }
+.count-pill { background: #e8e6ed; color: #514d5c; border-radius: 999px; }
+.button, .site-header > .button, .button.atlas-primary, .welcome-enter {
+  border-radius: 999px;
+  box-shadow: 0 2px 3px #19191c0a, inset 0 1px 0 #ffffff26;
+  font-weight: 550;
+  min-height: 44px;
+}
+.button.primary, .button.atlas-primary, .welcome-enter { background: #252329; color: #fff; border: 1px solid #252329; }
+.button.primary:hover, .button.atlas-primary:hover, .welcome-enter:hover { background: #44404d; box-shadow: 0 5px 15px #19191c14; transform: translateY(-2px); }
+.button.secondary { background: linear-gradient(#fff, #f0eff3); }
+.welcome-gate, .atlas-section { background-color: #fafafa; background-image: radial-gradient(#dcdbe3 0.7px, transparent 0.7px); background-size: 24px 24px; }
+.welcome-header { position: relative; z-index: 3; }
+.site-header .welcome-nav { display: flex; align-items: center; gap: 5px; align-self: center; }
+.welcome-nav button { background: none; border: 0; border-radius: 999px; padding: 10px 14px; color: #69676e; font-size: 14px; white-space: nowrap; }
+.welcome-nav button:hover { color: #19191c; background: #eeedf2; }
+.welcome-layout { min-height: calc(100svh - 76px); max-width: 1260px; margin: auto; padding: 52px 38px 60px; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 62px; align-items: center; }
+.welcome-content { padding: 0; justify-self: start; max-width: 480px; }
+.welcome-content h1 { color: #19191c; font-family: var(--font-geist-sans), Arial, sans-serif; font-size: clamp(4rem, 7.6vw, 6.8rem); font-weight: 550; letter-spacing: -.075em; line-height: 1.08; text-transform: none; margin: 0 0 22px; white-space: nowrap; }
+.welcome-content h1 span { padding: 0; margin: 0; background: none; transform: none; color: #817098; }
+.welcome-description { font-size: 18px; color: #66626c; line-height: 1.6; max-width: 350px; }
+.welcome-stats { border: 0; gap: 25px; padding: 0; margin: 23px 0 27px; }
+.welcome-stats div { gap: 6px; }
+.welcome-stats strong { font-family: var(--font-geist-mono), monospace; font-size: 15px; color: #514a60; font-weight: 500; }
+.welcome-stats span { font-size: 14px; color: #6d6873; }
+.welcome-enter { min-height: 50px; width: fit-content; gap: 27px; padding: 13px 22px; font-size: 15px; }
+.welcome-email-block { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e3e1e8; }
+.welcome-email-block > p:first-child { font-size: 14px; color: #5e5968; }
+.welcome-email-row { gap: 7px; min-height: 44px; }
+.welcome-email-row input, .welcome-email-row button { border: 1px solid #d9d6e1; border-radius: 10px; }
+.welcome-email-row input { padding: 10px 12px; background: #ffffffd9; }
+.welcome-email-row button { background: #e7e1f6; color: #2d243d; padding: 0 13px; font-weight: 550; }
+.welcome-email-row button:hover { background: #dcd2f0; }
+.welcome-consent { color: #716b7a; font-size: 12px; line-height: 1.6; margin-top: 14px; }
+.welcome-fineprint { color: #77717e; font-size: 12px; max-width: 420px; margin-top: 20px; }
+.welcome-visual { display: block; min-height: 550px; height: auto; padding: 55px 0 65px; border: 0; background: transparent; overflow: visible; }
+.welcome-map-window { border: 1px solid #c9c6d2; border-radius: 14px; background: #fafafd; box-shadow: 0 12px 35px #24202b10, 0 2px 5px #24202b0a; transform: rotate(1.5deg); overflow: hidden; }
+.welcome-globe { width: 100%; margin: 0; }
+.welcome-globe-caption { position: static; transform: none; width: auto; max-width: 100%; margin: 18px 0 0; padding: 0; background: none; color: #76707f; box-shadow: none; font-size: 12px; text-align: left; }
+.map-window-bar { display: flex; justify-content: space-between; align-items: center; gap: 15px; height: 34px; padding: 0 13px; border-bottom: 1px solid #dedbe5; background: linear-gradient(#fdfdff, #efedf3); color: #797381; font: 12px var(--font-geist-mono), monospace; }
+.window-dots { display: flex; gap: 5px; }
+.window-dots i { width: 7px; height: 7px; background: #cfccd7; border: 1px solid #bcb8c6; border-radius: 50%; }
+.window-dots i:nth-child(2) { background: #dbd2f5; }
+.window-dots i:nth-child(3) { background: #d8e6b9; }
+.atlas-section { border-bottom: 1px solid #dedbe4; }
+.atlas-main { max-width: 1320px; padding: 42px 38px 18px; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 55px; min-height: 620px; }
+.atlas-copy { min-width: 0; padding: 155px 0 80px; }
+.atlas-headline { font-family: var(--font-geist-sans), Arial, sans-serif; font-size: clamp(3.5rem, 6.2vw, 5.75rem); letter-spacing: -.07em; font-weight: 520; line-height: 1.06; color: #19191c; }
+.atlas-headline > span { color: #817098; }
+.atlas-actions { gap: 19px; margin-top: 30px; }
+.button.atlas-primary { padding: 13px 21px; }
+.atlas-match-link { color: #514b5d; }
+.globe-stage { margin: 0; max-width: 650px; border: 1px solid #d5d1de; border-radius: 14px; background: #fcfcfdf0; box-shadow: 0 12px 32px #29233109; padding-bottom: 12px; }
+.globe-stage .map-window-bar { border-radius: 14px 14px 0 0; }
+.globe-orbit { stroke: #c9c3d5; }
+.atlas-count-card { left: -20px; top: 13%; padding: 12px 15px; background: #fff; border: 1px solid #d9d5e1; border-radius: 13px; box-shadow: 0 6px 18px #2820340a; transform: rotate(-3deg); }
+.atlas-count-icon { background: #eee9f8; color: #6c5c83; width: 33px; height: 33px; }
+.atlas-count-card strong { font-family: var(--font-geist-sans), Arial, sans-serif; font-size: 28px; font-weight: 650; letter-spacing: -1px; color: #252329; }
+.atlas-count-card div > span { color: #7a7383; font-size: 12px; }
+.count-card-spark { display: none; }
+.country-preview { right: -17px; bottom: 14%; width: 215px; padding: 16px; border: 1px solid #d3cedd; border-radius: 14px; box-shadow: 0 8px 25px #2820340c; background: #fffffff7; }
+.country-preview h2 { color: #242129; font-weight: 600; font-size: 23px; }
+.country-state.mapped { background: #ece7f7; color: #5c4d72; }
+.country-state { font-size: 11px; }
+.country-preview button { background: #e8e1f5; color: #43364f; border: 1px solid #ddd3ed; border-radius: 8px; font-weight: 550; }
+.country-preview button:hover { background: #dcd1ef; }
+.globe-controls { margin: 0; padding: 0 14px; color: #77717d; }
+.atlas-country-bar { max-width: 1244px; margin: 18px auto 0; border-top: 1px solid #dedbe5; padding-top: 21px; }
+.country-bar-heading > span { font-size: 12px; letter-spacing: .7px; font-weight: 550; }
+.country-bar-heading small { color: #797380; }
+.country-chip { border-radius: 999px; background: #ffffffcc; padding: 9px 14px; }
+.country-chip.selected { background: #eee8fb; color: #43364f; border-color: #c6b8df; }
+.country-chip:hover { border-color: #b9accb; }
+.global-benefits { border-color: #e6e3eb; }
+.catalog-anchor { height: 38px; scroll-margin-top: 22px; }
+.contribute-section, .site-footer { border-top: 1px solid #dedbe5; }
+.contribute-copy h2 { color: #242129; font-family: var(--font-geist-sans), Arial, sans-serif; text-transform: none; font-weight: 550; letter-spacing: -.045em; }
+.contribute-panel { box-shadow: 0 4px 18px #29233105; border: 1px solid #ded9e6; border-radius: 16px; }
+.quiz-option.chosen, .need-option.chosen { background: #f0ebfa; border-color: #b9a9cf; box-shadow: 0 0 0 1px #b9a9cf; }
+.quiz-progress [data-slot='progress-indicator'] { background: #817098; }
+.match-dialog[data-slot='dialog-content'], .about-dialog[data-slot='dialog-content'] { border: 1px solid #d8d1e2; border-radius: 18px; }
+.detail-title, .quiz-title { color: #242129; }
+.opportunity-card { border-color: #e1dde7; border-radius: 14px; box-shadow: 0 1px 2px #22222203; transition: border-color 180ms, box-shadow 180ms; }
+.opportunity-card:hover { border-color: #c6b9d8; box-shadow: 0 7px 22px #29233108; }
+.official-link { background: #f4f1f9; border-color: #e3dcec; color: #4e405e; border-radius: 8px; }
+.official-link:hover { background: #eae4f4; }
+.brand-sticker { position: absolute; z-index: 2; pointer-events: none; animation: sticker-arrive 800ms cubic-bezier(.2,.8,.3,1) both; }
+.brand-sticker img { display: block; width: 100%; height: auto; transform: rotate(var(--sticker-angle, -8deg)); transition: transform 380ms cubic-bezier(.2,.8,.3,1); }
+.sticker-envidia { --sticker-angle: -9deg; width: 235px; }
+.sticker-latam { --sticker-angle: 9deg; width: 175px; }
+.atlas-copy > .sticker-envidia { top: -3px; left: 35px; }
+.atlas-copy > .sticker-latam { right: 12px; bottom: -2px; }
+.welcome-visual > .sticker-envidia { top: -21px; left: -25px; width: 255px; }
+.welcome-visual > .sticker-latam { right: -17px; bottom: 35px; width: 190px; }
+@keyframes sticker-arrive {
+  from { opacity: 0; translate: 0 -14px; scale: 1.06; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .atlas-copy:hover .brand-sticker img, .welcome-visual:hover .brand-sticker img { transform: translateY(-7px) rotate(calc(var(--sticker-angle) + 5deg)); }
+}
+@media (min-width: 1600px) { .atlas-main { min-height: 620px; } }
+@media (max-width: 1350px) { .atlas-country-bar { margin-left: 38px; margin-right: 38px; } }
+@media (max-width: 1050px) {
+  .welcome-layout { gap: 32px; padding: 44px 28px; }
+  .welcome-content h1 { font-size: clamp(3.5rem, 7vw, 5.5rem); }
+  .welcome-visual { min-height: 440px; }
+  .atlas-main { gap: 30px; padding: 32px 28px 15px; min-height: 540px; }
+  .atlas-headline { font-size: clamp(3rem, 6vw, 5rem); }
+  .atlas-copy { padding-top: 135px; padding-bottom: 65px; }
+  .atlas-copy > .sticker-envidia { width: 210px; left: 5px; }
+  .atlas-actions { gap: 12px; }
+  .country-preview { right: -8px; width: 190px; }
+  .atlas-count-card { left: -10px; padding: 10px; }
+}
+@media (max-width: 900px) {
+  .site-header { padding: 12px 22px; gap: 9px; }
+  .main-nav[data-slot='tabs-list'], .site-header .welcome-nav { order: 3; flex-basis: 100%; overflow-x: auto; justify-content: flex-start; gap: 6px; height: auto; padding: 3px 0 0; }
+  .welcome-nav button { padding: 9px 12px; }
+  .welcome-layout { grid-template-columns: minmax(0, 1fr); max-width: 620px; padding: 45px 30px; gap: 30px; }
+  .welcome-content { max-width: 520px; justify-self: stretch; }
+  .welcome-content h1 { font-size: clamp(3.5rem, 12vw, 6rem); }
+  .welcome-visual { min-height: 0; padding: 55px 15px 45px; }
+  .welcome-globe { margin: 0; width: 100%; }
+  .welcome-visual > .sticker-envidia { width: 210px; top: -5px; left: 0; }
+  .welcome-visual > .sticker-latam { right: 0; bottom: 28px; width: 155px; }
+}
+@media (max-width: 800px) {
+  .atlas-main { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 22px 24px; }
+  .atlas-copy { padding: 95px 0 62px; }
+  .atlas-headline { font-size: clamp(3rem, 8vw, 4.5rem); }
+  .atlas-copy > .sticker-envidia { width: 180px; top: -17px; left: auto; right: 0; }
+  .atlas-copy > .sticker-latam { width: 140px; bottom: -6px; right: 8px; }
+  .globe-stage { max-width: 600px; margin: 0 auto; padding-bottom: 12px; }
+  .country-preview { right: 7px; bottom: 17%; }
+  .atlas-count-card { left: 8px; top: 12%; }
+  .globe-controls { flex-direction: row; justify-content: space-between; align-items: center; padding: 0 14px; }
+  .atlas-country-bar { margin: 2px 24px 0; }
+  .international-paths { grid-template-columns: 1fr; gap: 0; }
+}
+@media (max-width: 520px) {
+  .site-header { padding: 10px 16px; }
+  .site-mark img { width: 29px; height: 29px; }
+  .site-wordmark { font-size: 22px; }
+  .site-header > .button { font-size: 12px; padding: 9px 12px; gap: 5px; min-height: 40px; }
+  .main-nav .nav-link, .welcome-nav button { font-size: 13px; padding: 8px 10px; min-height: 38px; }
+  .welcome-layout { padding: 37px 22px; gap: 25px; }
+  .welcome-description { font-size: 17px; }
+  .welcome-stats { gap: 20px; }
+  .welcome-email-row { flex-wrap: wrap; }
+  .welcome-email-row input { flex: 1 1 165px; }
+  .welcome-email-row button { min-height: 44px; flex: 1 1 135px; }
+  .welcome-visual { display: block; height: auto; }
+  .welcome-globe-caption { font-size: 12px; line-height: 1.6; padding-right: 10px; align-items: flex-start; }
+  .atlas-main { padding: 17px 18px 20px; }
+  .atlas-copy { padding: 85px 0 60px; }
+  .atlas-headline { font-size: clamp(2.8rem, 12vw, 4rem); }
+  .atlas-actions { margin-top: 22px; gap: 15px; }
+  .button.atlas-primary { font-size: 13px; padding: 12px 16px; }
+  .atlas-match-link { font-size: 13px; }
+  .atlas-copy > .sticker-envidia { width: 160px; top: -9px; right: 4px; }
+  .atlas-copy > .sticker-latam { width: 127px; bottom: -4px; }
+  .atlas-count-card { top: 13%; padding: 8px 10px; gap: 7px; }
+  .atlas-count-card strong { font-size: 22px; }
+  .atlas-count-card div > span { max-width: 105px; font-size: 11px; }
+  .atlas-count-icon { display: none; }
+  .country-preview { position: relative; right: auto; bottom: auto; width: auto; margin: -12px 12px 14px; padding: 13px; border-radius: 10px; }
+  .country-preview-top { margin-bottom: 3px; }
+  .country-preview h2 { font-size: 21px; }
+  .country-preview p { font-size: 14px; margin: 4px 0 10px; }
+  .country-state { font-size: 11px; }
+  .atlas-country-bar { margin: 0 18px; }
+  .country-bar-heading { gap: 6px; }
+  .contribute-panel { box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-sticker { animation: none; }
+  .brand-sticker img { transition: none; }
+  .atlas-copy:hover .brand-sticker img, .welcome-visual:hover .brand-sticker img { transform: rotate(var(--sticker-angle)); }
+  .opportunity-card, .button, .welcome-enter { transition: none; }
+  .button:hover, .welcome-enter:hover { transform: none; }
 }

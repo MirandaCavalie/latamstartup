@@ -775,7 +775,16 @@ export default function Home() {
     </>
   );
 
-  if (!entered) return <WelcomeGate onEnter={enterMap} />;
+  if (!entered) return <WelcomeGate
+    onEnter={enterMap}
+    onNavigate={(nextView) => {
+      enterMap();
+      setView(nextView);
+      resetFilters();
+      requestAnimationFrame(scrollToCatalog);
+    }}
+    onMatch={() => { enterMap(); setQuizOpen(true); }}
+  />;
 
   return (
     <Tabs
@@ -848,11 +857,7 @@ export default function Home() {
         onMatch={() => setQuizOpen(true)}
       />
       <main className="main-wrap">
-        <section className="intro catalog-intro" id="catalogo">
-          <div>
-            <h2>Menos búsqueda. Más movimiento.</h2>
-          </div>
-        </section>
+        <div className="catalog-anchor" id="catalogo" />
         <div className="workspace">
           <aside
             className="filter-sidebar"
