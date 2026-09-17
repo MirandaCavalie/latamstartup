@@ -128,6 +128,8 @@ Cada sugerencia recibida queda en estado `pending` hasta revisión de la fuente,
 
 ## Mantenimiento
 
+Refuerzo de costes (17/09/2026): la propietaria decidió mantener Workers Paid. Se desplegaron límites de 50 ms CPU/10 subpeticiones, 60 páginas/minuto/IP y los límites de formularios existentes. Se añadieron cupos globales diarios de 200 correos, 100 propuestas y 1,000 matches compartidos, índices de bajas/retención y desactivación de logs persistentes. Las bajas no consumen cupo diario. Se verificaron 39 pruebas y la integración local, más respuestas HTTP del dominio público. Decisión: controles simples dentro del Worker/D1 y avisos gestionados de Cloudflare; no construir otro servicio de monitorización ni activar builds automáticos mientras no hagan falta. Los cupos controlan recepción/crecimiento, no garantizan un máximo monetario. `docs/PRODUCTION.md` describe límites, operación y riesgos residuales. El registro de alertas vive en la cuenta Cloudflare, no en GitHub; su destinatario no autoriza publicar ese correo en Privacidad.
+
 Responsable: propietario/editor de Mapping; no hay un mantenedor externo contratado.
 
 - Corrección del mapa del 17/09/2026: los grupos de stickers y resultados tenían claves React iguales al cambiar de país; ahora usan prefijos distintos para evitar nodos decorativos huérfanos. El SVG impide selección y arrastre nativos con CSS y eventos, para prevenir el resaltado azul observado; esta causa del azul es una hipótesis basada en la captura, no una reproducción en navegador. No se desactiva la selección de texto de las fichas ni la navegación por teclado.
