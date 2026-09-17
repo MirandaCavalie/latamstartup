@@ -28,18 +28,20 @@ const countries = boundaries.map((boundary) => ({
 const latamBounds: MapBounds = [projection([-119, 34])!, projection([-33, -57])!];
 const mapped = atlasCountries.filter((country) => countryOpportunities(opportunities, country).length > 0);
 
-export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, onContribute, now }: {
+export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, onContribute, initialCountryCode, onCountryChange, now }: {
   onExplore: (scope: string) => void;
   onDetails: (item: Opportunity) => void;
   onNewsletter: () => void;
   onAbout: () => void;
   onContribute: () => void;
+  initialCountryCode?: string;
+  onCountryChange: (code: string) => void;
   now: Date;
 }) {
   const container = useRef<HTMLElement>(null);
   const picker = useRef<HTMLSelectElement>(null);
   const [size, setSize] = useState({ width: 1440, height: 800 });
-  const [selected, setSelected] = useState<AtlasCountry | null>(null);
+  const [selected, setSelected] = useState<AtlasCountry | null>(() => atlasCountries.find((country) => country.code === initialCountryCode) ?? null);
   const [dragging, setDragging] = useState(false);
   const [camera, setCamera] = useState<MapCamera>(() => fitMapCamera(latamBounds, 1440, 800));
   const cameraRef = useRef(camera);
@@ -77,11 +79,13 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
     Number(availability(a, now) === 'closed') - Number(availability(b, now) === 'closed')) : [], [selected, now]);
   const reset = () => {
     setSelected(null);
+    onCountryChange('');
     moveTo(fitMapCamera(latamBounds, size.width, size.height));
     picker.current?.focus();
   };
   const selectCountry = (country: AtlasCountry) => {
     setSelected(country);
+    onCountryChange(country.code);
     const boundary = countries.find((item) => item.country?.code === country.code)?.boundary;
     if (boundary) moveTo(fitMapCamera(path.bounds(boundary), size.width, size.height, true));
   };
@@ -92,8 +96,11 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
       onKeyDown={(event) => { if (event.key === 'Escape' && selected) { reset(); picker.current?.focus(); } }}>
       <h1 className="sr-only">La Combi: explora oportunidades por país</h1>
       <svg className={'flat-map ' + (dragging ? 'is-dragging' : '')} viewBox={`0 0 ${size.width} ${size.height}`} role="group" aria-label="Mapa plano. Selecciona un país o arrastra para desplazarte."
+        onDragStart={(event) => event.preventDefault()}
         onPointerDown={(event) => {
           if (event.button !== 0 || drag.current) return;
+          // Map gestures must not start native SVG selection/image dragging.
+          event.preventDefault();
           cancelAnimationFrame(animation.current);
           drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY, start: cameraRef.current, moved: false };
           event.currentTarget.setPointerCapture(event.pointerId);
@@ -152,17 +159,17 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
           const y = camera.y + point[1] * camera.scale;
           if (x < -60 || x > size.width + 60 || y < -60 || y > size.height + 60) return null;
           return <button key={country.code} className={'map-bus' + (selected ? ' is-current' : '')} style={{ left: x, top: y }} onClick={() => selectCountry(country)} aria-label={`Explorar ${country.name}`} aria-pressed={selected?.code === country.code}>
-            <img src="/brand/combi-mark.png" width="48" height="48" alt="" />
+            <img src="/brand/combi-mark.png" width="48" height="48" alt="" draggable={false} />
             <span>{country.flag} {country.name}</span>
           </button>;
         })}
       </div>
       {selected && <>
-        <div className="country-stickers" key={selected.code} aria-hidden="true">
+        <div className="country-stickers" key={`stickers-${selected.code}`} aria-hidden="true">
           <BrandSticker kind={selected.code === 'PE' ? 'envidia' : selected.code === 'MX' || selected.code === 'CO' ? 'parada' : 'fronteras'} />
           <BrandSticker kind="latam" />
         </div>
-        <aside key={selected.code} className="map-results" aria-label={`Oportunidades de ${selected.name}`}>
+        <aside key={`results-${selected.code}`} className="map-results" aria-label={`Oportunidades de ${selected.name}`}>
           <div className="map-country-heading">
             <div><span className="map-chapter">{selectedItems.length ? `${selectedItems.length} oportunidades` : 'Por mapear'}</span><h2>{selected.flag} {selected.name}</h2></div>
             <button className="map-icon-button" onClick={reset} aria-label="Cerrar país y volver a Latinoamérica"><X size={20} /></button>
@@ -177,7 +184,7 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
                 <span className="map-card-status"><i className={'status-dot ' + availability(item, now)} />{availabilityLabels[availability(item, now)]}</span>
               </button>)}
             </div>
-            <button className="map-catalog-link" onClick={() => onExplore(selected.name)}>Ver en catálogo <ArrowUpRight size={16} /></button>
+            <button className="map-catalog-link" onClick={() => onExplore(selected.name)}>Ver en base de datos <ArrowUpRight size={16} /></button>
           </> : <div className="map-empty-country"><p>Aún no hemos mapeado programas de {selected.name}. Puedes explorar las opciones regionales o ayudarnos a sumar una.</p><button className="button primary" onClick={() => onExplore('Latinoamérica')}>Ver programas regionales</button><button className="text-button" onClick={onContribute}>Proponer un programa <ArrowUpRight size={15} /></button></div>}
         </aside>
       </>}
@@ -197,7 +204,7 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
         <button onClick={() => moveTo(zoomMapAt(cameraRef.current, 1.4, [size.width * (selected && size.width >= 760 ? .35 : .5), size.height * (selected && size.width < 760 ? .3 : .5)]))} aria-label="Acercar mapa"><Plus size={20} /></button>
         <button onClick={() => moveTo(zoomMapAt(cameraRef.current, 1 / 1.4, [size.width * (selected && size.width >= 760 ? .35 : .5), size.height * (selected && size.width < 760 ? .3 : .5)]))} aria-label="Alejar mapa"><Minus size={20} /></button>
       </div>
-      <p className="sr-only" role="status">{selected ? `${selected.name}: ${selectedItems.length} oportunidades en el catálogo. Los marcadores no indican sedes físicas.` : 'Selecciona un país para ver sus oportunidades.'}</p>
+      <p className="sr-only" role="status">{selected ? `${selected.name}: ${selectedItems.length} oportunidades en la base de datos. Los marcadores no indican sedes físicas.` : 'Selecciona un país para ver sus oportunidades.'}</p>
     </section>
   );
 }

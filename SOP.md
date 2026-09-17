@@ -93,7 +93,7 @@ npm run check:links
 
 - Mapa plano: 30 pruebas automatizadas cubren el catálogo, los 20 encuadres nacionales, zoom anclado, inversión de coordenadas después de desplazar, acceso directo, assets y consentimiento. TypeScript y compilación de producción completados; no se realizó QA de navegador de esta versión. Las comprobaciones de navegador descritas más abajo son históricas.
 - En móvil las tarjetas se desplazan horizontalmente; en escritorio, verticalmente. Se reserva espacio al encuadrar para que el panel no tape el país. En pantallas de muy poca altura la página conserva una altura mínima utilizable y puede requerir desplazamiento vertical. El zoom y arrastre no requieren gestos multitáctiles: hay controles y un selector de los 20 países como alternativa.
-- Abrir/cerrar una ficha conserva país y encuadre. Navegar al catálogo y volver desde el logo reinicia la vista regional. No hay enlaces permanentes ni historial de navegador por país en esta versión. Las coordenadas representan países y no ubicaciones de programas.
+- Abrir/cerrar una ficha conserva país y encuadre. La navegación visible se llama «Base de datos»; «Volver al mapa» recupera el país seleccionado y ajusta su encuadre (no conserva desplazamientos manuales). El logo también devuelve al mapa. No hay enlaces permanentes ni historial de navegador por país en esta versión. Las coordenadas representan países y no ubicaciones de programas.
 
 - Convocatorias cerradas: visibles para referencia, excluidas del match.
 - Fechas: se almacenan con desfase explícito de la fuente, normalmente UTC-5 y, para Puentes, UTC-7. Cuando solo se publica el día, se utiliza el final del día de manera editorial y se advierte que la hora real debe verificarse.
@@ -128,6 +128,10 @@ Cada sugerencia recibida queda en estado `pending` hasta revisión de la fuente,
 ## Mantenimiento
 
 Responsable: propietario/editor de Mapping; no hay un mantenedor externo contratado.
+
+- Corrección del mapa del 17/09/2026: los grupos de stickers y resultados tenían claves React iguales al cambiar de país; ahora usan prefijos distintos para evitar nodos decorativos huérfanos. El SVG impide selección y arrastre nativos con CSS y eventos, para prevenir el resaltado azul observado; esta causa del azul es una hipótesis basada en la captura, no una reproducción en navegador. No se desactiva la selección de texto de las fichas ni la navegación por teclado.
+- Los stickers del mapa tienen entrada escalonada de 650 ms y flotación de hasta 9 px/3 grados con periodos diferentes. Conservan espacios separados en escritorio/móvil. `prefers-reduced-motion` desactiva ambas animaciones. Las notas anteriores sin bucles describen versiones previas al mapa plano.
+- Verificación de esta corrección: 34 pruebas automatizadas, incluidas identidades de elementos, protección de gestos, regreso al país y reglas de movimiento reducido; TypeScript y compilación de producción. No se realizó QA interactivo de navegador en esta revisión.
 
 - Revisar semanalmente convocatorias con cierre próximo y mensualmente recursos permanentes.
 - Abrir la fuente oficial antes de actualizar `checkedAt`; que un enlace responda no sustituye la revisión de contenido.

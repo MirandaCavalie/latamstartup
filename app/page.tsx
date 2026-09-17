@@ -443,7 +443,7 @@ function MatchQuiz({
               />
               {draftCountry && countryOpportunities(opportunities, draftCountry).length === 0 && (
                 <p className="match-caveat" role="status">
-                  Aún no tenemos un catálogo local para {draftCountry.name}. Buscaremos afinidad con programas regionales y globales; confirma si admiten candidaturas de tu país.
+                  Aún no tenemos programas locales en la base de datos para {draftCountry.name}. Buscaremos afinidad con programas regionales y globales; confirma si admiten candidaturas de tu país.
                 </p>
               )}
               <div className="profile-preview">
@@ -488,6 +488,7 @@ function MatchQuiz({
 export default function Home() {
   const [view, setView] = useState<View>('explore');
   const [surface, setSurface] = useState<'map' | 'catalog'>('map');
+  const [mapCountryCode, setMapCountryCode] = useState('');
   const [newsletterOpen, setNewsletterOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
@@ -803,7 +804,7 @@ export default function Home() {
             value="explore"
             onClick={() => switchView('explore')}
           >
-            Catálogo
+            Base de datos
           </TabsTrigger>
           <TabsTrigger
             className="nav-link"
@@ -836,6 +837,8 @@ export default function Home() {
         </button>
       </header>
       {surface === 'map' && <OpportunityAtlas
+        initialCountryCode={mapCountryCode}
+        onCountryChange={setMapCountryCode}
         onExplore={(selectedScope) => {
           switchView('explore');
           setScope(selectedScope);
@@ -848,6 +851,15 @@ export default function Home() {
       />}
       <main className="main-wrap" hidden={surface === 'map'}>
         <div className="catalog-anchor" id="catalogo" />
+        <div className="database-navigation">
+          <button className="back-to-map" onClick={() => {
+            setSurface('map');
+            requestAnimationFrame(() => {
+              window.scrollTo({ top: 0, behavior: 'instant' });
+              document.getElementById('map-country')?.focus({ preventScroll: true });
+            });
+          }}><ArrowLeft size={18} /> Volver al mapa</button>
+        </div>
         <div className="workspace">
           <aside
             className="filter-sidebar"
@@ -872,7 +884,7 @@ export default function Home() {
           <section
             id="oportunidades"
             className="results-area"
-            aria-label="Catálogo"
+            aria-label="Base de datos"
           >
             <div className="search-line">
               <label className="search-box">
@@ -1060,7 +1072,7 @@ export default function Home() {
                       {view === 'saved' && !saved.length
                         ? 'Guarda lo que te interesa con el marcador de cada tarjeta.'
                         : view === 'matches' && !hasFilters
-                          ? 'El catálogo aún no cubre esa combinación. Prueba otros objetivos o explora todas las opciones.'
+                          ? 'La base de datos aún no cubre esa combinación. Prueba otros objetivos o explora todas las opciones.'
                           : 'Prueba otra búsqueda o amplía tus filtros.'}
                     </EmptyDescription>
                   </EmptyHeader>
@@ -1301,10 +1313,10 @@ export default function Home() {
             <h3>Un atlas en expansión</h3>
             <p>
               Los países marcados como “Por mapear” todavía no tienen fichas
-              en este catálogo. Los programas regionales pueden aceptar equipos
+              en esta base de datos. Los programas regionales pueden aceptar equipos
               de varios países; comprueba su alcance en la ficha oficial. El
               cuestionario de match usa el país donde emprendes. Si todavía no
-              hay un catálogo local, busca afinidad con programas regionales y
+              hay programas locales registrados, busca afinidad con programas regionales y
               globales, siempre sujeta a sus condiciones territoriales.
             </p>
             <p>
@@ -1359,7 +1371,7 @@ export default function Home() {
             <h3>Tu postulación</h3>
             <p>
               La inscripción, evaluación y contratación se realizan directamente
-              con cada institución. Este es un catálogo independiente y no
+              con cada institución. Esta es una base de datos independiente y no
               representa a las organizaciones listadas.
             </p>
           </div>

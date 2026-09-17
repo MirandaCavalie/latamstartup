@@ -3,6 +3,7 @@
 Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping y después Chancletazo; conserva su carpeta, URL y preferencias guardadas.
 
 - El mapa plano ocupa la pantalla inicial debajo de la navegación. No hay pantalla de acceso previa: seleccionar un país acerca el mapa y muestra programas, combi y stickers.
+- «Base de datos» abre todas las fichas con sus filtros. «Volver al mapa» recupera el último país seleccionado. Los stickers se reemplazan al cambiar de país, entran escalonados y flotan suavemente; con movimiento reducido permanecen quietos.
 - 18 oportunidades de origen peruano, 6 beneficios globales, 18 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
 

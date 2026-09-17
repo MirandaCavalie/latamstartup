@@ -203,7 +203,7 @@ export const latamOpportunities: Opportunity[] = [
     status: 'open', closesAt: '2026-09-30T23:59:59-03:00', cost: 'gratis', costLabel: 'Postulación sin costo publicado',
     benefits: ['Mentoría y visibilidad para proyectos seleccionados.', 'Premio económico según las bases de la edición 2026.'],
     requirements: ['Verificar sectores y criterios de impacto en las bases.', 'Postular antes del cierre publicado: 30 de septiembre de 2026.'],
-    note: 'Convocatoria 2026 abierta al momento de la revisión. La fuente publica el día de cierre, no la hora; el catálogo toma el final del día local solo para no seguir marcándola abierta después. Confirma la hora exacta en la fuente.',
+    note: 'Convocatoria 2026 abierta al momento de la revisión. La fuente publica el día de cierre, no la hora; la base de datos toma el final del día local solo para no seguir marcándola abierta después. Confirma la hora exacta en la fuente.',
   },
   {
     ...common, ...place.AR,

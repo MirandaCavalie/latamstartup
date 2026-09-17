@@ -35,7 +35,7 @@ export function Contribute() {
     <section className="contribute-section" id="colabora" aria-labelledby="contribute-title">
       <div className="contribute-copy">
         <h2 id="contribute-title">¿Conoces otro programa?</h2>
-        <p>Comparte su enlace oficial. Lo revisaremos antes de incluirlo en el catálogo; las propuestas no aparecen automáticamente.</p>
+        <p>Comparte su enlace oficial. Lo revisaremos antes de incluirlo en la base de datos; las propuestas no aparecen automáticamente.</p>
       </div>
       <div className="contribute-panel">
         {status === 'saved' ? (

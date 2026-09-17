@@ -56,7 +56,7 @@ export function useMappingTools(options: Options) {
         name: 'search_mapping_opportunities',
         title: 'Buscar oportunidades para emprender',
         description:
-          'Busca en el catálogo y actualiza los resultados visibles. No abre enlaces ni envía postulaciones.',
+          'Busca en la base de datos y actualiza los resultados visibles. No abre enlaces ni envía postulaciones.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -95,7 +95,7 @@ export function useMappingTools(options: Options) {
       },
       {
         name: 'read_mapping_results',
-        title: 'Leer resultados del catálogo',
+        title: 'Leer resultados de la base de datos',
         description:
           'Devuelve las oportunidades visibles y los identificadores guardados en este navegador.',
         inputSchema: {

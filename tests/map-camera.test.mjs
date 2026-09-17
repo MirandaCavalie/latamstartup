@@ -79,3 +79,40 @@ test('Map opens directly; newsletter is optional and all original details stay a
   assert.match(newsletter, /if \(!consent\)/);
   assert.match(newsletter, /JSON.stringify\(\{ email, consent, website \}\)/);
 });
+
+test('Country decorations and results use distinct identities on every country change', () => {
+  const atlas = readFileSync(new URL('../components/opportunity-atlas.tsx', import.meta.url), 'utf8');
+  // Equal sibling keys left orphaned sticker layers when switching countries.
+  assert.match(atlas, /key=\{`stickers-\$\{selected.code\}`\}/);
+  assert.match(atlas, /key=\{`results-\$\{selected.code\}`\}/);
+  assert.doesNotMatch(atlas, /key=\{selected.code\}/);
+});
+
+test('Map gestures block native selection/drag without disabling country keyboard controls', () => {
+  const atlas = readFileSync(new URL('../components/opportunity-atlas.tsx', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../app/map.css', import.meta.url), 'utf8');
+  assert.match(atlas, /onDragStart=\{\(event\) => event.preventDefault\(\)\}/);
+  assert.match(atlas, /onPointerDown=[\s\S]*?event.preventDefault\(\);[\s\S]*?setPointerCapture/);
+  assert.match(atlas, /draggable=\{false\}/);
+  assert.match(atlas, /event.key === 'Enter' \|\| event.key === ' '/);
+  assert.match(css, /\.flat-map, \.flat-map \*[^}]*user-select: none;[^}]*-webkit-user-select: none;/);
+});
+
+test('Database has an explicit return to the previously selected map country', () => {
+  const page = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8');
+  const atlas = readFileSync(new URL('../components/opportunity-atlas.tsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(page + atlas, /Catálogo|catálogo/);
+  assert.match(page, /Base de datos/);
+  assert.match(page, /className="back-to-map"[\s\S]*?setSurface\('map'\)[\s\S]*?Volver al mapa/);
+  assert.match(page, /initialCountryCode=\{mapCountryCode\}/);
+  assert.match(page, /onCountryChange=\{setMapCountryCode\}/);
+  assert.match(atlas, /country.code === initialCountryCode/);
+});
+
+test('Sticker motion is staggered, bounded, and disabled for reduced motion', () => {
+  const css = readFileSync(new URL('../app/map.css', import.meta.url), 'utf8');
+  assert.match(css, /nth-child\(2\)[^}]*animation-delay: 140ms/);
+  assert.match(css, /@keyframes map-sticker-float/);
+  assert.match(css, /translateY\(-9px\)/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.country-stickers[^}]*animation: none/);
+});

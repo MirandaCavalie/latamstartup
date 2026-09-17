@@ -87,7 +87,7 @@ export const regionalOpportunities: Opportunity[] = [
     closesAt: '2026-09-20T23:59:59-05:00',
     benefits: ['Tracks de AI Business y Coding, comunidad y mentores.', 'Participación remota, sin viaje a Estados Unidos.'],
     requirements: ['Tener entre 18 y 25 años; selección con conversación en inglés y ejercicio práctico.', 'Verificar el track y la fecha de cierre en la página oficial.'],
-    note: 'La página anuncia cierre el 20 de septiembre de 2026, sin publicar hora. El catálogo utiliza el final de ese día únicamente para dejar de mostrarla abierta después; comprueba el horario real antes de aplicar. Es una alternativa remota, no una beca de viaje a EE. UU.',
+    note: 'La página anuncia cierre el 20 de septiembre de 2026, sin publicar hora. La base de datos utiliza el final de ese día únicamente para dejar de mostrarla abierta después; comprueba el horario real antes de aplicar. Es una alternativa remota, no una beca de viaje a EE. UU.',
     checkedAt: '2026-09-17',
   },
 ];

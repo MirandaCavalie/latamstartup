@@ -109,7 +109,7 @@ export function WelcomeGate({ onEnter, onNavigate, onMatch }: {
       <header className="site-header welcome-header">
         <SiteMark />
         <nav className="welcome-nav" aria-label="Navegación principal">
-          <button onClick={() => onNavigate('explore')}>Catálogo</button>
+          <button onClick={() => onNavigate('explore')}>Base de datos</button>
           <button onClick={() => onNavigate('resources')}>Recursos</button>
           <button onClick={() => onNavigate('matches')}>Mis matches</button>
           <button onClick={() => onNavigate('saved')}>Guardados</button>
