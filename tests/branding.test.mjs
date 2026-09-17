@@ -68,7 +68,8 @@ test('Original stickers replace the large poster without replacing the combi ide
   assert.doesNotMatch(mark + page + layout, /chancla-mark|chancletazo|WelcomeGate/i);
   assert.doesNotMatch(atlas, /ChichaPoster|tu-envidia-es-mi-progreso-combi|geoOrthographic/);
   assert.match(atlas, /selected && <>/);
-  assert.match(atlas, /<BrandSticker kind="latam"/);
+  assert.match(atlas, /<BrandSticker kind=\{stickerKinds\[index\]\}/);
+  assert.match(atlas, /'envidia', 'latam', 'parada', 'fronteras'/);
   assert.match(atlas, /'envidia'.*'parada'.*'fronteras'/);
   const sticker = readFileSync(new URL('../components/brand-sticker.tsx', import.meta.url), 'utf8');
   assert.match(sticker, /\/brand\/sticker-tu-envidia-neon\.png/);

@@ -2,7 +2,7 @@
 
 Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping y después Chancletazo; conserva su carpeta, URL y preferencias guardadas.
 
-- El mapa plano ocupa la pantalla inicial debajo de la navegación. No hay pantalla de acceso previa: seleccionar un país acerca el mapa y muestra programas, combi y stickers.
+- El mapa plano ocupa la pantalla inicial debajo de la navegación, con cuadrícula continua en todo el viewport. Seleccionar un país acerca la vista y muestra hasta cuatro tarjetas flotantes con stickers (dos en ventanas pequeñas); «Ver todas» abre su base de datos completa.
 - «Base de datos» abre todas las fichas con sus filtros. «Volver al mapa» recupera el último país seleccionado. Los stickers se reemplazan al cambiar de país, entran escalonados y flotan suavemente; con movimiento reducido permanecen quietos.
 - 18 oportunidades de origen peruano, 6 beneficios globales, 18 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
@@ -17,8 +17,8 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Fechas con zona horaria de Perú y revisión de vigencia a los 45 días.
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
 - Mapa monocromático de borde a borde, con selección, zoom y desplazamiento; tarjetas flotantes con marcas oficiales y acceso a cada ficha sin perder el país seleccionado.
-- Cuatro stickers neón originales: «Tu envidia es mi progreso», «HECHO EN LATAM», «SIGUIENTE PARADA» e «IDEAS SIN FRONTERAS». Solo aparecen al seleccionar un país; la combi es logo y marcador. Banderas y marcas oficiales conservan sus colores.
-- Entrada breve de stickers y respuesta sutil al cursor; sin bucles permanentes y con soporte de movimiento reducido.
+- Cuatro stickers neón originales: «Tu envidia es mi progreso», «HECHO EN LATAM», «SIGUIENTE PARADA» e «IDEAS SIN FRONTERAS». Cada tarjeta lleva uno; la combi permanece solo como marca, sin marcadores en los países. Cada país tiene un acento de hover/foco propio. Banderas y marcas oficiales conservan sus colores.
+- Entrada escalonada de tarjetas y flotación suave de stickers; movimiento reducido desactiva ambas animaciones.
 - Tipografía Geist para marca, títulos y lectura. La fuente y los carteles del branding anterior se conservan como archivos históricos, sin uso en la interfaz actual.
 - Logos oficiales locales en las 45 fichas, con fuentes y distinción entre marca del programa y de su institución.
 - Lista de correo y buzón de sugerencias persistentes en D1. Sin cuenta propia, pagos ni envío automático de campañas; las propuestas pasan por revisión humana.
@@ -63,7 +63,8 @@ La publicación propia utiliza Cloudflare Workers con assets y D1. `npm run depl
 - `lib/latam-opportunities.ts`: fichas revisadas de los cinco países incorporados.
 - `lib/regional-opportunities.ts`: fellowships transfronterizos, cobertura, restricciones y fechas.
 - `lib/atlas.ts`: países, identificadores ISO, coordenadas de referencia y conteos derivados.
-- `components/opportunity-atlas.tsx`: mapa plano, combis, selección y tarjetas de oportunidades por país.
+- `components/opportunity-atlas.tsx`: mapa plano, selección y tarjetas de oportunidades por país.
+- `lib/map-presentation.ts`: acentos por país y límite de tarjetas según espacio disponible.
 - `lib/map-camera.ts`: encuadre y zoom, con espacio reservado para tarjetas en escritorio y móvil.
 - `components/newsletter-dialog.tsx`: formulario opcional de novedades; no bloquea el mapa.
 - `components/welcome-gate.tsx`: entrada histórica, sin uso en la página actual.
@@ -97,6 +98,6 @@ Fecha editorial inicial: 16 de septiembre de 2026; nuevas fichas regionales revi
 
 ## Cartografía y expansión
 
-El mapa plano usa [D3 Geo](https://d3js.org/d3-geo) y [world-atlas](https://github.com/topojson/world-atlas) 2.0.2, a partir de Natural Earth 1:110m. Se incluye en el sitio, sin claves ni peticiones a un proveedor de mapas. Los marcadores sitúan países, no sedes de instituciones. Consultar `public/map-attribution.txt` para la licencia.
+El mapa plano usa [D3 Geo](https://d3js.org/d3-geo) y [world-atlas](https://github.com/topojson/world-atlas) 2.0.2, a partir de Natural Earth 1:110m. Se incluye en el sitio, sin claves ni peticiones a un proveedor de mapas. Las tarjetas son una selección editorial del país, no sedes geolocalizadas. Consultar `public/map-attribution.txt` para la licencia.
 
 Para un nuevo país, añadir fichas revisadas con `geography` igual a su nombre en español y `countryCode` ISO alfa-2. Las opciones y conteos se derivan de los datos; nunca añadir cifras manuales. El cuestionario permite elegir los 20 países del atlas. El match combina fichas locales del país seleccionado con programas regionales o globales; no mezcla las fichas nacionales de otros países. Los programas con sede nacional y alcance regional confirmado usan `matchScope: 'Latinoamérica'`, sin cambiar su capítulo en el mapa. Cuando falta catálogo local se avisa y solo se buscan opciones transfronterizas. La afinidad no confirma elegibilidad, residencia, inscripción del negocio ni disponibilidad para viajar. Puentes queda fuera porque evalúa perfiles individuales de ingeniería. Los perfiles antiguos con un departamento peruano válido se migran a Perú conservando las otras respuestas; el país puede cambiarse desde «Editar mi perfil».

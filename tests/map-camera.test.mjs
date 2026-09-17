@@ -6,6 +6,7 @@ import { feature } from 'topojson-client';
 import world from 'world-atlas/countries-110m.json' with { type: 'json' };
 import { atlasCountries } from '../lib/atlas.ts';
 import { fitMapCamera, zoomMapAt } from '../lib/map-camera.ts';
+import { countryColor, previewLimit } from '../lib/map-presentation.ts';
 
 const projection = geoMercator().scale(1).translate([0, 0]);
 const path = geoPath(projection);
@@ -25,7 +26,7 @@ test('Initial map frames LATAM in desktop and portrait without preselecting a co
   }
 });
 
-test('Each LATAM country has a geometry and a fitted camera clear of the results panel', () => {
+test('Each LATAM country fits between the floating cards and above the mobile previews', () => {
   for (const country of atlasCountries) {
     const boundary = features.find((item) => String(item.id).padStart(3, '0') === country.id);
     assert.ok(boundary, country.name);
@@ -36,8 +37,9 @@ test('Each LATAM country has a geometry and a fitted camera clear of the results
       for (const point of countryBounds) {
         const x = camera.x + point[0] * camera.scale;
         const y = camera.y + point[1] * camera.scale;
-        assert.ok(x >= 0 && x < width - (width >= 760 ? 390 : 0), country.name + ': horizontal');
-        assert.ok(y >= 0 && y <= height - (width < 760 ? Math.min(height * .44, 325) + 104 : 65), country.name + ': vertical');
+        const side = width >= 760 ? Math.min(300, width * .26) : 24;
+        assert.ok(x >= side - 1 && x <= width - side + 1, country.name + ': horizontal');
+        assert.ok(y >= 0 && y <= height - (width < 760 ? 340 : 140), country.name + ': vertical');
       }
     }
   }
@@ -74,16 +76,18 @@ test('Map opens directly; newsletter is optional and all original details stay a
   assert.match(atlas, /prefers-reduced-motion: reduce/);
   assert.match(atlas, /onPointerCancel/);
   assert.match(atlas, /onLostPointerCapture/);
-  assert.match(atlas, /combi-mark.png/);
+  assert.doesNotMatch(atlas, /combi-mark.png|map-markers/);
   assert.match(atlas, /geoMercator/);
   assert.match(newsletter, /if \(!consent\)/);
   assert.match(newsletter, /JSON.stringify\(\{ email, consent, website, deletionToken: token, privacyVersion: PRIVACY_VERSION \}\)/);
 });
 
-test('Country decorations and results use distinct identities on every country change', () => {
+test('Country previews remount cleanly and stickers belong to individual cards', () => {
   const atlas = readFileSync(new URL('../components/opportunity-atlas.tsx', import.meta.url), 'utf8');
   // Equal sibling keys left orphaned sticker layers when switching countries.
-  assert.match(atlas, /key=\{`stickers-\$\{selected.code\}`\}/);
+  assert.match(atlas, /key=\{`\$\{selected.code\}-\$\{item.id\}`\}/);
+  assert.match(atlas, /BrandSticker kind=\{stickerKinds\[index\]\}/);
+  assert.doesNotMatch(atlas, /country-stickers|map-results/);
   assert.match(atlas, /key=\{`results-\$\{selected.code\}`\}/);
   assert.doesNotMatch(atlas, /key=\{selected.code\}/);
 });
@@ -93,7 +97,8 @@ test('Map gestures block native selection/drag without disabling country keyboar
   const css = readFileSync(new URL('../app/map.css', import.meta.url), 'utf8');
   assert.match(atlas, /onDragStart=\{\(event\) => event.preventDefault\(\)\}/);
   assert.match(atlas, /onPointerDown=[\s\S]*?event.preventDefault\(\);[\s\S]*?setPointerCapture/);
-  assert.match(atlas, /draggable=\{false\}/);
+  const sticker = readFileSync(new URL('../components/brand-sticker.tsx', import.meta.url), 'utf8');
+  assert.match(sticker, /draggable=\{false\}/);
   assert.match(atlas, /event.key === 'Enter' \|\| event.key === ' '/);
   assert.match(css, /\.flat-map, \.flat-map \*[^}]*user-select: none;[^}]*-webkit-user-select: none;/);
 });
@@ -111,8 +116,27 @@ test('Database has an explicit return to the previously selected map country', (
 
 test('Sticker motion is staggered, bounded, and disabled for reduced motion', () => {
   const css = readFileSync(new URL('../app/map.css', import.meta.url), 'utf8');
-  assert.match(css, /nth-child\(2\)[^}]*animation-delay: 140ms/);
-  assert.match(css, /@keyframes map-sticker-float/);
-  assert.match(css, /translateY\(-9px\)/);
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.country-stickers[^}]*animation: none/);
+  assert.match(css, /\.popup-2[^}]*animation-delay: 110ms/);
+  assert.match(css, /@keyframes popup-sticker-float/);
+  assert.match(css, /translateY\(-5px\)/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.map-opportunity[^}]*animation: none/);
+});
+
+test('Grid covers the viewport independently of the projected world extent', () => {
+  const atlas = readFileSync(new URL('../components/opportunity-atlas.tsx', import.meta.url), 'utf8');
+  assert.match(atlas, /patternUnits="userSpaceOnUse"/);
+  assert.match(atlas, /<rect width="100%" height="100%" fill=\{`url\(#\$\{gridId\}\)`\}/);
+  assert.doesNotMatch(atlas, /geoGraticule10/);
+});
+
+test('Every LATAM country has a distinct valid sticker accent; previews are bounded', () => {
+  const colors = atlasCountries.map(country => countryColor(country.code));
+  assert.equal(new Set(colors).size, atlasCountries.length);
+  colors.forEach(color => assert.match(color, /^#[0-9a-f]{6}$/i));
+  assert.equal(previewLimit(1440, 800), 4);
+  assert.equal(previewLimit(1440, 600), 2);
+  assert.equal(previewLimit(1000, 759), 2);
+  assert.equal(previewLimit(1000, 760), 4);
+  assert.equal(previewLimit(800, 900), 2);
+  assert.equal(previewLimit(390, 700), 2);
 });

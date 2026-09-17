@@ -7,65 +7,50 @@
 .back-to-map:hover { background: #f0edf5; border-color: #81748e; }
 .flat-atlas { position: relative; flex: 1 1 auto; min-height: 0; width: 100%; overflow: hidden; background: #f7f8f8; isolation: isolate; }
 .flat-map { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
-.flat-map, .flat-map *, .map-markers, .country-stickers { user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
-.map-bus img, .country-stickers img { -webkit-user-drag: none; }
+.flat-map, .flat-map * { user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
 .flat-map.is-dragging { cursor: grabbing; }
 .flat-graticule { fill: none; stroke: #e1e3e4; stroke-width: 1; pointer-events: none; }
 .flat-country { fill: #fff; stroke: #bbbfc2; stroke-width: .8; }
 .flat-country.is-latam { fill: #f1f2f3; stroke: #55585e; stroke-width: 1.1; cursor: pointer; transition: fill 150ms; }
-.flat-country.is-latam:hover, .flat-country.is-latam:focus-visible { fill: #e8e4f1; outline: none; stroke: #222; stroke-width: 2; }
-.flat-country.is-selected { fill: #e8e2f0; stroke: #2c2437; stroke-width: 1.8; }
+.flat-country.is-latam:hover, .flat-country.is-latam:focus-visible { fill: var(--country-color, #c4f542); outline: none; stroke: #222; stroke-width: 2; }
+.flat-country.is-selected { fill: color-mix(in srgb, var(--country-color, #c4f542) 32%, white); stroke: #2c2437; stroke-width: 1.8; }
 .map-picker { position: absolute; top: 24px; left: 28px; z-index: 5; display: flex; align-items: center; gap: 12px; padding: 7px 12px 7px 16px; background: #fff; border: 1px solid #d9dbde; border-radius: 10px; box-shadow: 0 3px 14px #1c1c2309; }
 .map-picker label { color: #77777e; font-size: 14px; }
 .map-picker select { min-height: 36px; max-width: 195px; border: 0; background: transparent; color: #222; font: inherit; font-size: 15px; font-weight: 550; cursor: pointer; }
-.map-markers { position: absolute; inset: 0; pointer-events: none; }
-.map-bus { position: absolute; pointer-events: auto; transform: translate(-50%, -62%); display: grid; place-items: center; width: 44px; height: 44px; border: 0; background: transparent; cursor: pointer; z-index: 2; }
-.map-bus img { width: 39px; height: 39px; object-fit: contain; filter: drop-shadow(0 3px 2px #1b1b1b30); transition: transform 180ms; }
-.map-bus:hover, .map-bus:focus-visible { z-index: 4; }
-.map-bus:hover img, .map-bus:focus-visible img { transform: translateY(-4px); }
-.map-bus span { position: absolute; top: 44px; white-space: nowrap; font-size: 14px; color: #24242a; background: #ffffffeb; border: 1px solid #dfdfe3; border-radius: 6px; padding: 5px 9px; opacity: 0; transition: opacity 120ms; pointer-events: none; }
-.map-bus:hover span, .map-bus:focus-visible span, .map-bus.is-current span { opacity: 1; }
-.map-bus.is-current { width: 64px; height: 64px; }
-.map-bus.is-current img { width: 64px; height: 64px; }
-.map-bus.is-current span { top: 65px; font-weight: 600; }
-.map-results { position: absolute; z-index: 4; top: 24px; right: 28px; bottom: 90px; width: 330px; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
-.map-results > * { pointer-events: auto; }
-.map-results { animation: country-reveal 260ms ease-out both; }
-@keyframes country-reveal { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
-.map-country-heading { background: #fffffff5; border: 1px solid #d7d7dc; border-radius: 12px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 5px 20px #1a1a2009; }
-.map-chapter { color: #707079; font-size: 12px; font-family: var(--font-geist-mono), monospace; }
-.map-country-heading h2 { margin: 4px 0 0; font-size: 25px; line-height: 1.2; font-weight: 650; letter-spacing: -.6px; }
-.map-icon-button { background: transparent; border: 0; min-width: 40px; min-height: 40px; display: grid; place-items: center; border-radius: 50%; cursor: pointer; }
-.map-icon-button:hover { background: #f0eef5; }
-.map-opportunities { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 1px 5px 8px 1px; }
-.map-opportunity { display: flex; flex-direction: column; flex: 0 0 auto; width: 100%; padding: 18px 20px; gap: 5px; background: #fff; border: 1px solid #d6d7dc; border-radius: 12px; text-align: left; color: #202027; cursor: pointer; box-shadow: 0 5px 16px #24242909; transition: border-color 180ms, transform 180ms; }
-.map-opportunity:hover { border-color: #81748e; transform: translateY(-2px); }
-.map-card-top { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 5px; color: #777; }
-.map-card-top .provider-logo { width: 85px; height: 35px; border-radius: 5px; }
-.map-card-category { font-size: 12px; color: #77717f; line-height: 1.4; }
-.map-opportunity strong { font-size: 18px; line-height: 1.25; letter-spacing: -.3px; }
-.map-card-org { font-size: 14px; color: #727079; line-height: 1.4; }
-.map-card-status { display: flex; align-items: center; gap: 6px; font-size: 14px; margin-top: 9px; color: #55545e; }
-.map-catalog-link { align-self: flex-end; display: flex; align-items: center; gap: 8px; border: 1px solid #dedee3; border-radius: 30px; background: #fff; font-size: 14px; padding: 10px 15px; cursor: pointer; }
-.map-empty-country { padding: 22px; border: 1px solid #ddd; border-radius: 12px; background: #fff; font-size: 16px; line-height: 1.5; }
+.map-preview { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.map-preview button, .map-empty-country { pointer-events: auto; }
+.map-country-heading { position: absolute; top: 24px; right: 28px; display: flex; align-items: center; gap: 20px; padding: 10px 12px 10px 18px; border: 1px solid #dedee3; border-radius: 12px; background: #fffffff2; }
+.map-country-heading h2 { margin: 0; font-size: 20px; letter-spacing: -.5px; }
+.map-chapter { font-size: 12px; color: #727079; }
+.map-icon-button { display: grid; place-items: center; border: 0; background: transparent; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; }
+.map-icon-button:hover { background: #efedf4; }
+.map-popups { position: absolute; inset: 0; pointer-events: none; }
+.map-opportunity { position: absolute; display: flex; flex-direction: column; width: 244px; height: 190px; gap: 7px; padding: 17px 20px; border: 1px solid #35353b; border-radius: 9px; background: #202025; color: #fff; text-align: left; box-shadow: 0 10px 28px #19192120; cursor: pointer; animation: popup-arrive 550ms cubic-bezier(.2,.8,.3,1.1) both; transition: box-shadow 180ms, border-color 180ms; }
+.map-opportunity:hover, .map-opportunity:focus-visible { z-index: 5; border-color: #9991ad; box-shadow: 0 14px 34px #19192138; }
+.popup-1 { left: 5%; top: 22%; }
+.popup-2 { right: 5%; top: 19%; animation-delay: 110ms; }
+.popup-3 { left: 10%; bottom: 20%; animation-delay: 220ms; }
+.popup-4 { right: 10%; bottom: 18%; animation-delay: 330ms; }
+.map-card-top { display: flex; align-items: center; margin-bottom: 3px; }
+.map-card-top .provider-logo { width: 85px; height: 34px; background: #fff; padding: 4px; border-radius: 4px; }
+.map-card-top .provider-logo-inverse { background: #242428; }
+.map-card-category { color: #bab7c5; font-size: 11px; line-height: 1.3; }
+.map-opportunity strong { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 17px; line-height: 1.25; letter-spacing: -.25px; padding-right: 6px; }
+.map-card-status { display: flex; align-items: center; gap: 5px; margin-top: auto; color: #ccc9d2; font-size: 11px; padding-right: 16px; }
+.map-card-arrow { position: absolute; right: 14px; bottom: 17px; color: #e2ddea; }
+.map-opportunity > .brand-sticker { width: 112px; right: -22px; top: -36px; --sticker-angle: 8deg; animation: none; user-select: none; }
+.map-opportunity .brand-sticker img { -webkit-user-drag: none; animation: popup-sticker-float 5s ease-in-out infinite; }
+.popup-2 > .brand-sticker { --sticker-angle: -10deg; top: -29px; }
+.popup-3 > .brand-sticker { --sticker-angle: 6deg; }
+.popup-4 > .brand-sticker { --sticker-angle: -8deg; }
+.popup-2 .brand-sticker img, .popup-4 .brand-sticker img { animation-delay: -2s; animation-direction: reverse; }
+@keyframes popup-arrive { from { opacity: 0; translate: 0 18px; scale: .95; } to { opacity: 1; translate: 0 0; scale: 1; } }
+@keyframes popup-sticker-float { 0%, 100% { transform: translateY(0) rotate(var(--sticker-angle)); } 50% { transform: translateY(-5px) rotate(calc(var(--sticker-angle) + 4deg)); } }
+.map-catalog-link { position: absolute; bottom: 102px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; white-space: nowrap; padding: 10px 22px; border: 1px solid #d8d5e0; border-radius: 30px; background: #fff; color: #24232b; font-size: 14px; box-shadow: 0 4px 14px #24242910; cursor: pointer; }
+.map-catalog-link:hover { background: #f1edf7; }
+.map-empty-country { position: absolute; width: min(360px, calc(100% - 32px)); left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 24px; background: #fff; border: 1px solid #ddd; border-radius: 12px; font-size: 15px; line-height: 1.5; }
 .map-empty-country .button { margin-top: 16px; font-size: 14px; }
 .map-empty-country .text-button { display: flex; margin-top: 18px; }
-.country-stickers { position: absolute; inset: 0; pointer-events: none; }
-.country-stickers > .brand-sticker:first-child { width: clamp(150px, 18vw, 225px); left: 5%; top: 118px; --sticker-angle: -11deg; }
-.country-stickers > .sticker-latam { width: 165px; bottom: 130px; left: 31%; --sticker-angle: 8deg; }
-.country-stickers > .brand-sticker { animation: map-sticker-pop 650ms cubic-bezier(.2,.8,.3,1.15) both; }
-.country-stickers > .brand-sticker:nth-child(2) { animation-delay: 140ms; }
-.country-stickers .brand-sticker img { animation: map-sticker-float 4.8s ease-in-out 650ms infinite; }
-.country-stickers .sticker-latam img { animation-duration: 5.7s; animation-delay: 900ms; animation-direction: reverse; }
-@keyframes map-sticker-pop {
-  0% { opacity: 0; translate: 0 18px; scale: .72; }
-  65% { opacity: 1; translate: 0 -4px; scale: 1.06; }
-  100% { opacity: 1; translate: 0 0; scale: 1; }
-}
-@keyframes map-sticker-float {
-  0%, 100% { transform: translateY(0) rotate(var(--sticker-angle)); }
-  50% { transform: translateY(-9px) rotate(calc(var(--sticker-angle) + 3deg)); }
-}
 .map-bottom-bar { position: absolute; left: 28px; right: 175px; bottom: 16px; z-index: 5; pointer-events: none; }
 .map-hint { font-size: clamp(23px, 3vw, 38px); color: #29282f; font-weight: 600; letter-spacing: -1px; margin: 0 0 18px; }
 .map-hint span { display: block; margin-top: 4px; font-size: 14px; color: #74717d; font-weight: 400; letter-spacing: 0; }
@@ -95,12 +80,10 @@
 .newsletter-dialog .welcome-email-row { flex-wrap: wrap; }
 .newsletter-dialog .welcome-email-row input { min-width: 120px; }
 .newsletter-dialog .welcome-consent { font-size: 13px; }
-@media (max-width: 1000px) {
-  .map-picker { left: 20px; }
-  .map-results { right: 20px; width: 310px; }
-  .country-stickers > .brand-sticker:first-child { width: 160px; left: 20px; top: 110px; }
-  .country-stickers > .sticker-latam { width: 140px; left: 20px; bottom: 145px; }
-  .map-bottom-bar { left: 20px; }
+@media (min-width: 760px) and (max-width: 999px) {
+  .map-opportunity { width: 215px; }
+  .popup-1 { left: 3%; top: 30%; }
+  .popup-2 { right: 3%; top: 34%; }
 }
 @media (max-width: 759px) {
   .site-shell.map-mode { min-height: 700px; }
@@ -112,41 +95,22 @@
   .map-hint { font-size: 26px; margin-bottom: 12px; }
   .map-bottom-bar { left: 12px; right: 12px; bottom: 10px; }
   .map-shortcuts { padding: 4px 9px; gap: 0 10px; border-radius: 8px; }
-  .map-shortcuts button { font-size: 12px; min-height: 28px; }
-  .map-attribution { font-size: 12px; line-height: 1.3; max-width: 100%; }
-  .map-results { top: auto; right: 12px; left: 12px; bottom: 104px; width: auto; height: min(44%, 325px); gap: 8px; }
-  .map-country-heading { padding: 10px 13px; border-radius: 10px; }
-  .map-country-heading h2 { font-size: 20px; margin-top: 1px; }
-  .map-chapter { font-size: 12px; }
-  .map-opportunities { flex-direction: row; overflow-y: hidden; overflow-x: auto; scroll-snap-type: x proximity; padding: 1px 1px 7px; flex: 1; }
-  .map-opportunity { flex: 0 0 82%; max-width: 295px; padding: 12px 15px; gap: 3px; overflow-y: auto; scroll-snap-align: start; }
-  .map-card-top { margin-bottom: 0; }
-  .map-card-top .provider-logo { height: 26px; width: 70px; }
+  .map-shortcuts button, .map-shortcuts a { font-size: 12px; min-height: 28px; }
+  .map-attribution { font-size: 11px; line-height: 1.3; }
+  .map-country-heading { top: 69px; right: 12px; padding: 5px 8px 5px 12px; gap: 10px; }
+  .map-country-heading h2 { font-size: 17px; }
+  .map-chapter { font-size: 11px; }
+  .map-country-heading .map-icon-button { width: 32px; height: 36px; }
+  .map-popups { top: auto; bottom: 159px; height: 226px; display: flex; align-items: flex-end; gap: 30px; padding: 36px 25px 6px 16px; overflow-x: auto; overscroll-behavior: contain; scroll-snap-type: x mandatory; pointer-events: auto; scrollbar-width: thin; }
+  .map-opportunity { position: relative; inset: auto; flex: 0 0 min(244px, 77vw); width: auto; height: 180px; padding: 14px 17px; scroll-snap-align: center; }
+  .map-opportunity > .brand-sticker { width: 100px; right: -16px; top: -28px; }
   .map-opportunity strong { font-size: 16px; }
-  .map-card-org { font-size: 13px; }
-  .map-card-status { margin-top: 5px; }
-  .map-catalog-link { position: absolute; top: -39px; right: 0; font-size: 12px; padding: 8px 11px; }
-  .map-empty-country { padding: 14px; overflow-y: auto; font-size: 14px; }
-  .map-empty-country .button { margin-top: 10px; }
-  .map-empty-country .text-button { margin-top: 12px; }
-  .country-stickers > .brand-sticker:first-child { width: 115px; left: 8px; top: 80px; }
-  .country-stickers > .sticker-latam { width: 100px; left: auto; right: 14px; top: 89px; bottom: auto; }
-  .map-bus img { width: 32px; height: 32px; }
-  .map-bus.is-current img { width: 48px; height: 48px; }
-  .map-bus.is-current span { top: 55px; font-size: 13px; }
-}
-@media (max-height: 580px) and (min-width: 760px) {
-  .map-results { top: 12px; bottom: 85px; }
-  .map-country-heading { padding: 10px 16px; }
-  .map-opportunity { padding: 12px 18px; }
-  .country-stickers > .brand-sticker:first-child { top: 90px; width: 135px; }
-  .country-stickers > .sticker-latam { width: 120px; bottom: 95px; }
+  .map-catalog-link { bottom: 107px; min-height: 40px; font-size: 13px; }
+  .map-empty-country { top: 45%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .country-stickers > .brand-sticker, .country-stickers .brand-sticker img { animation: none; }
-  .map-results { animation: none; }
-  .map-bus img, .map-bus span, .map-opportunity, .flat-country { transition: none; }
-  .map-bus:hover img, .map-bus:focus-visible img, .map-opportunity:hover { transform: none; }
+  .map-opportunity, .map-opportunity > .brand-sticker, .map-opportunity .brand-sticker img { animation: none; }
+  .map-opportunity, .flat-country { transition: none; }
 }
 .sharing-notice { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; width: min(90vw, 620px); padding: 16px 42px 16px 18px; background: #fff; color: #242424; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 24px #0002; font-size: 14px; }
 .sharing-notice a { text-decoration: underline; margin-left: 6px; }

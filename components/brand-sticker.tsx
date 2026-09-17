@@ -12,6 +12,7 @@ export function BrandSticker({ kind }: { kind: keyof typeof stickers }) {
       <img
         {...stickers[kind]}
         alt=""
+        draggable={false}
         decoding="async"
       />
     </span>

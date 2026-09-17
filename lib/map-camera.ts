@@ -4,10 +4,10 @@ export type MapBounds = [[number, number], [number, number]];
 // Normalized Mercator coordinates, not program-office locations.
 export function fitMapCamera(bounds: MapBounds, width: number, height: number, selected = false): MapCamera {
   const mobile = width < 760;
-  const left = mobile ? 24 : 80;
-  const top = selected ? (mobile ? 85 : 100) : 65;
-  const right = selected && !mobile ? 410 : left;
-  const bottom = selected && mobile ? Math.min(height * .44, 325) + 124 : 85;
+  const left = mobile ? 24 : selected ? Math.min(300, width * .26) : 80;
+  const top = selected ? (mobile ? 115 : 100) : 65;
+  const right = left;
+  const bottom = selected ? (mobile ? 360 : 145) : 85;
   const usableWidth = Math.max(160, width - left - right);
   const usableHeight = Math.max(120, height - top - bottom);
   const dx = Math.max(.12, bounds[1][0] - bounds[0][0]);
