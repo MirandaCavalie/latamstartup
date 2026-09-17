@@ -67,6 +67,7 @@ export const latamOpportunities: Opportunity[] = [
   {
     ...common, ...place.MX,
     id: '500-latam', name: '500 Global · LatAm', org: '500 Global', orgType: 'Empresa',
+    matchScope: 'Latinoamérica',
     category: 'inversion', mark: '500',
     description: 'Programa de inversión y crecimiento para startups tecnológicas de Latinoamérica.',
     benefit: 'Capital a cambio de participación', benefitType: 'Inversión por participación',
@@ -80,6 +81,7 @@ export const latamOpportunities: Opportunity[] = [
   {
     ...common, ...place.MX,
     id: 'latitud-fellowship', name: 'Latitud Fellowship', org: 'Latitud', orgType: 'Empresa',
+    matchScope: 'Latinoamérica',
     category: 'inversion', mark: 'L',
     description: 'Programa remoto para fundadores latinoamericanos en etapa inicial, con inversión y comunidad.',
     benefit: 'Inversión mediante SAFE', benefitType: 'Inversión por participación',
@@ -117,6 +119,7 @@ export const latamOpportunities: Opportunity[] = [
   {
     ...common, ...place.CO,
     id: 'rockstart-latam', name: 'Rockstart LatAm', org: 'Rockstart', orgType: 'Empresa',
+    matchScope: 'Latinoamérica',
     category: 'inversion', mark: 'R',
     description: 'Aceleradora e inversionista para startups de Latinoamérica, con operación regional desde Colombia.',
     benefit: 'Inversión y aceleración', benefitType: 'Inversión por participación',

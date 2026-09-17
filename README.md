@@ -11,7 +11,7 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Inversión por participación en una categoría propia: Platanus, Latitud, 500 Global y Rockstart no se confunden con subvenciones o capital semilla condonable.
 - Enlaces directos a los sitios oficiales; las postulaciones se realizan allí.
 - Búsqueda sin sensibilidad a tildes, filtros, recursos y guardados locales.
-- Match en cuatro pasos: etapa, tipo de negocio/sector, objetivos y región.
+- Match en cuatro pasos: etapa, tipo de negocio/sector, objetivos y país donde opera el negocio.
 - Afinidad explicada, sin prometer elegibilidad o aprobación.
 - Fechas con zona horaria de Perú y revisión de vigencia a los 45 días.
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
@@ -92,4 +92,4 @@ Fecha editorial inicial: 16 de septiembre de 2026; nuevas fichas regionales revi
 
 El globo usa [D3 Geo](https://d3js.org/d3-geo) y [world-atlas](https://github.com/topojson/world-atlas) 2.0.2, a partir de Natural Earth 1:110m. Se incluye en el sitio, sin claves ni peticiones a un proveedor de mapas. Los marcadores sitúan países, no sedes de instituciones. Consultar `public/map-attribution.txt` para la licencia.
 
-Para un nuevo país, añadir fichas revisadas con `geography` igual a su nombre en español y `countryCode` ISO alfa-2. Las opciones y conteos se derivan de los datos; nunca añadir cifras manuales. El match todavía utiliza regiones peruanas y excluye fichas locales de otros países. Puede sugerir programas regionales con requisitos pendientes; Puentes queda fuera porque evalúa perfiles individuales de ingeniería. Ampliar el cuestionario, reglas y pruebas antes de ofrecer match para residentes de otros países.
+Para un nuevo país, añadir fichas revisadas con `geography` igual a su nombre en español y `countryCode` ISO alfa-2. Las opciones y conteos se derivan de los datos; nunca añadir cifras manuales. El cuestionario permite elegir los 20 países del atlas. El match combina fichas locales del país seleccionado con programas regionales o globales; no mezcla las fichas nacionales de otros países. Los programas con sede nacional y alcance regional confirmado usan `matchScope: 'Latinoamérica'`, sin cambiar su capítulo en el mapa. Cuando falta catálogo local se avisa y solo se buscan opciones transfronterizas. La afinidad no confirma elegibilidad, residencia, inscripción del negocio ni disponibilidad para viajar. Puentes queda fuera porque evalúa perfiles individuales de ingeniería. Los perfiles antiguos con un departamento peruano válido se migran a Perú conservando las otras respuestas; el país puede cambiarse desde «Editar mi perfil».

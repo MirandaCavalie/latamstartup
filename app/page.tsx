@@ -63,7 +63,6 @@ import {
   stageLabels,
   sectorLabels,
   needLabels,
-  regions,
   CATALOG_REVIEWED,
 } from '@/lib/opportunities';
 import type {
@@ -257,6 +256,7 @@ function MatchQuiz({
 }) {
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<Partial<Profile>>({ needs: [] });
+  const draftCountry = atlasCountries.find((country) => country.code === draft.countryCode);
   useEffect(() => {
     if (open) {
       setStep(0);
@@ -270,7 +270,7 @@ function MatchQuiz({
         ? !!draft.businessType && !!draft.sector
         : step === 2
           ? !!draft.needs?.length
-          : !!draft.region;
+          : !!draftCountry;
   const titles = [
     '¿En qué momento está tu negocio?',
     '¿Qué estás construyendo?',
@@ -281,12 +281,12 @@ function MatchQuiz({
     'Tu etapa nos ayuda a encontrar el apoyo adecuado.',
     'Las oportunidades cambian según el tipo de negocio y el sector.',
     'Puedes elegir más de una opción.',
-    'El cuestionario usa regiones de Perú. Incluye oportunidades regionales cuando aceptan candidaturas peruanas; verifica cada requisito.',
+    'Elige el país donde opera tu negocio. Buscaremos opciones locales, regionales y globales; cada programa confirma sus requisitos.',
   ];
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) =>
     setDraft((old) => ({ ...old, [key]: value }));
   const submit = () => {
-    const valid = validateProfile(draft, regions);
+    const valid = validateProfile(draft);
     if (valid) {
       onComplete(valid);
       setOpen(false);
@@ -430,14 +430,22 @@ function MatchQuiz({
           {step === 3 && (
             <>
               <ChoiceSelect
-                label="Región en Perú"
-                value={draft.region ?? ''}
-                onChange={(v) => update('region', v)}
+                label="País donde emprendes"
+                value={draft.countryCode ?? ''}
+                onChange={(v) => {
+                  const country = atlasCountries.find((c) => c.code === v);
+                  if (country) update('countryCode', country.code);
+                }}
                 options={[
-                  { value: '', label: 'Selecciona tu región' },
-                  ...regions.map((r) => ({ value: r, label: r })),
+                  { value: '', label: 'Selecciona tu país' },
+                  ...atlasCountries.map((country) => ({ value: country.code, label: country.name })),
                 ]}
               />
+              {draftCountry && countryOpportunities(opportunities, draftCountry).length === 0 && (
+                <p className="match-caveat" role="status">
+                  Aún no tenemos un catálogo local para {draftCountry.name}. Buscaremos afinidad con programas regionales y globales; confirma si admiten candidaturas de tu país.
+                </p>
+              )}
               <div className="profile-preview">
                 <ShieldCheck size={21} />
                 <div>
@@ -519,7 +527,6 @@ export default function Home() {
       setProfile(
         validateProfile(
           JSON.parse(localStorage.getItem('mapping.profile.v1') ?? 'null'),
-          regions,
         ),
       );
     } catch {
@@ -556,6 +563,7 @@ export default function Home() {
   const matchCount = opportunities.filter(
     (o) => matchMap.get(o.id)?.eligibleForSuggestions,
   ).length;
+  const profileCountry = atlasCountries.find((country) => country.code === profile?.countryCode);
   const baseItems = useMemo(
     () =>
       opportunities.filter(
@@ -916,7 +924,7 @@ export default function Home() {
                         ' · ' +
                         sectorLabels[profile.sector] +
                         ' · ' +
-                        profile.region
+                        profileCountry?.name
                       : 'Cuéntanos sobre tu negocio y descubre por dónde empezar.'}
                   </p>
                 </div>
@@ -1300,9 +1308,9 @@ export default function Home() {
               Los países marcados como “Por mapear” todavía no tienen fichas
               en este catálogo. Los programas regionales pueden aceptar equipos
               de varios países; comprueba su alcance en la ficha oficial. El
-              cuestionario de match usa regiones de Perú y puede mostrar
-              oportunidades regionales que aceptan candidaturas peruanas. Aún
-              no evalúa perfiles residentes en otros países.
+              cuestionario de match usa el país donde emprendes. Si todavía no
+              hay un catálogo local, busca afinidad con programas regionales y
+              globales, siempre sujeta a sus condiciones territoriales.
             </p>
             <p>
               El mapa sitúa países, no sedes de instituciones. Cartografía de{' '}
@@ -1325,7 +1333,10 @@ export default function Home() {
             </p>
             <h3>Así funciona el match</h3>
             <p>
-              Comparamos etapa, tipo de negocio, sector, objetivos y ubicación.
+              Comparamos etapa, tipo de negocio, sector, objetivos y país.
+              Priorizamos fichas locales y también consideramos programas de
+              alcance regional o global. No verificamos residencia, registro
+              del negocio ni disponibilidad para viajar.
               Las convocatorias cerradas y los perfiles que no coinciden se
               excluyen de las recomendaciones. La afinidad prioriza tus
               objetivos; no es una probabilidad de admisión.

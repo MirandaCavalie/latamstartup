@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { opportunities, regions } from '../lib/opportunities.ts';
+import { opportunities } from '../lib/opportunities.ts';
 import { atlasCountries, countryOpportunities } from '../lib/atlas.ts';
 import {
   availability,
@@ -16,7 +16,7 @@ const tech = {
   businessType: 'startup',
   sector: 'tecnologia',
   needs: ['tecnologia', 'mentoria'],
-  region: 'Lima',
+  countryCode: 'PE',
 };
 test('Every catalogue entry has a unique ID, HTTPS source and sufficient editorial context', () => {
   assert.equal(opportunities.length, 44);
@@ -89,15 +89,11 @@ test('Closed programmes never appear as a current match', () => {
     assert.equal(matchOpportunity(o, p, date).eligibleForSuggestions, false);
   }
 });
-test('Location affects score and explains possible attendance in Lima', () => {
-  const local = matchOpportunity(find('uni-incubacion'), tech, date);
-  const remote = matchOpportunity(
-    find('uni-incubacion'),
-    { ...tech, region: 'Cusco' },
-    date,
-  );
-  assert.ok(remote.score < local.score);
-  assert.ok(remote.pending.some((r) => r.includes('Cusco')));
+test('In-person participation still requires confirming the actual location', () => {
+  const match = matchOpportunity(find('uni-incubacion'), tech, date);
+  assert.ok(match.eligibleForSuggestions);
+  assert.ok(match.pending.some((r) => r.includes('Lima')));
+  assert.ok(match.pending.some((r) => r.includes('disponibilidad para viajar')));
 });
 test('Unrelated objectives do not create a false match', () => {
   assert.equal(
@@ -116,15 +112,15 @@ test('Search handles accents, case, multiword queries and no-result input', () =
   assert.ok(opportunities.every((o) => matchesText(o, '')));
 });
 test('Corrupt stored profiles are rejected and duplicate needs are normalized', () => {
-  assert.equal(validateProfile(null, regions), null);
-  assert.equal(validateProfile({ ...tech, stage: 'unknown' }, regions), null);
-  assert.equal(validateProfile({ ...tech, needs: [] }, regions), null);
+  assert.equal(validateProfile(null), null);
+  assert.equal(validateProfile({ ...tech, stage: 'unknown' }), null);
+  assert.equal(validateProfile({ ...tech, needs: [] }), null);
   assert.equal(
-    validateProfile({ ...tech, region: 'Inventada' }, regions),
+    validateProfile({ ...tech, countryCode: 'XX' }),
     null,
   );
   assert.deepEqual(
-    validateProfile({ ...tech, needs: ['tecnologia', 'tecnologia'] }, regions)
+    validateProfile({ ...tech, needs: ['tecnologia', 'tecnologia'] })
       .needs,
     ['tecnologia'],
   );
@@ -165,7 +161,7 @@ test('Cross-border fellowships disclose actual travel coverage and live status',
   assert.ok(regionalMatch.pending.some((reason) => reason.includes('edad')));
 });
 
-test('Investment programs disclose equity, closed rounds, and remain outside the Peru-only match', () => {
+test('Investment programs disclose equity and regional reach without reopening closed rounds', () => {
   const mexico = atlasCountries.find((c) => c.code === 'MX');
   const invest = ['500-latam', 'latitud-fellowship', 'rockstart-latam', 'platanus-programa'];
   assert.ok(countryOpportunities(opportunities, mexico).some((o) => o.id === '500-latam'));
@@ -173,9 +169,58 @@ test('Investment programs disclose equity, closed rounds, and remain outside the
     const item = find(id);
     assert.equal(item.category, 'inversion');
     assert.equal(item.benefitType, 'Inversión por participación');
-    assert.equal(matchOpportunity(item, tech, date).eligibleForSuggestions, false);
+    assert.equal(matchOpportunity(item, tech, date).eligibleForSuggestions, id === 'rockstart-latam');
   }
   assert.equal(availability(find('platanus-programa'), date), 'closed');
   assert.equal(availability(find('endeavor-argentina-premio'), new Date('2026-10-01T04:00:00Z')), 'closed');
   assert.equal(find('fondo-emprender-sena').benefitType, 'Capital semilla condonable');
+});
+
+test('Every mapped country gets its own local suggestions, not Peru by default', () => {
+  const examples = {
+    PE: 'startup-peru', MX: 'incmty-accelerator', CO: 'innpulsa-convocatorias',
+    CL: 'startup-chile-ignite', AR: 'endeavor-argentina-premio', BR: 'sebrae-startups',
+  };
+  for (const [countryCode, id] of Object.entries(examples)) {
+    const profile = { ...tech, countryCode };
+    assert.ok(validateProfile(profile), countryCode);
+    assert.ok(matchOpportunity(find(id), profile, date).eligibleForSuggestions, id);
+    for (const other of Object.keys(examples).filter((c) => c !== countryCode)) {
+      assert.equal(matchOpportunity(find(id), { ...tech, countryCode: other }, date).eligibleForSuggestions, false, `${id} from ${other}`);
+    }
+  }
+});
+
+test('Regional and global suggestions name the selected country and retain pending requirements', () => {
+  for (const country of atlasCountries) {
+    const profile = { ...tech, countryCode: country.code };
+    for (const id of ['aws-activate', 'rockstart-latam']) {
+      const match = matchOpportunity(find(id), profile, date);
+      assert.ok(match.eligibleForSuggestions, `${id} / ${country.code}`);
+      assert.ok(match.pending.some((reason) => reason.includes(`desde ${country.name}`)));
+    }
+    for (const item of opportunities.filter((o) => availability(o, date) === 'closed')) {
+      assert.equal(matchOpportunity(item, profile, date).eligibleForSuggestions, false);
+    }
+  }
+});
+
+test('Countries without local records get no invented national matches', () => {
+  const profile = { ...tech, countryCode: 'EC' };
+  assert.ok(validateProfile(profile));
+  const matches = opportunities.filter((o) => matchOpportunity(o, profile, date).eligibleForSuggestions);
+  assert.ok(matches.length > 0);
+  assert.ok(matches.every((o) => ['Global', 'Latinoamérica'].includes(o.geography) || o.matchScope === 'Latinoamérica'));
+  assert.equal(matchOpportunity(find('aws-activate'), { ...tech, countryCode: 'XX' }, date).eligibleForSuggestions, false);
+});
+
+test('Legacy Peruvian profiles migrate without overriding a selected country', () => {
+  const { countryCode, ...answers } = tech;
+  const migrated = validateProfile({ ...answers, region: 'Cusco' });
+  assert.deepEqual(migrated, { ...answers, countryCode: 'PE' });
+  assert.deepEqual(validateProfile(migrated), migrated);
+  assert.equal(validateProfile({ ...answers, region: 'Inventada' }), null);
+  assert.equal(validateProfile({ ...answers }), null);
+  assert.equal(validateProfile({ ...answers, region: 'Lima', countryCode: 'XX' }), null);
+  assert.equal(validateProfile({ ...answers, region: 'Lima', countryCode: 'BR' }).countryCode, 'BR');
 });

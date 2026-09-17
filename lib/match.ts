@@ -6,6 +6,8 @@ import type {
   Need,
   Sector,
 } from './opportunities';
+import { legacyPeruRegions } from './opportunities.ts';
+import { atlasCountries } from './atlas.ts';
 
 export type Availability =
   | 'open'
@@ -52,18 +54,22 @@ export function matchOpportunity(
     reasons: [],
     pending: [],
   };
+  const country = atlasCountries.find((c) => c.code === profile.countryCode);
+  if (!country) {
+    result.pending.push('Selecciona un país válido para calcular tu match.');
+    return result;
+  }
   if (item.matchEligible === false) {
     result.pending.push('Este fellowship selecciona perfiles individuales; el match actual evalúa negocios.');
     return result;
   }
   const state = availability(item, now);
-  if (
-    item.geography !== 'Global' &&
-    item.geography !== 'Latinoamérica' &&
-    (item.countryCode ? item.countryCode !== 'PE' : item.geography !== 'Perú')
-  ) {
+  const crossBorder = item.geography === 'Global' ||
+    item.geography === 'Latinoamérica' || item.matchScope === 'Latinoamérica';
+  const origin = item.countryCode ?? atlasCountries.find((c) => c.name === item.geography)?.code;
+  if (!crossBorder && origin !== country.code) {
     result.pending.push(
-      'El match actual está diseñado para negocios en Perú. Esta oportunidad corresponde a otro país.',
+      `La ficha está catalogada en ${item.geography}; no tenemos confirmado su alcance para negocios en ${country.name}.`,
     );
     return result;
   }
@@ -120,29 +126,18 @@ export function matchOpportunity(
   );
   if (item.sectors !== 'todos')
     result.reasons.push('Su enfoque incluye tu sector.');
-  if (
-    item.location.startsWith('Lima') &&
-    profile.region !== 'Lima' &&
-    profile.region !== 'Callao'
-  ) {
-    result.score -= 15;
-    result.pending.push(
-      'Consulta si debes asistir a Lima y si puedes participar desde ' +
-        profile.region +
-        '.',
-    );
-  } else if (item.geography === 'Perú') {
+  if (!crossBorder) {
     result.score += 5;
-    if (item.mode === 'Presencial')
-      result.pending.push(
-        'Confirma la atención del centro y sus servicios en ' +
-          profile.region +
-          '.',
-      );
+    result.reasons.push(`Tiene una ficha local en ${country.name}.`);
+    result.pending.push('Confirma los requisitos de residencia, registro del negocio y cobertura local.');
   }
-  if (item.geography === 'Global' || item.geography === 'Latinoamérica')
+  if (item.mode !== 'Virtual')
     result.pending.push(
-      'Confirma con el programa la elegibilidad de tu perfil en Perú, incluidos edad e idioma cuando corresponda.',
+      `${item.mode === 'Por confirmar' ? 'Confirma la modalidad y la sede indicadas' : 'Revisa la sede y la asistencia requerida'}: ${item.location}. El país seleccionado no confirma disponibilidad para viajar.`,
+    );
+  if (crossBorder)
+    result.pending.push(
+      `Confirma con el programa la elegibilidad de tu perfil desde ${country.name}, incluidos país de residencia, registro del negocio, edad e idioma cuando corresponda.`,
     );
   if (state === 'consult' || state === 'stale') {
     result.score -= 5;
@@ -179,7 +174,6 @@ export function matchesText(item: Opportunity, query: string) {
 }
 export function validateProfile(
   value: unknown,
-  allowedRegions: readonly string[],
 ): Profile | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
   const p = value as Record<string, unknown>;
@@ -203,12 +197,17 @@ export function validateProfile(
     'vender',
     'formalizar',
   ];
+  // Legacy profiles could only select a Peruvian department. Migrate once
+  // without overriding an explicit (even invalid) country in newer profiles.
+  const countryCode = p.countryCode === undefined &&
+    typeof p.region === 'string' && legacyPeruRegions.includes(p.region)
+    ? 'PE' : p.countryCode;
+  const country = atlasCountries.find((c) => c.code === countryCode);
   if (
     !stages.includes(p.stage as Stage) ||
     !kinds.includes(p.businessType as BusinessType) ||
     !sectors.includes(p.sector as Sector) ||
-    typeof p.region !== 'string' ||
-    !allowedRegions.includes(p.region) ||
+    !country ||
     !Array.isArray(p.needs) ||
     !p.needs.length ||
     p.needs.some((n) => !needs.includes(n)) ||
@@ -220,6 +219,6 @@ export function validateProfile(
     businessType: p.businessType as BusinessType,
     sector: p.sector as Sector,
     needs: [...new Set(p.needs)] as Need[],
-    region: p.region,
+    countryCode: country.code,
   };
 }

@@ -1,5 +1,6 @@
 import { latamOpportunities } from './latam-opportunities.ts';
 import { regionalOpportunities } from './regional-opportunities.ts';
+import type { AtlasCountry } from './atlas';
 
 export type Category =
   | 'incubacion'
@@ -33,7 +34,7 @@ export type Profile = {
   businessType: BusinessType;
   sector: Sector;
   needs: Need[];
-  region: string;
+  countryCode: AtlasCountry['code'];
 };
 export type Opportunity = {
   id: string;
@@ -66,6 +67,8 @@ export type Opportunity = {
   needs: Need[];
   geography: string;
   countryCode?: string;
+  // Match coverage can differ from the country chapter used on the atlas.
+  matchScope?: 'Latinoamérica';
   location: string;
   mode: 'Virtual' | 'Presencial' | 'Híbrido' | 'Por confirmar';
   status: 'open' | 'ongoing' | 'consult' | 'closed';
@@ -112,7 +115,8 @@ export const sectorLabels: Record<Sector, string> = {
   sostenibilidad: 'Sostenibilidad',
   otro: 'Otro sector',
 };
-export const regions = [
+// Only used to migrate previously saved Peru-only profiles, never as quiz options.
+export const legacyPeruRegions = [
   'Amazonas',
   'Áncash',
   'Apurímac',
