@@ -87,6 +87,8 @@ import { useMappingTools } from '@/lib/webmcp';
 import { OpportunityAtlas } from '@/components/opportunity-atlas';
 import { SiteMark } from '@/components/site-mark';
 import { ProviderLogo } from '@/components/provider-logo';
+import { WelcomeGate } from '@/components/welcome-gate';
+import { Contribute, UnsubscribeForm } from '@/components/contribute';
 import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 
 type View = 'explore' | 'resources' | 'matches' | 'saved';
@@ -279,7 +281,7 @@ function MatchQuiz({
     'Tu etapa nos ayuda a encontrar el apoyo adecuado.',
     'Las oportunidades cambian según el tipo de negocio y el sector.',
     'Puedes elegir más de una opción.',
-    'Por ahora, el match está disponible para negocios en Perú. Algunas actividades pueden requerir viajar.',
+    'El cuestionario usa regiones de Perú. Incluye oportunidades regionales cuando aceptan candidaturas peruanas; verifica cada requisito.',
   ];
   const update = <K extends keyof Profile>(key: K, value: Profile[K]) =>
     setDraft((old) => ({ ...old, [key]: value }));
@@ -493,10 +495,12 @@ export default function Home() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [announcement, setAnnouncement] = useState('');
   const [storageError, setStorageError] = useState(false);
+  const [entered, setEntered] = useState(false);
   const [now, setNow] = useState(
     () => new Date(CATALOG_REVIEWED + 'T12:00:00-05:00'),
   );
   useEffect(() => {
+    try { setEntered(sessionStorage.getItem('chancletazo.entered.v1') === 'yes'); } catch { /* La entrada funciona igual sin almacenamiento. */ }
     setNow(new Date());
     try {
       const localSaved: unknown = JSON.parse(
@@ -525,6 +529,10 @@ export default function Home() {
     const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
+  const enterMap = () => {
+    setEntered(true);
+    try { sessionStorage.setItem('chancletazo.entered.v1', 'yes'); } catch { /* No es necesario para explorar. */ }
+  };
   useEffect(() => {
     if (loaded) {
       try {
@@ -762,6 +770,8 @@ export default function Home() {
     </>
   );
 
+  if (!entered) return <WelcomeGate onEnter={enterMap} />;
+
   return (
     <Tabs
       value={view}
@@ -808,7 +818,7 @@ export default function Home() {
             onClick={scrollToCatalog}
           >
             <Sparkles size={15} />
-            Matches · Perú
+            Mis matches
             {profile && <span className="count-pill">{matchCount}</span>}
           </TabsTrigger>
           <TabsTrigger
@@ -822,7 +832,7 @@ export default function Home() {
         </TabsList>
         <button className="button primary" onClick={() => setQuizOpen(true)}>
           <Sparkles size={16} />
-          <span>{profile ? 'Editar mi perfil' : 'Match para Perú'}</span>
+          <span>{profile ? 'Editar mi perfil' : 'Hacer mi match'}</span>
         </button>
       </header>
       <OpportunityAtlas
@@ -1088,6 +1098,7 @@ export default function Home() {
             </div>
           </section>
         </div>
+        <Contribute />
         <footer className="site-footer">
           <a
             href="#mapa"
@@ -1102,6 +1113,7 @@ export default function Home() {
             <SiteMark variant="footer" />
           </a>
           <p>Oportunidades para moverte.</p>
+          <a className="text-button" href="#colabora">¿Conoces más programas? Colabora aquí <ArrowUpRight size={13} /></a>
           <button className="text-button" onClick={() => setAboutOpen(true)}>
             Cómo funciona y privacidad <ArrowUpRight size={13} />
           </button>
@@ -1304,7 +1316,9 @@ export default function Home() {
               Los países marcados como “Por mapear” todavía no tienen fichas
               en este catálogo. Los programas regionales pueden aceptar equipos
               de varios países; comprueba su alcance en la ficha oficial. El
-              match, por ahora, está pensado para negocios en Perú.
+              cuestionario de match usa regiones de Perú y puede mostrar
+              oportunidades regionales que aceptan candidaturas peruanas. Aún
+              no evalúa perfiles residentes en otros países.
             </p>
             <p>
               El mapa sitúa países, no sedes de instituciones. Cartografía de{' '}
@@ -1342,10 +1356,16 @@ export default function Home() {
             <h3>Tus datos</h3>
             <p>
               Guardados y respuestas del match permanecen en este navegador. No
-              solicitamos nombre, correo ni información financiera. Puedes
-              eliminar tu perfil desde Mis matches y quitar cada guardado con su
-              marcador.
+              pedimos nombre ni información financiera para explorar. Si eliges
+              recibir novedades, guardamos tu correo y consentimiento por
+              separado; si sugieres un programa, guardamos tu propuesta y solo
+              el correo opcional que escribas. No vinculamos esos datos con tu
+              perfil de match. Puedes eliminar tu perfil desde Mis matches,
+              quitar cada guardado con su marcador y retirar tu correo desde
+              el formulario de novedades. Revisamos sugerencias antes de
+              publicarlas; no enviamos correos automáticos desde el sitio.
             </p>
+            <UnsubscribeForm />
             <h3>Tu postulación</h3>
             <p>
               La inscripción, evaluación y contratación se realizan directamente

@@ -2,7 +2,7 @@
 
 Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping; conserva su carpeta, URL y preferencias guardadas.
 
-- Portada con globo interactivo, selección de países y controles accesibles de rotación.
+- Entrada visual con globo, acceso sin cuenta dentro de la aplicación y opción voluntaria de recibir novedades; el atlas interactivo sigue después.
 - 18 oportunidades de origen peruano, 6 beneficios globales, 17 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
 
@@ -18,7 +18,7 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Cartel chicha original en la portada, con tintas planas brillantes sobre papel negro y movimiento discreto que respeta la preferencia de movimiento reducido.
 - Identidad independiente: chancla monocroma y nombre Chancletazo en encabezado y pie; el afiche no es el logo. Interfaz en blanco y negro, con banderas y marcas a color.
 - Logos oficiales locales en las 44 fichas, con fuentes y distinción entre marca del programa y de su institución.
-- Sin claves de API, registro de usuarios, pagos ni base de datos.
+- Lista de correo y buzón de sugerencias persistentes en D1. Sin cuenta propia, pagos ni envío automático de campañas; las propuestas pasan por revisión humana.
 
 ## Uso local
 
@@ -33,6 +33,15 @@ npm run dev
 
 Abrir la URL que muestre la consola. El puerto se ajusta si ya está ocupado.
 
+La vista previa de formularios necesita una base D1 local. Tras generar la compilación, aplicar la migración una vez (no repetirla si ya existe):
+
+```sh
+npm run build
+npx wrangler d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_absent_captain_cross.sql
+```
+
+Después iniciar `npm run dev`. Los datos de prueba locales no se envían al sitio publicado.
+
 ## Verificación
 
 ```sh
@@ -42,7 +51,7 @@ npm run build
 npm run check:links
 ```
 
-El resultado de producción es un sitio estático en `dist/client`. La publicación usa únicamente ese directorio: no incluye un servidor de funciones React, rutas de API ni optimización de imágenes.
+La publicación incluye la interfaz, dos rutas de recepción de datos y la base D1. La plataforma aplica las migraciones versionadas antes de publicar el Worker. El catálogo de oportunidades permanece editorial en archivos TypeScript; D1 almacena solo correos con consentimiento y sugerencias pendientes.
 
 ## Archivos principales
 
@@ -51,6 +60,10 @@ El resultado de producción es un sitio estático en `dist/client`. La publicaci
 - `lib/regional-opportunities.ts`: fellowships transfronterizos, cobertura, restricciones y fechas.
 - `lib/atlas.ts`: países, identificadores ISO, coordenadas de referencia y conteos derivados.
 - `components/opportunity-atlas.tsx`: globo y acceso al catálogo por origen.
+- `components/welcome-gate.tsx`: entrada y formulario voluntario de novedades.
+- `components/contribute.tsx`: propuesta de programas y baja de novedades.
+- `app/api/subscribe/route.ts` y `app/api/suggest/route.ts`: validación y escritura de formularios.
+- `db/schema.ts`, `db/index.ts`, `drizzle/`: estructura y migración de la base.
 - `lib/match.ts`: afinidad, búsqueda, validación de perfil y vigencia.
 - `app/page.tsx`: exploración, filtros, formulario, guardados y fichas.
 - `app/globals.css`: diseño adaptable.
@@ -67,7 +80,7 @@ El resultado de producción es un sitio estático en `dist/client`. La publicaci
 
 ## Privacidad
 
-El perfil y los guardados se almacenan exclusivamente en localStorage en el navegador del visitante. No se envían a un servidor del catálogo. Los proveedores externos aplican sus propias políticas cuando el visitante abre sus enlaces. El acceso al sitio privado publicado lo controla Sites.
+El perfil y los guardados se almacenan exclusivamente en localStorage en el navegador del visitante. La entrada como invitado se recuerda solo en la sesión. Si la persona marca consentimiento y envía un correo, se guarda en D1 para futuras novedades; puede retirarlo desde «Cómo funciona y privacidad». Las propuestas de programas se guardan pendientes de revisión, con un correo opcional para pedir aclaraciones; no se publican automáticamente ni se añaden a la lista de novedades. No hay envíos de correo automatizados. Los proveedores externos aplican sus propias políticas cuando el visitante abre sus enlaces. El acceso al sitio publicado sigue privado y lo controla Sites; «invitado» significa sin cuenta adicional de la aplicación, no acceso público hasta que la propietaria decida cambiarlo.
 
 ## Estado de la revisión
 

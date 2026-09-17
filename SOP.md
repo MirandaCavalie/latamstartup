@@ -2,11 +2,11 @@
 
 ## Qué hace
 
-Abre con un globo interactivo de Latinoamérica, que permite descubrir el catálogo por país. Reúne programas, aceleradoras, inversión y recursos con enlaces oficiales, filtros, guardados y match para negocios en Perú. La inscripción y evaluación suceden en el sitio de cada institución.
+Abre con una entrada visual que permite pasar al atlas como invitado o apuntarse voluntariamente a novedades. El atlas permite descubrir programas, aceleradoras, inversión y recursos por país, y proponer fuentes faltantes para revisión. El match usa regiones peruanas y también puede sugerir oportunidades regionales; la inscripción sucede en el sitio de cada institución.
 
 ## Por qué se construyó así (build/buy/kill)
 
-Se construyó un prototipo acotado porque el usuario pidió una experiencia propia de descubrimiento y match que conecte fuentes públicas, universitarias y corporativas. Se mantiene la edición humana de fuentes y requisitos: el catálogo no se actualiza ni aprueba postulaciones automáticamente. El match utiliza reglas transparentes y no requiere API de IA. La entrega es una exportación estática, suficiente para el catálogo y las preferencias locales.
+Se construyó un prototipo acotado porque el usuario pidió una experiencia propia de descubrimiento y match que conecte fuentes públicas, universitarias y corporativas. Se mantiene la edición humana de fuentes y requisitos: el catálogo no se actualiza ni aprueba postulaciones automáticamente. El match utiliza reglas transparentes y no requiere API de IA. La entrega original era estática; los formularios solicitados ahora necesitan una pequeña base persistente y un Worker, mientras las preferencias locales siguen en el navegador.
 
 Diagnóstico aplicado antes de implementar la lógica:
 
@@ -28,7 +28,7 @@ Rúbrica de automation-decision (1–5; 5 favorece construir):
 | Tiempo a valor   |     5 | Un catálogo acotado y reglas de afinidad permiten probar el concepto.                                                                                                 |
 | Mantenimiento    |     3 | Las condiciones requieren revisión editorial; se separaron del diseño y la lógica.                                                                                    |
 
-Decisión: construir la experiencia autorizada; mantener manual la aprobación de datos y posponer la extracción automática. Si el catálogo o tráfico crece 10 veces, la exportación estática puede seguir sirviendo visitas, pero conviene añadir edición compartida, historial editorial y revisión asistida de enlaces. No se justifica todavía una plataforma pesada ni solicitudes automáticas a instituciones.
+Decisión: construir la experiencia autorizada; mantener manual la aprobación de datos y posponer la extracción automática. La lista de novedades y las sugerencias se guardan en D1 porque deben sobrevivir a las sesiones; no se contrató una plataforma externa de newsletter sin que exista aún una campaña o proveedor elegido. Si crecen volumen o abuso, añadir verificación antispam, gestión editorial y proveedor de correo antes de hacer campañas. No se envían solicitudes automáticas a instituciones.
 
 Ampliación visual solicitada: el atlas proyecta datos de Natural Earth con D3, sin contratar un servicio de mapas ni automatizar recopilación adicional. Se reutilizaron catálogo, match y almacenamiento local. El nuevo nombre visible no cambia las claves guardadas ni la URL existente.
 
@@ -43,6 +43,10 @@ La expansión regional añade 17 fichas: 5 de México y 3 de cada uno de Colombi
 La ampliación del 17/09/2026 incorpora tres fichas en un origen independiente «Latinoamérica» y categoría «Fellowships e intercambios». Puentes es para ingenieros de LATAM, no una aceleradora: la cohorte de octubre ya cerró y Antigravity cubre alojamiento y la mayoría de comidas, pero no vuelos ni transporte; no garantiza empleo ni permiso de trabajo. YLAI es un intercambio para emprendedores elegibles en EE. UU.; la documentación de IREX sobre pasajes y estancia corresponde a una edición anterior y exige reconfirmación cuando se anuncie la próxima convocatoria. Makers es gratuito y remoto, de 18 a 25 años, con cierre anunciado el 20/09/2026. La fuente no publica hora de cierre; el fin del día se usa solo para no mantener el estado abierto después. Se revisaron también otras opciones: MassChallenge no se añadió porque su estancia puede exigir viaje autofinanciado y sus términos reservan el uso de la marca; otros programas con cuotas no se presentan como gratuitos. Esta selección no intenta agotar los programas regionales.
 
 El filtro «Programa regional» distingue esas fichas de los beneficios globales y de los capítulos nacionales. El match peruano puede sugerir YLAI o Makers por afinidad, pero no valida edad, idioma, visa ni admisión; los deja pendientes. Puentes se excluye del match empresarial porque selecciona talento individual. Mantener esa distinción al extender el cuestionario.
+
+Entrada y colaboración (17/09/2026): la portada adicional abre con un globo de los seis países con catálogo, número de fichas y dos acciones. «Entrar como invitado» no crea cuenta y se recuerda durante esa sesión; el formulario de novedades guarda solo el correo normalizado y la fecha de consentimiento en D1. El formulario «¿Conoces otro programa?» guarda nombre, enlace oficial, país/alcance, tipo, nota y correo opcional con estado `pending`. No alimenta automáticamente el catálogo. Se eligió un buzón del propio sitio en lugar de publicar el correo personal de la propietaria: permite estructurar fuentes, moderar y no exponer una dirección a spam. La lista no envía correos por sí sola; un proveedor y una política de campañas quedan como trabajo posterior.
+
+El Site permanece con acceso privado de una sola persona. «Invitado» significa sin una segunda cuenta dentro de la aplicación; no evita el control de acceso de Sites. Abrirlo a visitantes requiere una decisión explícita de la propietaria, además de probar el flujo público y añadir controles antispam proporcionales.
 
 ## Cómo correrlo
 
@@ -66,7 +70,7 @@ npm run build
 npm run check:links
 ```
 
-5. La exportación estática está en `dist/client`. Para revisarla sin el servidor de desarrollo, ejecutar `python3 -m http.server 3002 --bind 127.0.0.1 --directory dist/client` y abrir `http://127.0.0.1:3002/` (requiere Python 3). Recompilar después de cada cambio antes de esta revisión. Sites conserva la configuración del proyecto en `.openai/hosting.json`. Publicar una nueva versión tras cambios validados; conservar acceso privado salvo instrucción del propietario. El repositorio GitHub contiene código y recursos públicos, no perfiles ni guardados de los visitantes.
+5. Para una vista previa local con formularios, generar la compilación y aplicar una sola vez `drizzle/0000_absent_captain_cross.sql` al D1 local usando `npx wrangler d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_absent_captain_cross.sql`; después usar `npm run dev`. No repetir la migración inicial sobre las tablas existentes. Sites conserva la configuración del proyecto en `.openai/hosting.json` y aplica migraciones versionadas al publicar. Conservar acceso privado salvo instrucción del propietario. El repositorio GitHub contiene código y marcas públicas, no la base de correos ni las sugerencias de visitantes.
 
 ## Entradas y salidas
 
@@ -74,9 +78,10 @@ npm run check:links
 - Entrada geográfica: `lib/atlas.ts` y el dataset world-atlas 2.0.2. Coordenadas a escala país, no ubicaciones de proveedores. Los conteos se calculan del catálogo.
 - Entrada visual: PNG del cartel y marca de chancla en `public/brand/`, logos oficiales PNG/SVG/WebP en `public/logos/`. Las imágenes no son enlaces a servicios de logos ni dependen de un proveedor externo durante la visita.
 - Entrada del visitante: etapa, tipo de negocio, sector, objetivos y región.
+- Entrada voluntaria: correo y consentimiento para novedades; propuestas de programas con nombre, país, enlace HTTPS y correo de respuesta opcional.
 - Salida: lista filtrada, explicación de afinidad, ficha detallada y enlace oficial en nueva pestaña.
 - Preferencias: `mapping.saved.v1` y `mapping.profile.v1` en localStorage. Se valida su estructura al recuperar; no se requieren identificadores personales.
-- No se generan postulaciones ni se envían correos, mensajes o solicitudes a instituciones.
+- Persistencia: D1 contiene `subscribers` y `suggestions`, separadas del perfil y guardados locales. La baja borra un correo de la lista. No se generan postulaciones ni se envían correos, mensajes o solicitudes a instituciones desde el sitio.
 
 ## Casos límite conocidos
 
@@ -93,18 +98,20 @@ npm run check:links
 - Importes: solo se incluyen tarifas ligadas a ediciones identificadas. Confirmar en la fuente.
 - BCP devolvió 403 al verificador automatizado; su página oficial se leyó con la herramienta de búsqueda. No se considera un enlace inexistente.
 - En la revisión de enlaces del 16/09/2026, Nafin y Latitud no pudieron verificarse automáticamente; Brasil Mais Produtivo respondió 403 al verificador. Esos resultados no prueban que el sitio esté caído. Los demás enlaces nuevos respondieron HTTP 200. HTTP 200 no garantiza que las bases estén actualizadas.
-- El scaffold incluye dependencias con avisos npm en herramientas y componentes de servidor. Esta entrega publica solo archivos estáticos, sin servidor RSC ni procesador de imágenes. Revisar dependencias antes de añadir backend.
+- Las dependencias reportan avisos npm, incluidos paquetes de herramientas y servidor. Esta versión ejecuta un Worker y requiere revisar vulnerabilidades, actualizaciones y límites del servicio antes de abrirlo al público.
 - Atlas: 18 fichas de origen peruano, 6 globales, 17 en los cinco países añadidos y 3 regionales. HubSpot se reclasificó como internacional después de revisar su fuente oficial; su inclusión de Perú no lo convierte en un programa local.
 - Otros países: “Por mapear” significa que faltan fichas en este catálogo, no que el país carezca de programas. No hay fechas prometidas de lanzamiento.
 - Match: por ahora solo contempla emprendimientos en Perú. Excluye las fichas nacionales de los otros países; puede sugerir programas latinoamericanos de acceso regional con requisitos pendientes y excluye Puentes, dirigido a ingenieros individuales.
 - Cartografía: límites simplificados de Natural Earth, no una referencia legal de fronteras; no solicita geolocalización. Si la interacción de arrastre no está disponible, usar los botones de país y rotación.
 - QA: pruebas de reglas y separación territorial, TypeScript y compilación. Comprobación visual y de navegación del atlas en navegador; no es una auditoría integral de accesibilidad. Se preservan las dos herramientas WebMCP previamente verificadas.
 - Logos: si una imagen falla, se muestra el nombre de la institución como texto, no un logo inventado. El original de ITP tiene resolución limitada (137 × 72). Los logos se muestran sin alterar sus proporciones o colores.
-- Vista previa: el servidor de desarrollo presentó un bucle de solicitudes de trazas de error durante esta revisión. La compilación estática terminó correctamente y se revisó con un servidor HTTP local; no se cambió la arquitectura de la aplicación para eludirlo.
+- Formularios: si D1 no responde, conservan los campos y muestran un error recuperable. Se validan longitud, correo, URL HTTPS y origen; los campos trampa descartan spam sencillo, pero no reemplazan una protección antispam cuando el sitio sea público. La baja por correo es una operación sin verificación de propiedad: una persona que conoce otro correo podría retirarlo; incorporar confirmación por email al activar campañas reales.
 
 ## Umbral de aprobación humana
 
 La publicación de una nueva ficha o el cambio de monto, fechas, gratuidad, elegibilidad o enlace debe revisarlo la persona responsable del catálogo contra la fuente oficial. Nunca se marca una admisión como aprobada: la decisión pertenece a la institución. Cambiar de acceso privado a público requiere instrucción del propietario del sitio.
+
+Cada sugerencia recibida queda en estado `pending` hasta revisión de la fuente, condiciones, logo y vigencia. No promoverla al catálogo por volumen de votos ni por recibir un formulario; no usar la lista de correos para campañas sin verificar consentimiento, bajas y proveedor elegido.
 
 ## Mantenimiento
 
@@ -119,6 +126,8 @@ Responsable: propietario/editor de Mapping; no hay un mantenedor externo contrat
 - La lógica de afinidad vive en `lib/match.ts`. Ajustar pruebas cuando cambien reglas.
 - Para incorporar otro país: verificar sus fuentes, agregar `countryCode` ISO alfa-2 y `geography` con su nombre del atlas. La selección y los conteos se actualizan con las fichas; los beneficios globales permanecen separados. Ampliar cuestionario y reglas antes de habilitar match para residentes de ese país.
 - Verificar y publicar otra vez tras editar datos o código. No existe actualización automática en segundo plano.
-- Revisar las dependencias antes de ampliar la arquitectura o incorporar funciones de servidor.
+- Consultar periódicamente las tablas privadas `suggestions` y `subscribers` mediante herramientas de Sites o acceso D1 autorizado. No exponerlas con un GET público ni escribir direcciones en el repositorio. El formulario no es una bandeja de administración.
+- No editar migraciones ya aplicadas. Para cambios de esquema, actualizar `db/schema.ts`, correr `npm run db:generate`, inspeccionar el nuevo SQL y probarlo localmente antes de publicar.
+- Revisar dependencias y el gasto/abuso de escrituras antes de abrir el sitio al público. Implementar protección antispam y un proveedor de correo con doble opt-in si se lanzan campañas; mantener baja disponible.
 - Mantener el cartel separado del símbolo de identidad. Para cambiar su texto, regenerar el asset y actualizar `components/chicha-poster.tsx`, dimensiones, texto alternativo y pruebas; no reconstruirlo con una fuente CSS. Conservar colores sin filtros y respetar movimiento reducido. El prompt exacto está documentado en `public/brand/POSTER-PROMPT.md`.
 - Para una nueva ficha, agregar su logo oficial a `public/logos/`, registrar su fuente y asignarlo en `lib/provider-logos.ts`. No generar marcas de instituciones con IA. No aplicar filtros globales de escala de grises: las banderas y los logos deben conservar su color.

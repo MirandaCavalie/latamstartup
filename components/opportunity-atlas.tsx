@@ -97,7 +97,7 @@ export function OpportunityAtlas({
               Explorar oportunidades <ArrowDown size={18} />
             </button>
             <button className="atlas-match-link" onClick={onMatch}>
-              <Sparkles size={17} /> Match para Perú
+              <Sparkles size={17} /> Haz tu match
             </button>
           </div>
         </div>
