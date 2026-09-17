@@ -18,6 +18,7 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Cartel original «Tu envidia es mi progreso»: letras rojas y azules sobre papel amarillo, textura de impresión y motivos populares latinoamericanos.
 - Identidad independiente: combi ilustrada y nombre La Combi en entrada, encabezado, pie y favicon; el afiche no es el logo. Papel crema, amarillo, rojo, cobalto y verde en la interfaz; banderas y marcas oficiales conservan sus colores.
 - Animaciones breves de llegada, cartel pegado y respuesta al cursor; sin bucles permanentes y con soporte de movimiento reducido.
+- Tipografía Bowlby One SC local para marca y títulos, inspirada en carteles de letras recortadas; Geist para lectura. Licencia y procedencia en `public/fonts/`.
 - Logos oficiales locales en las 44 fichas, con fuentes y distinción entre marca del programa y de su institución.
 - Lista de correo y buzón de sugerencias persistentes en D1. Sin cuenta propia, pagos ni envío automático de campañas; las propuestas pasan por revisión humana.
 

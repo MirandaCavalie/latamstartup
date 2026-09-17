@@ -34,7 +34,6 @@ export function Contribute() {
   return (
     <section className="contribute-section" id="colabora" aria-labelledby="contribute-title">
       <div className="contribute-copy">
-        <span className="contribute-eyebrow">EL MAPA SE HACE ENTRE TODOS</span>
         <h2 id="contribute-title">¿Conoces otro programa?</h2>
         <p>Comparte su enlace oficial. Lo revisaremos antes de incluirlo en el catálogo; las propuestas no aparecen automáticamente.</p>
       </div>

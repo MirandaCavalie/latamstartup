@@ -556,7 +556,6 @@ export default function Home() {
   const matchCount = opportunities.filter(
     (o) => matchMap.get(o.id)?.eligibleForSuggestions,
   ).length;
-  const resourceCount = opportunities.filter((o) => o.resource).length;
   const baseItems = useMemo(
     () =>
       opportunities.filter(
@@ -687,19 +686,17 @@ export default function Home() {
 
   const filterFields = () => (
     <>
-      <div className="filter-heading">
-        <SlidersHorizontal size={17} />
-        <h2>Explora a tu manera</h2>
-        {hasFilters && (
+      {hasFilters && (
+        <div className="filter-heading">
           <button
             className="reset-filters"
             onClick={resetFilters}
             aria-label="Limpiar filtros"
           >
-            <RotateCcw size={14} />
+            <RotateCcw size={14} /> Limpiar filtros
           </button>
-        )}
-      </div>
+        </div>
+      )}
       <p className="field-title">TIPO DE APOYO</p>
       <button
         className={'side-option ' + (category === 'all' ? 'selected' : '')}
@@ -846,19 +843,6 @@ export default function Home() {
         <section className="intro catalog-intro" id="catalogo">
           <div>
             <h2>Menos búsqueda. Más movimiento.</h2>
-            <p className="intro-copy">
-              Programas, inversión y recursos para emprender en Latinoamérica.
-            </p>
-          </div>
-          <div className="intro-note">
-            <Compass size={25} />
-            <p>
-              <strong>
-                {opportunities.length} oportunidades · {resourceCount} recursos
-              </strong>
-              <br />
-              Estado, universidades, empresas y fondos.
-            </p>
           </div>
         </section>
         <div className="workspace">
@@ -982,7 +966,7 @@ export default function Home() {
             <div className="results-heading">
               <div>
                 <h2>{title}</h2>
-                <p aria-live="polite">
+                <p className="sr-only" aria-live="polite">
                   {filtered.length}{' '}
                   {filtered.length === 1 ? 'oportunidad' : 'oportunidades'}
                   {hasFilters ? ' con estos filtros' : ''}

@@ -1,6 +1,13 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+@font-face {
+  font-family: 'Bowlby One SC';
+  src: url('/fonts/bowlby-one-sc.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 @custom-variant dark (&:is(.dark *));
 @theme inline {
   --color-background: var(--background);
@@ -34,7 +41,7 @@
   --combi-blue: #154d99;
   --combi-green: #0c7165;
   --combi-paper: #fff8e8;
-  --font-display: Impact, 'Arial Narrow', sans-serif;
+  --font-display: 'Bowlby One SC', Impact, sans-serif;
   --background: var(--combi-paper);
   --foreground: #202c35;
   --card: #ffffff;
@@ -120,7 +127,7 @@ button:disabled {
 .welcome-content { position: relative; z-index: 1; max-width: 730px; width: 100%; justify-self: end; padding: clamp(28px, 4vw, 64px); }
 .welcome-wordmark { display: flex; align-items: center; margin-bottom: clamp(30px, 5vh, 55px); }
 .welcome-eyebrow { color: var(--combi-green); letter-spacing: 1.4px; font-size: 12px; font-weight: 750; }
-.welcome-content h1 { color: var(--combi-red); font-family: var(--font-display); text-transform: uppercase; font-size: clamp(64px, 6.8vw, 108px); line-height: 1.02; letter-spacing: -.015em; font-weight: 400; margin: 18px 0 25px; }
+.welcome-content h1 { color: var(--combi-red); font-family: var(--font-display); text-transform: uppercase; font-size: clamp(2.5rem, 4.8vw, 4.75rem); line-height: 1.14; letter-spacing: -.025em; font-weight: 400; margin: 18px 0 25px; }
 .welcome-content h1 span { display: inline-block; padding: 0 10px 5px; margin-left: -10px; background: var(--combi-yellow); transform: rotate(-2deg); }
 .welcome-description { color: #535e61; font-size: 17px; line-height: 1.6; max-width: 480px; margin: 0; }
 .welcome-stats { display: flex; gap: 48px; border-top: 1px dashed var(--combi-green); border-bottom: 1px dashed var(--combi-green); margin: 26px 0; padding: 13px 0; }
@@ -147,7 +154,7 @@ button:disabled {
 .welcome-globe { display: block; width: min(100%, 760px); margin: auto; }
 .welcome-route-ticket { position: absolute; left: 9%; top: 6%; background: var(--combi-yellow); color: var(--combi-blue); padding: 20px 30px; transform: rotate(-5deg); box-shadow: 6px 6px 0 #0d3d80; z-index: 1; }
 .welcome-route-ticket span { font-size: 12px; letter-spacing: 1.4px; font-weight: 700; }
-.welcome-route-ticket strong { display: block; font-family: var(--font-display); font-size: clamp(30px, 3.2vw, 46px); text-transform: uppercase; font-weight: 400; line-height: 1.07; margin-top: 9px; }
+.welcome-route-ticket strong { display: block; font-family: var(--font-display); font-size: clamp(1.5rem, 2.65vw, 2.4rem); text-transform: uppercase; font-weight: 400; line-height: 1.12; margin-top: 9px; }
 .welcome-globe-caption { position: absolute; bottom: 7%; left: 50%; transform: translateX(-50%) rotate(2deg); width: max-content; max-width: 85%; display: flex; gap: 9px; align-items: center; padding: 12px 16px; background: var(--combi-paper); color: var(--combi-blue); font-size: 13px; text-align: center; box-shadow: 5px 5px 0 var(--combi-red); }
 .contribute-section { display: grid; grid-template-columns: minmax(230px, .85fr) minmax(400px, 1.15fr); gap: clamp(24px, 5vw, 75px); border-top: 1px solid #d7d7d7; padding: 64px 0 80px; scroll-margin-top: 40px; }
 .contribute-eyebrow { color: #777; letter-spacing: 1.6px; font-size: 12px; font-weight: 650; }
@@ -1885,6 +1892,7 @@ p {
   gap: 20px;
   align-items: center;
   flex-wrap: wrap;
+  margin-top: 30px;
 }
 .button.atlas-primary {
   background: var(--combi-blue);
@@ -2467,14 +2475,14 @@ p {
 }
 @media (max-width: 550px) {
   .welcome-content { padding: 22px; }
-  .welcome-content h1 { font-size: clamp(3.5rem, 15vw, 5rem); }
+  .welcome-content h1 { font-size: clamp(2rem, 10vw, 3.5rem); }
   .welcome-wordmark { margin-bottom: 27px; }
   .welcome-stats { gap: 16px; }
   .welcome-stats div { display: flex; flex-wrap: wrap; gap: 5px; }
   .welcome-eyebrow { font-size: 12px; letter-spacing: .8px; }
   .site-mark { gap: 6px; }
-  .site-wordmark { font-size: 28px; }
-  .site-mark img { width: 52px; height: 48px; }
+  .site-wordmark { font-size: 22px; }
+  .site-mark img { width: 46px; height: 44px; }
   .atlas-count-card, .country-preview { border-radius: 4px; }
   .contribute-panel { box-shadow: 4px 4px 0 var(--combi-yellow); }
 }

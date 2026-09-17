@@ -106,7 +106,6 @@ export function WelcomeGate({ onEnter }: { onEnter: () => void }) {
           <div className="welcome-wordmark">
             <SiteMark />
           </div>
-          <span className="welcome-eyebrow">OPORTUNIDADES PARA EMPRENDER EN LATAM</span>
           <h1 id="welcome-title">Tu próxima<br /><span>parada.</span></h1>
           <p className="welcome-description">
             Programas, inversión, recursos y fellowships para emprender. Explora el mapa y ve directo a cada fuente oficial.

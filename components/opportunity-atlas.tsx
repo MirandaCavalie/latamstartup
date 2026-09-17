@@ -83,9 +83,6 @@ export function OpportunityAtlas({
           <h1 id="atlas-title" className="chicha-poster">
             <ChichaPoster />
           </h1>
-          <p className="atlas-description">
-            Encuentra programas, inversión y recursos para emprender en Latinoamérica.
-          </p>
           <div className="atlas-actions">
             <button
               className="button atlas-primary"
