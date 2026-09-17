@@ -12,7 +12,7 @@ test('Every opportunity has a local, attributed program or provider image', () =
   for (const item of opportunities) {
     const logo = providerLogos[item.id];
     assert.ok(logo, `Missing logo: ${item.id}`);
-    assert.match(logo.src, /^\/logos\/[a-z0-9-]+\.(png|svg)$/);
+    assert.match(logo.src, /^\/logos\/[a-z0-9-]+\.(png|svg|webp)$/);
     assert.ok(['program', 'provider'].includes(logo.kind));
     assert.ok(logo.name.length > 1);
     const file = new URL(`../public${logo.src}`, import.meta.url);
@@ -32,7 +32,7 @@ test('Every opportunity has a local, attributed program or provider image', () =
   }
 });
 
-test('The homepage poster is a real image, separate from the monochrome site mark', () => {
+test('The homepage poster is a real image, separate from the chancla site mark', () => {
   const poster = readFileSync(
     new URL(
       '../public/brand/tu-envidia-es-mi-progreso-poster.png',
@@ -54,8 +54,11 @@ test('The homepage poster is a real image, separate from the monochrome site mar
     new URL('../app/page.tsx', import.meta.url),
     'utf8',
   );
-  assert.match(mark, /MapPinned/);
-  assert.doesNotMatch(mark, /<img|poster|BrandLogo/);
+  assert.match(mark, /\/brand\/chancla-mark\.png/);
+  assert.match(mark, /chancletazo/);
+  assert.doesNotMatch(mark, /poster|BrandLogo/);
+  const chancla = readFileSync(new URL('../public/brand/chancla-mark.png', import.meta.url));
+  assert.equal(chancla.subarray(1, 4).toString(), 'PNG');
   assert.match(atlas, /<ChichaPoster\s*\/>/);
   assert.match(page, /<SiteMark variant="header"/);
   assert.match(page, /<SiteMark variant="footer"/);

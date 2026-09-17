@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Tu envidia es mi progreso · El atlas para emprender',
-  icons: { icon: '/favicon.svg' },
+  title: 'Chancletazo · Oportunidades para emprender en Latinoamérica',
+  icons: { icon: '/brand/chancla-mark.png' },
   description:
-    'Un mapa de programas, mentorías y recursos para emprender. Encuentra tu match y visita las fuentes oficiales.',
+    'Un mapa de programas, inversión y recursos para emprender en Latinoamérica. Explora cada oportunidad en su fuente oficial.',
 };
 
 export default function RootLayout({

@@ -1,17 +1,12 @@
-import { MapPinned } from 'lucide-react';
-
 export function SiteMark({
   variant = 'header',
 }: {
   variant?: 'header' | 'footer';
 }) {
   return (
-    <span
-      className={'site-mark site-mark-' + variant}
-      role="img"
-      aria-label="Tu envidia es mi progreso"
-    >
-      <MapPinned size={34} strokeWidth={1.6} aria-hidden="true" />
+    <span className={'site-mark site-mark-' + variant}>
+      <img src="/brand/chancla-mark.png" alt="" width="27" height="40" />
+      <span className="site-wordmark">chancletazo</span>
     </span>
   );
 }

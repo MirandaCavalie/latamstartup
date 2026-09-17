@@ -1667,15 +1667,32 @@ p {
   flex-shrink: 0;
 }
 .site-mark {
-  display: inline-grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
   color: #171717;
 }
 .site-mark-footer {
-  width: 40px;
   height: 40px;
+}
+.site-mark img {
+  width: 28px;
+  height: 42px;
+  object-fit: contain;
+}
+.site-mark-footer img {
+  width: 24px;
+  height: 35px;
+}
+.site-wordmark {
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.9px;
+  line-height: 1;
+}
+.site-mark-footer .site-wordmark {
+  font-size: 17px;
 }
 .chicha-poster {
   width: min(100%, 452px);
