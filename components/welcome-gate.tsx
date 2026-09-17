@@ -8,6 +8,7 @@ import type { GeometryCollection, Topology } from 'topojson-specification';
 import world from 'world-atlas/countries-110m.json';
 import { atlasCountries, countryOpportunities } from '@/lib/atlas';
 import { opportunities } from '@/lib/opportunities';
+import { SiteMark } from '@/components/site-mark';
 
 const topology = world as unknown as Topology<{
   countries: GeometryCollection<{ name: string }>;
@@ -38,23 +39,23 @@ function IntroGlobe() {
     >
       <defs>
         <radialGradient id={patternId} cx="45%" cy="38%" r="67%">
-          <stop stopColor="#343434" />
-          <stop offset="1" stopColor="#181818" />
+          <stop stopColor="#2965ad" />
+          <stop offset="1" stopColor="#154d99" />
         </radialGradient>
       </defs>
-      <circle cx="340" cy="340" r="295" fill="none" stroke="#5c5c5c" strokeDasharray="2 9" />
-      <circle cx="340" cy="340" r="284" fill={`url(#${patternId})`} stroke="#777" strokeWidth="1.5" />
-      <path d={path(geoGraticule10()) ?? ''} fill="none" stroke="#555" strokeWidth="0.7" />
+      <circle className="welcome-orbit" cx="340" cy="340" r="310" fill="none" stroke="#f4c331" strokeDasharray="4 12" />
+      <circle cx="340" cy="340" r="284" fill={`url(#${patternId})`} stroke="#d9e2da" strokeWidth="1.5" />
+      <path d={path(geoGraticule10()) ?? ''} fill="none" stroke="#9bb8d5" strokeWidth="0.7" />
       {countries.map((country, index) => (
-        <path key={index} d={path(country) ?? ''} fill="#2c2c2c" stroke="#979797" strokeWidth="0.65" />
+        <path key={index} d={path(country) ?? ''} fill="#fff8e8" fillOpacity=".12" stroke="#fff8e8" strokeWidth="0.8" />
       ))}
       {mapped.map((country) => {
         const point = projection([...country.coordinates]);
         if (!point || !path({ type: 'Point', coordinates: [...country.coordinates] })) return null;
         return (
           <g key={country.code}>
-            <circle cx={point[0]} cy={point[1]} r="11" fill="#f4f4f4" fillOpacity=".14" />
-            <circle cx={point[0]} cy={point[1]} r="4" fill="#fff" />
+            <circle cx={point[0]} cy={point[1]} r="11" fill="#f4c331" fillOpacity=".2" />
+            <circle cx={point[0]} cy={point[1]} r="4" fill="#f4c331" />
           </g>
         );
       })}
@@ -103,11 +104,10 @@ export function WelcomeGate({ onEnter }: { onEnter: () => void }) {
       <div className="welcome-layout">
         <div className="welcome-content">
           <div className="welcome-wordmark">
-            <span className="welcome-brand-icon"><img src="/brand/chancla-mark.png" alt="" /></span>
-            <span>chancletazo</span>
+            <SiteMark />
           </div>
-          <span className="welcome-eyebrow">LATINOAMÉRICA, EN EL MAPA</span>
-          <h1 id="welcome-title">Encuentra tu próximo paso.</h1>
+          <span className="welcome-eyebrow">OPORTUNIDADES PARA EMPRENDER EN LATAM</span>
+          <h1 id="welcome-title">Tu próxima<br /><span>parada.</span></h1>
           <p className="welcome-description">
             Programas, inversión, recursos y fellowships para emprender. Explora el mapa y ve directo a cada fuente oficial.
           </p>
@@ -138,11 +138,13 @@ export function WelcomeGate({ onEnter }: { onEnter: () => void }) {
               </form>
             )}
           </div>
-          <p className="welcome-fineprint">Sin registro en Chancletazo. Tu correo se guarda solo si lo envías con consentimiento; tus guardados y el perfil de match siguen en este navegador.</p>
+          <p className="welcome-fineprint">Sin registro en La Combi. Tu correo se guarda solo si lo envías con consentimiento; tus guardados y el perfil de match siguen en este navegador.</p>
         </div>
         <div className="welcome-visual" aria-hidden="true">
+          <div className="welcome-route-ticket"><span>RUTA LATINOAMÉRICA</span><strong>Hay lugar<br />para tu idea.</strong></div>
           <IntroGlobe />
-          <span className="welcome-globe-caption"><Globe2 size={16} /> Un mapa que sigue creciendo</span>
+          <img className="welcome-combi" src="/brand/combi-mark.png" alt="" width="1254" height="1254" />
+          <span className="welcome-globe-caption"><Globe2 size={16} /> Perú · México · Colombia · Chile · Argentina · Brasil</span>
         </div>
       </div>
     </section>

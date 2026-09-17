@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Chancletazo · Oportunidades para emprender en Latinoamérica',
-  icons: { icon: '/brand/chancla-mark.png' },
+  title: 'La Combi · Oportunidades para emprender en Latinoamérica',
+  icons: { icon: '/brand/combi-mark.png' },
   description:
     'Un mapa de programas, inversión y recursos para emprender en Latinoamérica. Explora cada oportunidad en su fuente oficial.',
 };

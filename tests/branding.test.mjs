@@ -32,10 +32,10 @@ test('Every opportunity has a local, attributed program or provider image', () =
   }
 });
 
-test('The homepage poster is a real image, separate from the chancla site mark', () => {
+test('The homepage poster is a real image, separate from the combi site mark', () => {
   const poster = readFileSync(
     new URL(
-      '../public/brand/tu-envidia-es-mi-progreso-poster.png',
+      '../public/brand/tu-envidia-es-mi-progreso-combi.png',
       import.meta.url,
     ),
   );
@@ -54,11 +54,17 @@ test('The homepage poster is a real image, separate from the chancla site mark',
     new URL('../app/page.tsx', import.meta.url),
     'utf8',
   );
-  assert.match(mark, /\/brand\/chancla-mark\.png/);
-  assert.match(mark, /chancletazo/);
+  assert.match(mark, /\/brand\/combi-mark\.png/);
+  assert.match(mark, /la combi/);
   assert.doesNotMatch(mark, /poster|BrandLogo/);
-  const chancla = readFileSync(new URL('../public/brand/chancla-mark.png', import.meta.url));
-  assert.equal(chancla.subarray(1, 4).toString(), 'PNG');
+  const combi = readFileSync(new URL('../public/brand/combi-mark.png', import.meta.url));
+  assert.equal(combi.subarray(1, 4).toString(), 'PNG');
+  assert.equal(combi.readUInt32BE(16), combi.readUInt32BE(20));
+  const welcome = readFileSync(new URL('../components/welcome-gate.tsx', import.meta.url), 'utf8');
+  const layout = readFileSync(new URL('../app/layout.tsx', import.meta.url), 'utf8');
+  assert.match(welcome, /<SiteMark\s*\/>/);
+  assert.match(layout, /La Combi/);
+  assert.doesNotMatch(mark + welcome + layout, /chancla-mark|chancletazo/i);
   assert.match(atlas, /<ChichaPoster\s*\/>/);
   assert.match(page, /<SiteMark variant="header"/);
   assert.match(page, /<SiteMark variant="footer"/);
@@ -80,16 +86,9 @@ test('The UI preserves image colors and the poster respects reduced motion', () 
   );
   assert.match(css, /\.poster-sheet\s*\{\s*transition: none;/);
   assert.doesNotMatch(css, /(?:saturate|hue-rotate|sepia|brightness)\s*\(/);
-  for (const [color] of css.matchAll(/#[0-9a-f]{6}(?:[0-9a-f]{2})?\b/gi)) {
-    assert.equal(
-      color.slice(1, 3),
-      color.slice(3, 5),
-      `Non-neutral UI color ${color}`,
-    );
-    assert.equal(
-      color.slice(3, 5),
-      color.slice(5, 7),
-      `Non-neutral UI color ${color}`,
-    );
+  for (const token of ['yellow', 'red', 'blue', 'green', 'paper']) {
+    assert.ok(css.includes(`--combi-${token}:`));
   }
+  assert.doesNotMatch(css, /animation: (?:combi|route|ticket)[^;]*infinite/);
+  assert.match(css, /\.welcome-combi, \.welcome-orbit, \.welcome-route-ticket, \.site-mark img, \.site-mark:hover img \{ animation: none; \}/);
 });

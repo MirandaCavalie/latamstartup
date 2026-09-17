@@ -1,6 +1,6 @@
-# Chancletazo
+# La Combi
 
-Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping; conserva su carpeta, URL y preferencias guardadas.
+Atlas en español para descubrir oportunidades y recursos para emprender. Proyecto originalmente llamado Mapping y después Chancletazo; conserva su carpeta, URL y preferencias guardadas.
 
 - Entrada visual con globo, acceso sin cuenta dentro de la aplicación y opción voluntaria de recibir novedades; el atlas interactivo sigue después.
 - 18 oportunidades de origen peruano, 6 beneficios globales, 17 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
@@ -15,8 +15,9 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Afinidad explicada, sin prometer elegibilidad o aprobación.
 - Fechas con zona horaria de Perú y revisión de vigencia a los 45 días.
 - Diseño adaptable a móvil y escritorio, controles accesibles y navegación por teclado.
-- Cartel chicha original en la portada, con tintas planas brillantes sobre papel negro y movimiento discreto que respeta la preferencia de movimiento reducido.
-- Identidad independiente: chancla monocroma y nombre Chancletazo en encabezado y pie; el afiche no es el logo. Interfaz en blanco y negro, con banderas y marcas a color.
+- Cartel original «Tu envidia es mi progreso»: letras rojas y azules sobre papel amarillo, textura de impresión y motivos populares latinoamericanos.
+- Identidad independiente: combi ilustrada y nombre La Combi en entrada, encabezado, pie y favicon; el afiche no es el logo. Papel crema, amarillo, rojo, cobalto y verde en la interfaz; banderas y marcas oficiales conservan sus colores.
+- Animaciones breves de llegada, cartel pegado y respuesta al cursor; sin bucles permanentes y con soporte de movimiento reducido.
 - Logos oficiales locales en las 44 fichas, con fuentes y distinción entre marca del programa y de su institución.
 - Lista de correo y buzón de sugerencias persistentes en D1. Sin cuenta propia, pagos ni envío automático de campañas; las propuestas pasan por revisión humana.
 
@@ -68,11 +69,11 @@ La publicación incluye la interfaz, dos rutas de recepción de datos y la base 
 - `app/page.tsx`: exploración, filtros, formulario, guardados y fichas.
 - `app/globals.css`: diseño adaptable.
 - `components/chicha-poster.tsx`: cartel de portada como imagen, no como logo.
-- `components/site-mark.tsx`: chancla monocroma y nombre breve en encabezado y pie.
-- `public/brand/`: cartel original y chancla, con sus prompts exactos.
+- `components/site-mark.tsx`: combi y nombre La Combi en entrada, encabezado y pie.
+- `public/brand/`: `combi-mark.png`, `tu-envidia-es-mi-progreso-combi.png` y `COMBI-PROMPTS.md`; las versiones anteriores se conservan sin uso en la interfaz.
 - `lib/provider-logos.ts`: relación entre cada ficha y su logotipo.
 - `public/logos/SOURCES.md`: procedencia de los logos oficiales.
-- `tests/branding.test.mjs`: cobertura de imágenes, seguridad de SVG y paleta neutra.
+- `tests/branding.test.mjs`: cobertura de imágenes, seguridad de SVG, identidad y movimiento reducido.
 - `lib/webmcp.ts`: búsqueda y lectura para navegadores con WebMCP.
 - `tests/match.test.mjs`: pruebas de los criterios de recomendación.
 - `scripts/check-links.mjs`: revisión HTTP de enlaces.

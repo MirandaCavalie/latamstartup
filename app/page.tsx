@@ -785,7 +785,7 @@ export default function Home() {
         <a
           className="brand atlas-brand"
           href="#mapa"
-          aria-label="Chancletazo, volver al mapa"
+          aria-label="La Combi, volver al mapa"
           onClick={(event) => {
             event.preventDefault();
             document.getElementById('mapa')?.scrollIntoView({ block: 'start' });

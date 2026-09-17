@@ -5,8 +5,8 @@ export function SiteMark({
 }) {
   return (
     <span className={'site-mark site-mark-' + variant}>
-      <img src="/brand/chancla-mark.png" alt="" width="27" height="40" />
-      <span className="site-wordmark">chancletazo</span>
+      <img src="/brand/combi-mark.png" alt="" width="1254" height="1254" />
+      <span className="site-wordmark">la combi<span className="site-wordmark-stop">.</span></span>
     </span>
   );
 }

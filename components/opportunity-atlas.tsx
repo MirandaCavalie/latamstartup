@@ -84,10 +84,7 @@ export function OpportunityAtlas({
             <ChichaPoster />
           </h1>
           <p className="atlas-description">
-            Encuentra el impulso que necesitas.
-            <br />
-            Programas, inversión y recursos para
-            <br className="desktop-break" /> emprender en Latinoamérica.
+            Encuentra programas, inversión y recursos para emprender en Latinoamérica.
           </p>
           <div className="atlas-actions">
             <button
@@ -170,9 +167,9 @@ export function OpportunityAtlas({
                 cy="30%"
                 r="72%"
               >
-                <stop offset="0%" stopColor="#ffffff" />
-                <stop offset="72%" stopColor="#f5f5f5" />
-                <stop offset="100%" stopColor="#e5e5e5" />
+                <stop offset="0%" stopColor="#fffdf7" />
+                <stop offset="72%" stopColor="#fff8e8" />
+                <stop offset="100%" stopColor="#eae4d6" />
               </radialGradient>
               <pattern
                 id={patternId + 'dots'}
@@ -180,7 +177,7 @@ export function OpportunityAtlas({
                 height="4.5"
                 patternUnits="userSpaceOnUse"
               >
-                <circle cx="2" cy="2" r="1.05" fill="#7e7e7e" />
+                <circle cx="2" cy="2" r="1.05" fill="#67847f" />
               </pattern>
               <pattern
                 id={patternId + 'active'}
@@ -188,8 +185,8 @@ export function OpportunityAtlas({
                 height="4.5"
                 patternUnits="userSpaceOnUse"
               >
-                <rect width="4.5" height="4.5" fill="#e8e8e8" />
-                <circle cx="2" cy="2" r="1.3" fill="#474747" />
+                <rect width="4.5" height="4.5" fill="#f4c331" />
+                <circle cx="2" cy="2" r="1.3" fill="#154d99" />
               </pattern>
               <filter
                 id={patternId + 'shadow'}
@@ -234,7 +231,7 @@ export function OpportunityAtlas({
                   key={boundary.id ?? index}
                   d={path(boundary) ?? ''}
                   fill={`url(#${patternId}${isSelected ? 'active' : 'dots'})`}
-                  stroke={isSelected ? '#585858' : '#adadad'}
+                  stroke={isSelected ? '#154d99' : '#adadad'}
                   strokeWidth={isSelected ? 1.2 : 0.5}
                   className={country ? 'globe-country' : 'globe-land'}
                   opacity={country ? 1 : 0.5}
@@ -248,8 +245,8 @@ export function OpportunityAtlas({
                 transform={`translate(${selectedPoint[0]},${selectedPoint[1]})`}
                 aria-hidden="true"
               >
-                <circle r="17" fill="#e1e1e1" opacity=".45" />
-                <circle r="8" fill="#323232" stroke="#ffffff" strokeWidth="3" />
+                <circle r="17" fill="#f4c331" opacity=".55" />
+                <circle r="8" fill="#c52e20" stroke="#ffffff" strokeWidth="3" />
                 <path
                   d="M 8 -7 L 32 -33 H 94"
                   fill="none"
@@ -262,7 +259,7 @@ export function OpportunityAtlas({
                   width={selected.name.length > 12 ? 162 : 105}
                   height="29"
                   rx="6"
-                  fill="#333333"
+                  fill="#154d99"
                 />
                 <text
                   x="43"
@@ -282,7 +279,7 @@ export function OpportunityAtlas({
             </span>
             <div>
               <strong>{opportunities.length}</strong>
-              <span>oportunidades en el radar</span>
+              <span>oportunidades en ruta</span>
             </div>
             <span className="count-card-spark" aria-hidden="true">
               ✳
