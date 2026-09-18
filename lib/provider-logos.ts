@@ -7,6 +7,20 @@ export type ProviderLogoAsset = {
 };
 
 export const providerLogos: Record<string, ProviderLogoAsset> = {
+  'prendho-incubacion': { src: '/logos/prendho.png', name: 'Prendho UTPL', kind: 'provider' },
+  'bolivia-plei': { src: '/logos/emprender-futuro.png', name: 'Fundación Emprender Futuro', kind: 'provider' },
+  'ande-centros-pymes': { src: '/logos/ande.svg', name: 'ANDE', kind: 'provider' },
+  'paraguay-sbdc': { src: '/logos/mic.png', name: 'MIC Paraguay', kind: 'provider' },
+  'tec-catalitec': { src: '/logos/tec.svg', name: 'TEC Costa Rica', kind: 'provider' },
+  'panama-innovar': { src: '/logos/ciudad-del-saber.svg', name: 'Ciudad del Saber', kind: 'provider' },
+  'guatemala-mineco-sde': { src: '/logos/mineco.png', name: 'MINECO Guatemala', kind: 'provider' },
+  'honduras-senprende': { src: '/logos/senprende.jpg', name: 'SENPRENDE', kind: 'provider' },
+  'salvador-cdmype': { src: '/logos/conamype.jpg', name: 'CONAMYPE', kind: 'provider' },
+  'nicaragua-ci-startups': { src: '/logos/centro-innovacion.webp', name: 'Centro de Innovación Nicaragua', kind: 'provider' },
+  'dominicana-mipymes-pucmm': { src: '/logos/pucmm.svg', name: 'PUCMM', kind: 'provider' },
+  'cuba-taller-emprende': { src: '/logos/cubaemprende.png', name: 'CubaEmprende', kind: 'provider' },
+  'haiti-banj-labs': { src: '/logos/banj.png', name: 'Banj', kind: 'provider' },
+  'venezuela-impact-hub': { src: '/logos/impact-hub-caracas.svg', name: 'Impact Hub Caracas', kind: 'provider', darkBackground: true },
   'ife-accelerator': {
     src: '/logos/tecnologico-de-monterrey.svg',
     name: 'Tecnológico de Monterrey',

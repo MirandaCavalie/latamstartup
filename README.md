@@ -4,10 +4,12 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 
 - Una bienvenida sobre el mapa permite entrar como invitado o abrir novedades opcionales. «Inicio» la recupera; no exige correo ni bloquea la navegación. Seleccionar un país acerca la vista y muestra hasta seis tarjetas claras con stickers (cuatro en móvil, desplazables); «Ver todas» abre su base de datos completa.
 - «Base de datos» abre todas las fichas con sus filtros. «Volver al mapa» recupera el último país seleccionado. Los stickers se reemplazan al cambiar de país, entran escalonados y flotan suavemente; con movimiento reducido permanecen quietos.
-- 18 oportunidades de origen peruano, 6 beneficios globales, 18 fichas de México, Colombia, Chile, Argentina y Brasil, y 3 fellowships regionales.
+- 59 fichas: 18 peruanas, 18 de México/Colombia/Chile/Argentina/Brasil, 14 nuevas fichas locales (una por cada país restante del atlas), 6 beneficios globales y 3 fellowships regionales. Cobertura inicial de 20 países, no inventario exhaustivo.
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
 
-- 45 fichas editoriales de Estado, universidades, empresas y organizaciones.
+- País de origen y alcance son distintos: una sección nacional incluye sus fichas locales más opciones LATAM/globales, respetando listas de países elegibles cuando se publican. No garantiza admisión.
+- El mapa y «Ver todas» comparten cobertura; el encabezado «Estás en…» mantiene el contexto. «Base de datos» restablece toda la colección. Recursos/guardados conservan el país; matches sigue el país del perfil.
+- Los contadores por categoría aplican búsqueda, país, institución, gratuidad y disponibilidad, pero excluyen la categoría seleccionada para permitir comparar categorías.
 - Fellowships e intercambios separados de aceleración e inversión: Puentes (ingeniería, estancia parcialmente cubierta, convocatoria cerrada), YLAI (intercambio en EE. UU., próximo plazo por confirmar) y Makers (remoto y gratuito).
 - Inversión por participación en una categoría propia: Platanus, Latitud, 500 Global y Rockstart no se confunden con subvenciones o capital semilla condonable.
 - Enlaces directos a los sitios oficiales; las postulaciones se realizan allí.
@@ -20,7 +22,7 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - Dieciocho stickers ilustrados tipo souvenir: dos para Perú, México, Colombia, Chile, Argentina, Brasil y Ecuador, más cuatro generales. Los demás países usan los generales. Los stickers neón y la frase «Tu envidia es mi progreso» ya no se muestran. La combi permanece como marca; banderas y logos oficiales conservan sus colores.
 - Entrada escalonada de tarjetas y flotación suave de stickers; movimiento reducido desactiva ambas animaciones.
 - Tipografía Geist para marca, títulos y lectura. La fuente y los carteles del branding anterior se conservan como archivos históricos, sin uso en la interfaz actual.
-- Logos oficiales locales en las 45 fichas, con fuentes y distinción entre marca del programa y de su institución.
+- Logos oficiales locales en las 59 fichas, con fuentes y distinción entre marca del programa y de su institución.
 - Lista de correo y buzón de sugerencias persistentes en D1. Sin cuenta propia, pagos ni envío automático de campañas; las propuestas pasan por revisión humana.
 
 ## Uso local

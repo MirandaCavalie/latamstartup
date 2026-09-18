@@ -1,5 +1,6 @@
 import { latamOpportunities } from './latam-opportunities.ts';
 import { regionalOpportunities } from './regional-opportunities.ts';
+import { countryOpportunitiesData } from './country-opportunities.ts';
 import type { AtlasCountry } from './atlas';
 
 export type Category =
@@ -69,6 +70,8 @@ export type Opportunity = {
   countryCode?: string;
   // Match coverage can differ from the country chapter used on the atlas.
   matchScope?: 'Latinoamérica';
+  // Explicit published country eligibility takes precedence over broad labels.
+  eligibleCountryCodes?: string[];
   location: string;
   mode: 'Virtual' | 'Presencial' | 'Híbrido' | 'Por confirmar';
   status: 'open' | 'ongoing' | 'consult' | 'closed';
@@ -925,4 +928,5 @@ export const opportunities: Opportunity[] = [
   },
   ...latamOpportunities,
   ...regionalOpportunities,
+  ...countryOpportunitiesData,
 ];

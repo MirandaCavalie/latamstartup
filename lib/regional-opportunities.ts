@@ -35,6 +35,8 @@ export const regionalOpportunities: Opportunity[] = [
   },
   {
     id: 'ylai-fellowship',
+    // Published State Department list includes every country currently on this atlas.
+    eligibleCountryCodes: ['PE', 'MX', 'CO', 'CL', 'AR', 'BR', 'EC', 'BO', 'UY', 'PY', 'CR', 'PA', 'GT', 'HN', 'SV', 'NI', 'DO', 'CU', 'HT', 'VE'],
     name: 'YLAI Fellowship',
     org: 'U.S. Department of State · IREX',
     orgType: 'Estado',

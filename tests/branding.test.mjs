@@ -26,7 +26,7 @@ test('Every opportunity has a local, attributed program or provider image', () =
   for (const item of opportunities) {
     const logo = providerLogos[item.id];
     assert.ok(logo, `Missing logo: ${item.id}`);
-    assert.match(logo.src, /^\/logos\/[a-z0-9-]+\.(png|svg|webp)$/);
+    assert.match(logo.src, /^\/logos\/[a-z0-9-]+\.(png|jpg|svg|webp)$/);
     assert.ok(['program', 'provider'].includes(logo.kind));
     assert.ok(logo.name.length > 1);
     const file = new URL(`../public${logo.src}`, import.meta.url);

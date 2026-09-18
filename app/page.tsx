@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useState } from 'react';
 import { deletionToken, MATCH_TOKEN_KEY, PRIVACY_VERSION } from '@/lib/privacy';
+import { filterCatalog } from '@/lib/catalog';
 import {
   ArrowUpRight,
   Bookmark,
@@ -79,7 +80,6 @@ import {
   availability,
   availabilityLabels,
   matchOpportunity,
-  matchesText,
   validateProfile,
 } from '@/lib/match';
 import type { MatchResult } from '@/lib/match';
@@ -89,7 +89,7 @@ import { SiteMark } from '@/components/site-mark';
 import { ProviderLogo } from '@/components/provider-logo';
 import { NewsletterDialog } from '@/components/newsletter-dialog';
 import { Contribute, UnsubscribeForm } from '@/components/contribute';
-import { atlasCountries, countryOpportunities } from '@/lib/atlas';
+import { atlasCountries, countryOpportunities, isCrossBorder } from '@/lib/atlas';
 
 type View = 'explore' | 'resources' | 'matches' | 'saved';
 const icons = {
@@ -211,6 +211,7 @@ function OpportunityCard({
             .replace(' y mentoría', '')}
         </span>
         <span className="tag neutral">{item.orgType}</span>
+        <span className="tag neutral">{isCrossBorder(item) ? item.geography === 'Global' ? 'Global · revisar elegibilidad' : 'Alcance LATAM' : item.geography}</span>
       </div>
       {match?.eligibleForSuggestions && (
         <div className="match-reason">
@@ -581,24 +582,12 @@ export default function Home() {
       ),
     [view, saved, matchMap],
   );
+  const countrySection = atlasCountries.find((country) => country.name === scope);
+  const facetItems = useMemo(() => filterCatalog(baseItems, {
+    category: 'all', orgType, scope, freeOnly, availableOnly, query,
+  }, now), [baseItems, orgType, scope, freeOnly, availableOnly, query, now]);
   const filtered = useMemo(() => {
-    const result = baseItems.filter(
-      (item) =>
-        (category === 'all' || item.category === category) &&
-        (orgType === 'all' || item.orgType === orgType) &&
-        (scope === 'all' ||
-          (scope === 'Global' || scope === 'Latinoamérica'
-            ? item.geography === scope
-            : countryOpportunities(
-                [item],
-                atlasCountries.find((country) => country.name === scope) ??
-                  atlasCountries[0],
-              ).length > 0)) &&
-        (!freeOnly || item.cost === 'gratis') &&
-        (!availableOnly ||
-          ['open', 'ongoing'].includes(availability(item, now))) &&
-        matchesText(item, query),
-    );
+    const result = facetItems.filter((item) => category === 'all' || item.category === category);
     return result.sort((a, b) => {
       if (sort === 'name') return a.name.localeCompare(b.name, 'es');
       if (sort === 'deadline') {
@@ -626,7 +615,7 @@ export default function Home() {
       );
     });
   }, [
-    baseItems,
+    facetItems,
     category,
     orgType,
     scope,
@@ -652,6 +641,12 @@ export default function Home() {
     setSurface('catalog');
     setView(v);
     resetFilters();
+    // Only the full database tab removes geographic context. Other views
+    // preserve it; matches follow the country in the saved profile.
+    if (v === 'resources' || v === 'saved') {
+      setScope(surface === 'map' ? atlasCountries.find((country) => country.code === mapCountryCode)?.name ?? 'all' : scope);
+    }
+    if (v === 'matches') setScope(profileCountry?.name ?? 'all');
     requestAnimationFrame(scrollToCatalog);
   };
   const toggleSaved = (id: string) => {
@@ -666,6 +661,7 @@ export default function Home() {
     setSharingNotice(shareForAnalytics ? 'Compartiendo tus respuestas…' : 'Tu nuevo match se calculó sin enviar respuestas.');
     setProfile(p);
     switchView('matches');
+    setScope(atlasCountries.find((country) => country.code === p.countryCode)?.name ?? 'all');
     setAnnouncement(
       'Tu selección está lista. ' +
         opportunities.filter(
@@ -738,7 +734,7 @@ export default function Home() {
       >
         <Compass size={17} />
         Todas las oportunidades
-        <span className="option-count">{baseItems.length}</span>
+        <span className="option-count">{facetItems.length}</span>
       </button>
       {Object.entries(categoryLabels).map(([key, label]) => {
         const Icon = icons[key as Category];
@@ -752,7 +748,7 @@ export default function Home() {
             <Icon size={17} />
             <span>{label}</span>
             <span className="option-count">
-              {baseItems.filter((o) => o.category === key).length}
+              {facetItems.filter((o) => o.category === key).length}
             </span>
           </button>
         );
@@ -771,11 +767,15 @@ export default function Home() {
         ]}
       />
       <ChoiceSelect
-        label="Origen de la oportunidad"
+        label="Explorar desde"
         value={scope}
-        onChange={setScope}
+        onChange={(nextScope) => {
+          setScope(nextScope);
+          const country = atlasCountries.find((entry) => entry.name === nextScope);
+          if (country) setMapCountryCode(country.code);
+        }}
         options={[
-          { value: 'all', label: 'Todos los orígenes' },
+          { value: 'all', label: 'Toda la base de datos' },
           ...atlasCountries
             .filter(
               (country) => countryOpportunities(opportunities, country).length,
@@ -890,6 +890,13 @@ export default function Home() {
             });
           }}><ArrowLeft size={18} /> Volver al mapa</button>
         </div>
+        <section className="country-context" aria-label="Sección de la base de datos">
+          <div>
+            <h1>{countrySection ? `${countrySection.flag} Estás en ${countrySection.name}` : scope === 'all' ? 'Base de datos · todos los países' : `${scope} · oportunidades compartidas`}</h1>
+            <p>{countrySection ? `Programas de ${countrySection.name} y opciones regionales o globales para explorar desde aquí. Revisa los requisitos de cada ficha.` : 'Explora programas, recursos y fellowships. Los contadores reflejan los filtros activos.'}</p>
+          </div>
+          {scope !== 'all' && <button className="back-to-map" onClick={() => switchView('explore')}>Ver toda la base de datos <ArrowUpRight size={16} /></button>}
+        </section>
         <div className="workspace">
           <aside
             className="filter-sidebar"

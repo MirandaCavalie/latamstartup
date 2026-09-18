@@ -7,7 +7,7 @@ import type {
   Sector,
 } from './opportunities';
 import { legacyPeruRegions } from './opportunities.ts';
-import { atlasCountries } from './atlas.ts';
+import { atlasCountries, isAvailableFromCountry, isCrossBorder } from './atlas.ts';
 
 export type Availability =
   | 'open'
@@ -64,10 +64,8 @@ export function matchOpportunity(
     return result;
   }
   const state = availability(item, now);
-  const crossBorder = item.geography === 'Global' ||
-    item.geography === 'Latinoamérica' || item.matchScope === 'Latinoamérica';
-  const origin = item.countryCode ?? atlasCountries.find((c) => c.name === item.geography)?.code;
-  if (!crossBorder && origin !== country.code) {
+  const crossBorder = isCrossBorder(item);
+  if (!isAvailableFromCountry(item, country.code)) {
     result.pending.push(
       `La ficha está catalogada en ${item.geography}; no tenemos confirmado su alcance para negocios en ${country.name}.`,
     );

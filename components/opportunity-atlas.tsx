@@ -7,7 +7,7 @@ import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import world from 'world-atlas/countries-110m.json';
 import { ArrowUpRight, CircleHelp, Mail, Minus, Plus, RotateCcw, X } from 'lucide-react';
-import { atlasCountries, countryOpportunities } from '@/lib/atlas';
+import { atlasCountries, opportunitiesForCountry, isCrossBorder } from '@/lib/atlas';
 import type { AtlasCountry } from '@/lib/atlas';
 import { opportunities, categoryLabels } from '@/lib/opportunities';
 import type { Opportunity } from '@/lib/opportunities';
@@ -80,8 +80,9 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, size.width, size.height]);
 
-  const selectedItems = useMemo(() => selected ? countryOpportunities(opportunities, selected).sort((a, b) =>
-    Number(availability(a, now) === 'closed') - Number(availability(b, now) === 'closed')) : [], [selected, now]);
+  const selectedItems = useMemo(() => selected ? opportunitiesForCountry(opportunities, selected).sort((a, b) =>
+    Number(availability(a, now) === 'closed') - Number(availability(b, now) === 'closed') ||
+    Number(isCrossBorder(a)) - Number(isCrossBorder(b))) : [], [selected, now]);
   const reset = () => {
     setSelected(null);
     onCountryChange('');
@@ -174,7 +175,7 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
               {previewItems.map((item, index) => <button className={`map-opportunity popup-${index + 1}`} key={`${selected.code}-${item.id}`} onClick={() => onDetails(item)}>
                 <TravelSticker country={selected.code} index={index} />
                 <span className="map-card-top"><ProviderLogo id={item.id} provider={item.org} /></span>
-                <span className="map-card-category">{categoryLabels[item.category]}</span>
+                <span className="map-card-category">{categoryLabels[item.category]} · {isCrossBorder(item) ? item.geography === 'Global' ? 'Global' : 'LATAM' : selected.name}</span>
                 <strong>{item.name}</strong>
                 <span className="map-card-status"><i className={'status-dot ' + availability(item, now)} />{availabilityLabels[availability(item, now)]}</span>
                 <ArrowUpRight className="map-card-arrow" size={17} />

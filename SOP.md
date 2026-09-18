@@ -10,7 +10,7 @@ Se construyó un prototipo acotado porque el usuario pidió una experiencia prop
 
 Diagnóstico aplicado antes de implementar la lógica:
 
-1. Volumen: tráfico y frecuencia real de uso desconocidos; no se afirma retorno de inversión. Hay 45 fichas revisadas como prueba del producto.
+1. Volumen: tráfico y frecuencia real de uso desconocidos; no se afirma retorno de inversión. Hay 59 fichas y cobertura local inicial de los 20 países del atlas, no un inventario exhaustivo.
 2. Entradas: sitios oficiales, bases y directorios enlazados, más respuestas estructuradas al cuestionario del visitante.
 3. Formato: fuentes HTML/PDF no uniformes, normalizadas editorialmente a registros TypeScript. El cuestionario usa opciones cerradas.
 4. Destino: catálogo y recomendaciones en la web; la acción final siempre va a la institución.
@@ -92,6 +92,8 @@ npm run check:links
 
 ## Casos límite conocidos
 
+- Prendho sirve contenido verificable a buscadores/navegadores, pero devolvió HTTP 403 en la comprobación automática del 17/09/2026. No se interpreta como cierre del programa. SENPRENDE debe enlazarse sin `www`, cuyo host falló la comprobación HTTPS.
+
 - Mapa plano: 30 pruebas automatizadas cubren el catálogo, los 20 encuadres nacionales, zoom anclado, inversión de coordenadas después de desplazar, acceso directo, assets y consentimiento. TypeScript y compilación de producción completados; no se realizó QA de navegador de esta versión. Las comprobaciones de navegador descritas más abajo son históricas.
 - En móvil hasta cuatro tarjetas de vista previa se desplazan horizontalmente; en escritorio se muestran hasta seis tarjetas distribuidas alrededor del país. «Ver todas» abre la base de datos filtrada. Se reserva espacio al encuadrar para la vista previa. En pantallas de muy poca altura la página conserva una altura mínima utilizable y puede requerir desplazamiento vertical. El zoom y arrastre no requieren gestos multitáctiles: hay controles y un selector de los 20 países como alternativa.
 - Abrir/cerrar una ficha conserva país y encuadre. La navegación visible se llama «Base de datos»; «Volver al mapa» recupera el país seleccionado y ajusta su encuadre (no conserva desplazamientos manuales). El logo también devuelve al mapa. No hay enlaces permanentes ni historial de navegador por país en esta versión. Las coordenadas representan países y no ubicaciones de programas.
@@ -127,6 +129,14 @@ La publicación de una nueva ficha o el cambio de monto, fechas, gratuidad, eleg
 Cada sugerencia recibida queda en estado `pending` hasta revisión de la fuente, condiciones, logo y vigencia. No promoverla al catálogo por volumen de votos ni por recibir un formulario; no usar la lista de correos para campañas sin verificar consentimiento, bajas y proveedor elegido.
 
 ## Mantenimiento
+
+Corrección de cobertura y contadores (17/09/2026, actualización más reciente): las 59 fichas dan cobertura local inicial a los 20 países. Las 14 nuevas entradas viven en `lib/country-opportunities.ts`, con enlaces oficiales y fecha de revisión; logos y procedencia en `public/logos/SOURCES.md`. No se afirma cobertura exhaustiva ni apertura sin confirmación.
+
+`countryOpportunities` conserva el significado de origen local para auditoría. `isAvailableFromCountry` y `opportunitiesForCountry` controlan alcance de descubrimiento y match, incluyendo LATAM/global y priorizando `eligibleCountryCodes` cuando exista. La lista oficial de YLAI incluye los 20 países del atlas. Alcance global/regional no garantiza admisión: se mantienen requisitos y avisos. No ampliar cobertura nacional sin evidencia del organizador.
+
+`filterCatalog` aplica país, búsqueda, institución, costo, estado y categoría. Los contadores usan los mismos filtros excepto categoría; su suma coincide con el total disponible. Mapa y «Ver todas» comparten cobertura. El encabezado «Estás en…» hace explícito el país; «Base de datos» elimina filtros, Recursos y Guardados conservan país, y Mis matches utiliza el país del perfil. Cambiar país en el filtro también actualiza el país al volver al mapa.
+
+Pruebas: `npm run check`. La suite contiene 89 pruebas, con matriz de 20 países × 8 categorías × 6 combinaciones, coherencia mapa/base, exclusión de programas nacionales ajenos y límites de recepción existentes. Navegador: Perú/fellowships (3), gratuitos (2), abiertos (1); restablecimiento de 59 fichas; Ecuador con Prendho y fellows; Recursos conservando Ecuador; cambio a Uruguay y retorno al mapa; búsqueda sin resultados con contadores en cero. No se enviaron correos ni respuestas de match a producción. Se conservan privacidad y controles de coste. Las notas siguientes son históricas.
 
 Bienvenida y souvenirs (17/09/2026, versión actual): vuelve una landing no bloqueante sobre el mapa. Ofrece invitado o el formulario de novedades existente, sin usar el antiguo WelcomeGate ni su envío obsoleto. «Inicio» vuelve a mostrarla; navegar a la base de datos la descarta hasta recargar o elegir Inicio. No se añade almacenamiento de preferencias de entrada. Las tarjetas son blancas/gris, compactas y con inclinaciones leves; se prioriza diversidad de categorías en la vista previa. Se muestran hasta seis en escritorio de 1200 × 840 px, cuatro a partir de 620 px de altura o en móvil con desplazamiento horizontal, dos en escritorio de poca altura. «Ver todas» mantiene el listado completo. Dieciocho souvenirs originales reemplazan los neones: dos para siete países y cuatro generales. Las tres láminas PNG RGBA se muestran por celda sin editar sus píxeles. Arte y prompts en `public/brand/SOUVENIR-PROMPTS.md`; no son marcas oficiales. Sin cambios en D1, recepción de correos, consentimientos ni controles de coste. Las notas siguientes documentan versiones anteriores.
 

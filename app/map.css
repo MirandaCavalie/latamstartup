@@ -3,6 +3,10 @@
 .map-mode > .site-header { position: relative; flex: 0 0 auto; z-index: 10; background: #fff; box-shadow: 0 4px 20px #1515150a; }
 .main-wrap[hidden] { display: none; }
 .database-navigation { padding: 20px 0 12px; }
+.country-context { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin: 6px 0 28px; padding: 20px 24px; background: #f0f1f3; border: 1px solid #dedee3; border-radius: 14px; }
+.country-context h1 { margin: 0 0 6px; font-size: clamp(22px, 3vw, 30px); letter-spacing: -.7px; }
+.country-context p { margin: 0; max-width: 760px; font-size: 15px; line-height: 1.5; color: #64616c; }
+.country-context .back-to-map { flex-shrink: 0; }
 .back-to-map { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 10px 16px; border: 1px solid #d6d7dc; border-radius: 24px; background: #fff; color: #24242a; font: inherit; font-size: 15px; font-weight: 550; cursor: pointer; }
 .back-to-map:hover { background: #f0edf5; border-color: #81748e; }
 .flat-atlas { position: relative; flex: 1 1 auto; min-height: 0; width: 100%; overflow: hidden; background: #f7f8f8; isolation: isolate; }

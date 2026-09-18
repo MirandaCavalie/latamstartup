@@ -1,5 +1,28 @@
 # Fuentes de logotipos
 
+## Nuevos capítulos nacionales · 17 septiembre 2026
+
+Copias originales de los proveedores, sin redibujar ni afirmar patrocinio. Todos son logos institucionales, no necesariamente del programa específico.
+
+| Proveedor | Archivo | Página oficial | Imagen original |
+| --- | --- | --- | --- |
+| Prendho UTPL | `prendho.png` | https://prendho.com/ | https://prendho.com/wp-content/uploads/2022/06/logo-prendho-UTPL.png |
+| Emprender Futuro | `emprender-futuro.png` | https://boliviaemprende.com/ | https://boliviaemprende.com/wp-content/themes/boliviaemprende_v2/assets/img/logo_efut_dark.png |
+| ANDE | `ande.svg` | https://portal.ande.org.uy/login | https://portal.ande.org.uy/customViews/images/logo-login.svg |
+| MIC Paraguay | `mic.png` | https://www.mic.gov.py/ | https://www.mic.gov.py/wp-content/uploads/2023/08/cropped-MINISTERIO-DE-INDUSTRIA-Y-COMERCIO-Curvas-01.png |
+| TEC Costa Rica | `tec.svg` | https://www.tec.ac.cr/ | https://www.tec.ac.cr/themes/custom/tecnologico/logo.svg |
+| Ciudad del Saber | `ciudad-del-saber.svg` | https://ciudaddelsaber.org/ | https://ciudaddelsaber.org/imgs/logo.svg |
+| MINECO | `mineco.png` | https://mineco.gob.gt/ | https://mineco.gob.gt/images/logos/LOGO-MINECO-2024-2028HB_compressed.png |
+| SENPRENDE | `senprende.jpg` | https://senprende.hn/ | https://senprende.hn/images/banners/senprende-full.jpg |
+| CONAMYPE | `conamype.jpg` | https://www.transparencia.gob.sv/institutions/conamype | https://www.transparencia.gob.sv/cargar_imagen.php?id=NDI%3D |
+| CI Nicaragua | `centro-innovacion.webp` | https://cinicaragua.edu.ni/ | https://cinicaragua.edu.ni/static/core/images/CILOGOCOLOR.webp |
+| PUCMM | `pucmm.svg` | https://pucmm.edu.do/ | https://pucmm.edu.do/wp-content/uploads/2026/07/pucmm-logo.svg |
+| CubaEmprende | `cubaemprende.png` | https://proyectocubaemprende.org/ | https://proyectocubaemprende.org/wp-content/uploads/2025/12/logo_cubaemprende.png |
+| Banj | `banj.png` | https://banj.ht/ | https://banj.ht/build/assets/logo-Ct7z-0D5.png |
+| Impact Hub Caracas | `impact-hub-caracas.svg` | https://caracas.impacthub.net/ | https://caracas.impacthub.net/wp-content/uploads/2018/09/logo-second.svg |
+
+## Catálogo anterior
+
 Revisados el 16 de septiembre de 2026. Se guardan copias locales de las imágenes originales para evitar dependencias de hotlinking. No se generan ni redibujan marcas de terceros. Las marcas pertenecen a sus respectivos titulares; su presencia identifica la institución o programa, no implica afiliación ni patrocinio.
 
 Cuando no se dispone de un logotipo específico del programa, se muestra el de su institución organizadora. El campo `kind` en `lib/provider-logos.ts` y el texto alternativo distinguen ambos casos. No modificar los colores, proporciones ni símbolos originales.

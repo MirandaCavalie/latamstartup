@@ -19,7 +19,7 @@ const tech = {
   countryCode: 'PE',
 };
 test('Every catalogue entry has a unique ID, HTTPS source and sufficient editorial context', () => {
-  assert.equal(opportunities.length, 45);
+  assert.equal(opportunities.length, 59);
   assert.equal(
     new Set(opportunities.map((o) => o.id)).size,
     opportunities.length,
@@ -138,7 +138,7 @@ test('The atlas maps verified country chapters without treating regional eligibi
     const country = atlasCountries.find((c) => c.code === code);
     assert.equal(countryOpportunities(opportunities, country).length, expected, code);
   }
-  assert.equal(local.length + global.length + regional.length + 18, opportunities.length);
+  assert.equal(local.length + global.length + regional.length + 18 + 14, opportunities.length);
   assert.ok(!local.some((o) => o.id === 'hubspot-bootstrap'));
 });
 
@@ -221,12 +221,12 @@ test('Regional and global suggestions name the selected country and retain pendi
   }
 });
 
-test('Countries without local records get no invented national matches', () => {
+test('New country records do not leak other national programs into matches', () => {
   const profile = { ...tech, countryCode: 'EC' };
   assert.ok(validateProfile(profile));
   const matches = opportunities.filter((o) => matchOpportunity(o, profile, date).eligibleForSuggestions);
   assert.ok(matches.length > 0);
-  assert.ok(matches.every((o) => ['Global', 'Latinoamérica'].includes(o.geography) || o.matchScope === 'Latinoamérica'));
+  assert.ok(matches.every((o) => o.countryCode === 'EC' || ['Global', 'Latinoamérica'].includes(o.geography) || o.matchScope === 'Latinoamérica'));
   assert.equal(matchOpportunity(find('aws-activate'), { ...tech, countryCode: 'XX' }, date).eligibleForSuggestions, false);
 });
 

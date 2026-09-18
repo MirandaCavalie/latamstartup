@@ -117,6 +117,23 @@ export const atlasCountries = [
 
 export type AtlasCountry = (typeof atlasCountries)[number];
 
+export function isCrossBorder(item: Opportunity) {
+  return item.geography === 'Global' || item.geography === 'Latinoamérica' || item.matchScope === 'Latinoamérica';
+}
+
+// Discovery coverage is not an admission guarantee: age, incorporation,
+// travel and provider terms remain in each record's requirements.
+export function isAvailableFromCountry(item: Opportunity, code: string) {
+  const country = atlasCountries.find((entry) => entry.code === code);
+  if (!country) return false;
+  if (item.eligibleCountryCodes) return item.eligibleCountryCodes.includes(code);
+  return isCrossBorder(item) || (item.countryCode ? item.countryCode === code : item.geography === country.name);
+}
+
+export function opportunitiesForCountry(items: Opportunity[], country: AtlasCountry) {
+  return items.filter((item) => isAvailableFromCountry(item, country.code));
+}
+
 export function countryOpportunities(
   items: Opportunity[],
   country: AtlasCountry,
