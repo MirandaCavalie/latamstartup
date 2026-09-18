@@ -134,6 +134,14 @@ export function opportunitiesForCountry(items: Opportunity[], country: AtlasCoun
   return items.filter((item) => isAvailableFromCountry(item, country.code));
 }
 
+// Map previews spotlight national programs, not the cross-border catalog.
+// The country database deliberately keeps the broader discovery coverage.
+export function countryPreviewOpportunities(items: Opportunity[], country: AtlasCountry) {
+  return countryOpportunities(items, country).filter(
+    (item) => !isCrossBorder(item) && isAvailableFromCountry(item, country.code),
+  );
+}
+
 export function countryOpportunities(
   items: Opportunity[],
   country: AtlasCountry,

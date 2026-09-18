@@ -7,7 +7,7 @@ import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import world from 'world-atlas/countries-110m.json';
 import { ArrowUpRight, CircleHelp, Mail, Minus, Plus, RotateCcw, X } from 'lucide-react';
-import { atlasCountries, opportunitiesForCountry, isCrossBorder } from '@/lib/atlas';
+import { atlasCountries, countryPreviewOpportunities } from '@/lib/atlas';
 import type { AtlasCountry } from '@/lib/atlas';
 import { opportunities, categoryLabels } from '@/lib/opportunities';
 import type { Opportunity } from '@/lib/opportunities';
@@ -80,9 +80,8 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected, size.width, size.height]);
 
-  const selectedItems = useMemo(() => selected ? opportunitiesForCountry(opportunities, selected).sort((a, b) =>
-    Number(availability(a, now) === 'closed') - Number(availability(b, now) === 'closed') ||
-    Number(isCrossBorder(a)) - Number(isCrossBorder(b))) : [], [selected, now]);
+  const localItems = useMemo(() => selected ? countryPreviewOpportunities(opportunities, selected).sort((a, b) =>
+    Number(availability(a, now) === 'closed') - Number(availability(b, now) === 'closed')) : [], [selected, now]);
   const reset = () => {
     setSelected(null);
     onCountryChange('');
@@ -96,7 +95,7 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
     const boundary = countries.find((item) => item.country?.code === country.code)?.boundary;
     if (boundary) moveTo(fitMapCamera(path.bounds(boundary), size.width, size.height, true));
   };
-  const previewItems = diversePreview(selectedItems, previewLimit(size.width, size.height));
+  const previewItems = diversePreview(localItems, previewLimit(size.width, size.height));
   const gridStep = Math.max(28, Math.min(110, camera.scale * Math.PI / 18));
 
   return (
@@ -167,22 +166,22 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
       {selected && <>
         <aside key={`results-${selected.code}`} className="map-preview" aria-label={`Oportunidades de ${selected.name}`}>
           <div className="map-country-heading">
-            <div><h2>{selected.flag} {selected.name}</h2><span className="map-chapter">{selectedItems.length ? `${previewItems.length} de ${selectedItems.length} oportunidades` : 'Por mapear'}</span></div>
+            <div><h2>{selected.flag} {selected.name}</h2><span className="map-chapter">{localItems.length ? `${previewItems.length} de ${localItems.length} oportunidades locales` : 'Sin programas locales aún'}</span></div>
             <button className="map-icon-button" onClick={reset} aria-label="Cerrar país y volver a Latinoamérica"><X size={20} /></button>
           </div>
-          {selectedItems.length ? <>
+          {localItems.length ? <>
             <div className={'map-popups' + (previewItems.length > 4 ? ' layout-six' : '')} aria-label="Selección de oportunidades">
               {previewItems.map((item, index) => <button className={`map-opportunity popup-${index + 1}`} key={`${selected.code}-${item.id}`} onClick={() => onDetails(item)}>
                 <TravelSticker country={selected.code} index={index} />
                 <span className="map-card-top"><ProviderLogo id={item.id} provider={item.org} /></span>
-                <span className="map-card-category">{categoryLabels[item.category]} · {isCrossBorder(item) ? item.geography === 'Global' ? 'Global' : 'LATAM' : selected.name}</span>
+                <span className="map-card-category">{categoryLabels[item.category]} · {selected.name}</span>
                 <strong>{item.name}</strong>
                 <span className="map-card-status"><i className={'status-dot ' + availability(item, now)} />{availabilityLabels[availability(item, now)]}</span>
                 <ArrowUpRight className="map-card-arrow" size={17} />
               </button>)}
             </div>
-            <button className="map-catalog-link" onClick={() => onExplore(selected.name)} aria-label={`Ver todas las oportunidades de ${selected.name} en la base de datos`}>Ver todas · {selectedItems.length} <ArrowUpRight size={16} /></button>
-          </> : <div className="map-empty-country"><p>Aún no hemos mapeado programas de {selected.name}. Puedes explorar las opciones regionales o ayudarnos a sumar una.</p><button className="button primary" onClick={() => onExplore('Latinoamérica')}>Ver programas regionales</button><button className="text-button" onClick={onContribute}>Proponer un programa <ArrowUpRight size={15} /></button></div>}
+            <button className="map-catalog-link" onClick={() => onExplore(selected.name)} aria-label={`Ver todas las oportunidades de ${selected.name} en la base de datos`} title="Incluye oportunidades locales, de LATAM y globales">Ver todas <ArrowUpRight size={16} /></button>
+          </> : <div className="map-empty-country"><p>Aún no hemos mapeado programas locales de {selected.name}. Puedes explorar las opciones regionales y globales disponibles para este país o ayudarnos a sumar una.</p><button className="button primary" onClick={() => onExplore(selected.name)}>Ver todas las oportunidades</button><button className="text-button" onClick={onContribute}>Proponer un programa <ArrowUpRight size={15} /></button></div>}
         </aside>
       </>}
       {showWelcome && !selected && <AtlasWelcome onEnter={() => { onEnter(); picker.current?.focus(); }} onNewsletter={onNewsletter} />}
@@ -204,7 +203,7 @@ export function OpportunityAtlas({ onExplore, onDetails, onNewsletter, onAbout, 
         <button onClick={() => moveTo(zoomMapAt(cameraRef.current, 1.4, [size.width * .5, size.height * (selected && size.width < 760 ? .3 : .5)]))} aria-label="Acercar mapa"><Plus size={20} /></button>
         <button onClick={() => moveTo(zoomMapAt(cameraRef.current, 1 / 1.4, [size.width * .5, size.height * (selected && size.width < 760 ? .3 : .5)]))} aria-label="Alejar mapa"><Minus size={20} /></button>
       </div>
-      <p className="sr-only" role="status">{selected ? `${selected.name}: ${selectedItems.length} oportunidades. Mostrando ${previewItems.length}. Las tarjetas no indican sedes físicas; usa Ver todas para abrir la base de datos completa.` : 'Selecciona un país para ver sus oportunidades.'}</p>
+      <p className="sr-only" role="status">{selected ? `${selected.name}: mostrando ${previewItems.length} de ${localItems.length} oportunidades locales. Las tarjetas no indican sedes físicas; usa Ver todas para incluir también oportunidades de LATAM y globales en la base de datos del país.` : 'Selecciona un país para ver sus oportunidades.'}</p>
     </section>
   );
 }

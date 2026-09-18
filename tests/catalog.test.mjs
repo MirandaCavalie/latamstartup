@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { opportunities, categoryLabels } from '../lib/opportunities.ts';
-import { atlasCountries, countryOpportunities, opportunitiesForCountry, isAvailableFromCountry, isCrossBorder } from '../lib/atlas.ts';
+import { atlasCountries, countryOpportunities, countryPreviewOpportunities, opportunitiesForCountry, isAvailableFromCountry, isCrossBorder } from '../lib/atlas.ts';
 import { filterCatalog } from '../lib/catalog.ts';
 import { availability, matchOpportunity } from '../lib/match.ts';
 
@@ -12,7 +12,7 @@ const ids = (rows) => rows.map((row) => row.id).sort();
 const read = (filters, rows = opportunities) => filterCatalog(rows, { ...defaults, ...filters }, now);
 
 for (const country of atlasCountries) {
-  test(`${country.name}: local coverage, regional fellowships and map/catalog parity`, () => {
+  test(`${country.name}: local coverage and regional fellowships in the country database`, () => {
     const local = countryOpportunities(opportunities, country);
     assert.ok(local.length >= 1, 'Every atlas country has at least one verified local record');
     const rows = read({ scope: country.name });
@@ -23,6 +23,16 @@ for (const country of atlasCountries) {
     for (const item of rows.filter((item) => !isCrossBorder(item))) {
       assert.equal(item.countryCode ?? atlasCountries.find((c) => c.name === item.geography)?.code, country.code);
     }
+  });
+  test(`${country.name}: map previews are national-only while the database keeps cross-border opportunities`, () => {
+    const local = countryPreviewOpportunities(opportunities, country);
+    const full = read({ scope: country.name });
+    assert.ok(local.length >= 1);
+    assert.ok(local.every((item) => !isCrossBorder(item) && full.includes(item)));
+    assert.ok(local.every((item) => (item.countryCode ?? atlasCountries.find((c) => c.name === item.geography)?.code) === country.code));
+    assert.ok(full.some((item) => item.id === 'ylai-fellowship'));
+    assert.ok(full.some((item) => item.id === 'rockstart-latam'));
+    assert.ok(full.length > local.length);
   });
   test(`${country.name}: facet counts match actual results under combined filters`, () => {
     for (const options of [{}, { freeOnly: true }, { availableOnly: true }, { query: 'mentoria' }, { orgType: 'Estado' }, { query: 'zz-no-result-zz', freeOnly: true }]) {
@@ -71,4 +81,19 @@ test('Country context and reset-all navigation use the same faceted base as the 
   assert.match(page, /Ver toda la base de datos/);
   assert.match(page, /facetItems\.filter\(\(o\) => o\.category === key\)/);
   assert.doesNotMatch(page, /baseItems\.filter\(\(o\) => o\.category === key\)/);
+});
+
+test('Map uses local preview candidates and keeps the country when opening the full database', () => {
+  const map = readFileSync(new URL('../components/opportunity-atlas.tsx', import.meta.url), 'utf8');
+  assert.match(map, /countryPreviewOpportunities\(opportunities, selected\)/);
+  assert.match(map, /diversePreview\(localItems,/);
+  assert.match(map, /onExplore\(selected.name\)/);
+  assert.match(map, /oportunidades locales/);
+});
+
+test('Map never fills an empty local chapter with regional programs or excludes explicit eligibility', () => {
+  const peru = atlasCountries.find((country) => country.code === 'PE');
+  assert.deepEqual(countryPreviewOpportunities(opportunities.filter(isCrossBorder), peru), []);
+  const restricted = { ...opportunities.find((item) => item.countryCode === 'PE'), eligibleCountryCodes: ['MX'] };
+  assert.deepEqual(countryPreviewOpportunities([restricted], peru), []);
 });

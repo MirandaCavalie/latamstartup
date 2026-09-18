@@ -8,7 +8,7 @@ Atlas en español para descubrir oportunidades y recursos para emprender. Proyec
 - 20 países en el atlas; los que no tienen fichas aparecen como “Por mapear”.
 
 - País de origen y alcance son distintos: una sección nacional incluye sus fichas locales más opciones LATAM/globales, respetando listas de países elegibles cuando se publican. No garantiza admisión.
-- El mapa y «Ver todas» comparten cobertura; el encabezado «Estás en…» mantiene el contexto. «Base de datos» restablece toda la colección. Recursos/guardados conservan el país; matches sigue el país del perfil.
+- Los pop-ups del mapa muestran solo programas nacionales del país seleccionado, sin repetir los regionales/globales. «Ver todas» abre su catálogo completo, incluyendo LATAM/global; el encabezado «Estás en…» mantiene el contexto. «Base de datos» restablece toda la colección. Recursos/guardados conservan el país; matches sigue el país del perfil.
 - Los contadores por categoría aplican búsqueda, país, institución, gratuidad y disponibilidad, pero excluyen la categoría seleccionada para permitir comparar categorías.
 - Fellowships e intercambios separados de aceleración e inversión: Puentes (ingeniería, estancia parcialmente cubierta, convocatoria cerrada), YLAI (intercambio en EE. UU., próximo plazo por confirmar) y Makers (remoto y gratuito).
 - Inversión por participación en una categoría propia: Platanus, Latitud, 500 Global y Rockstart no se confunden con subvenciones o capital semilla condonable.
